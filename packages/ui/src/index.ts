@@ -18,5 +18,5 @@ export {
 export { cn } from './lib/utils';
 
 /* ─── Tokens ─────────────────────────────────────────────────── */
-export { cardiolineColors, semanticColors } from './tokens/colors';
+export { beatColors as cardiolineColors, semanticColors } from './tokens/colors';
 export { typography, spacing, borderRadius, shadows } from './tokens/typography';

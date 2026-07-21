@@ -3,10 +3,12 @@ import { ArrowLeft, Edit, FileText, HeartPulse, History, Phone, Activity } from 
 import { Card, CardHeader, CardTitle, CardContent, Button } from '@cardioline/ui';
 import Link from 'next/link';
 
-export default function PatientDetailsPage({ params }: { params: { id: string } }) {
+export default async function PatientDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
+  const id = resolvedParams.id;
   // Mock data for patient details
   const patient = {
-    id: params.id || 'P-10023',
+    id: id || 'P-10023',
     name: 'John Doe',
     dob: '15 May 1965 (58 y/o)',
     gender: 'Male',
