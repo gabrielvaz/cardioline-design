@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Eye, EyeOff, Loader2, ArrowRight } from 'lucide-react';
 import { cn } from '@cardioline/ui';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 /* ─── Clean Light-themed Input ──────────────────────────────── */
 function Input({ className, ...props }: React.InputHTMLAttributes<HTMLInputElement>) {
@@ -78,6 +79,7 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [isLoading, setIsLoading]       = React.useState(false);
   const [error, setError]               = React.useState('');
+  const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -92,6 +94,7 @@ export function LoginForm() {
     /* TODO: replace with real authentication logic */
     await new Promise((r) => setTimeout(r, 1500));
     setIsLoading(false);
+    router.push('/dashboard');
   }
 
   return (
