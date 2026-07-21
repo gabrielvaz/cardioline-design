@@ -1,16 +1,17 @@
 'use client';
 
 import * as React from 'react';
-import { Eye, EyeOff, Activity, Loader2, ArrowRight } from 'lucide-react';
+import { Eye, EyeOff, Loader2, ArrowRight } from 'lucide-react';
 import { cn } from '@cardioline/ui';
+import Image from 'next/image';
 
-/* ─── Inline glass-style Input ──────────────────────────────── */
+/* ─── Clean Light-themed Input ──────────────────────────────── */
 function Input({ className, ...props }: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       className={cn(
-        'flex h-11 w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-white placeholder:text-white/40 ring-offset-transparent backdrop-blur-sm transition-all',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ee5b00] focus-visible:border-[#ee5b00]/60',
+        'flex h-11 w-full rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-gray-900 placeholder:text-gray-400 transition-all',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ee5b00]/20 focus-visible:border-[#ee5b00]',
         'disabled:cursor-not-allowed disabled:opacity-50',
         className
       )}
@@ -22,38 +23,31 @@ function Input({ className, ...props }: React.InputHTMLAttributes<HTMLInputEleme
 function Label({ className, ...props }: React.LabelHTMLAttributes<HTMLLabelElement>) {
   return (
     <label
-      className={cn('text-xs font-medium text-white/70 uppercase tracking-wider', className)}
+      className={cn('text-xs font-semibold text-gray-700 uppercase tracking-wider', className)}
       {...props}
     />
   );
 }
 
-/* ─── Vireo Arc Logo Mark ────────────────────────────────────── */
-function VireoArcLogo() {
+/* ─── Official Cardioline Logo ───────────────────────────────── */
+function CardiolineLogo() {
   return (
-    <div className="flex items-center gap-3">
-      <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-[#ee5b00] to-[#ff7d38] shadow-lg">
-        <Activity className="w-5 h-5 text-white" strokeWidth={2.5} />
-        {/* Navy accent dot */}
-        <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#071046] border-2 border-[#071046]" />
-      </div>
-      <div>
-        <p className="text-[10px] font-medium tracking-[0.2em] text-white/50 uppercase">
-          Cardioline
-        </p>
-        <p className="text-lg font-bold text-white leading-none font-heading tracking-tight">
-          Vireo Arc
-        </p>
-      </div>
+    <div className="flex justify-center mb-2">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img 
+        src="https://cardioline.com/wp-content/uploads/2022/08/logo.png" 
+        alt="Cardioline Logo" 
+        className="h-8 w-auto object-contain"
+      />
     </div>
   );
 }
 
-/* ─── ECG SVG Divider ────────────────────────────────────────── */
+/* ─── Light ECG SVG Divider ──────────────────────────────────── */
 function EcgDivider() {
   return (
     <div className="flex items-center gap-3 my-6">
-      <div className="flex-1 h-px bg-white/10" />
+      <div className="flex-1 h-px bg-gray-100" />
       <svg
         width="80"
         height="20"
@@ -72,7 +66,7 @@ function EcgDivider() {
           opacity="0.8"
         />
       </svg>
-      <div className="flex-1 h-px bg-white/10" />
+      <div className="flex-1 h-px bg-gray-100" />
     </div>
   );
 }
@@ -102,17 +96,14 @@ export function LoginForm() {
 
   return (
     <div
-      className="relative rounded-2xl overflow-hidden"
+      className="relative rounded-2xl overflow-hidden bg-white"
       style={{
-        background: 'rgba(7, 16, 70, 0.85)',
-        backdropFilter: 'blur(24px)',
-        border: '1px solid rgba(255, 255, 255, 0.10)',
-        boxShadow: '0 32px 64px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(238, 91, 0, 0.15)',
+        boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(238, 91, 0, 0.15)',
       }}
     >
-      {/* Top gradient accent line */}
+      {/* Top gradient accent line (kept as requested) */}
       <div
-        className="absolute top-0 inset-x-0 h-px"
+        className="absolute top-0 inset-x-0 h-[2px]"
         style={{
           background:
             'linear-gradient(90deg, transparent, rgba(238,91,0,0.9) 30%, rgba(238,91,0,0.5) 70%, transparent)',
@@ -122,16 +113,26 @@ export function LoginForm() {
 
       <div className="p-8">
         {/* Logo */}
-        <VireoArcLogo />
+        <CardiolineLogo />
+        
+        {/* App Name */}
+        <div className="text-center mt-3">
+          <p className="text-[10px] font-bold tracking-[0.2em] text-[#071046]/50 uppercase">
+            Platform
+          </p>
+          <p className="text-xl font-bold text-[#071046] leading-none font-heading tracking-tight mt-1">
+            Vireo Arc
+          </p>
+        </div>
 
         <EcgDivider />
 
         {/* Heading */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-white font-heading leading-tight">
+        <div className="mb-6 text-center">
+          <h1 className="text-2xl font-bold text-[#071046] font-heading leading-tight">
             Welcome back
           </h1>
-          <p className="text-sm text-white/50 mt-1">
+          <p className="text-sm text-gray-500 mt-1">
             Sign in to your account to access cardiac diagnostics.
           </p>
         </div>
@@ -167,7 +168,7 @@ export function LoginForm() {
               <button
                 type="button"
                 id="forgot-password-link"
-                className="text-xs text-[#ff7d38] hover:text-white transition-colors focus-visible:outline-none focus-visible:underline"
+                className="text-xs font-medium text-[#ee5b00] hover:text-[#d44e00] transition-colors focus-visible:outline-none focus-visible:underline"
                 onClick={() => { /* TODO: navigate to forgot password */ }}
               >
                 Forgot password?
@@ -189,7 +190,7 @@ export function LoginForm() {
               <button
                 type="button"
                 id="toggle-password-visibility"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/80 transition-colors focus-visible:outline-none"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors focus-visible:outline-none"
                 onClick={() => setShowPassword((v) => !v)}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
@@ -208,10 +209,10 @@ export function LoginForm() {
               id="login-error"
               role="alert"
               aria-live="polite"
-              className="flex items-center gap-2 rounded-lg bg-[#ee5b00]/10 border border-[#ee5b00]/30 px-4 py-3"
+              className="flex items-center gap-2 rounded-lg bg-red-50 border border-red-100 px-4 py-3"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#ee5b00] flex-shrink-0" />
-              <p className="text-xs text-[#ff9d6a]">{error}</p>
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0" />
+              <p className="text-xs font-medium text-red-600">{error}</p>
             </div>
           )}
 
@@ -221,23 +222,14 @@ export function LoginForm() {
             type="submit"
             disabled={isLoading}
             className={cn(
-              'relative w-full h-12 rounded-lg font-semibold text-sm text-white overflow-hidden group',
+              'relative w-full h-12 rounded-lg font-semibold text-sm text-white overflow-hidden group mt-2',
               'transition-all duration-200 active:scale-[0.98]',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ee5b00] focus-visible:ring-offset-2 focus-visible:ring-offset-[#071046]',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ee5b00] focus-visible:ring-offset-2',
               'disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100',
-              'bg-gradient-to-r from-[#ee5b00] to-[#ff7d38]',
-              'hover:from-[#d44e00] hover:to-[#ee5b00]',
-              'shadow-[0_4px_24px_-4px_rgba(238,91,0,0.5)]'
+              'bg-[#ee5b00] hover:bg-[#d44e00]',
+              'shadow-sm shadow-[#ee5b00]/20'
             )}
           >
-            {/* Shimmer on hover */}
-            {!isLoading && (
-              <span
-                aria-hidden="true"
-                className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-              />
-            )}
-
             <span className="relative flex items-center justify-center gap-2">
               {isLoading ? (
                 <>
@@ -254,23 +246,9 @@ export function LoginForm() {
           </button>
         </form>
 
-        {/* Footer */}
-        <div className="mt-6 pt-6 border-t border-white/10">
-          <div className="flex items-center justify-between">
-            <p className="text-[11px] text-white/30 leading-relaxed">
-              Certified platform for clinical<br />and diagnostic environments
-            </p>
-            {/* System status badge */}
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-[#ee5b00]/30 bg-[#ee5b00]/10">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#ee5b00] animate-pulse" />
-              <span className="text-[10px] font-medium text-[#ff9d6a] tracking-wide">
-                SYSTEM ACTIVE
-              </span>
-            </div>
-          </div>
-
-          {/* Attribution */}
-          <p className="text-center text-[10px] text-white/20 mt-5 tracking-widest uppercase">
+        {/* Footer (Cleaned up, no badge) */}
+        <div className="mt-6 pt-6 border-t border-gray-100">
+          <p className="text-center text-[10px] text-gray-400 font-medium tracking-widest uppercase">
             Powered by Cardioline S.P.A.
           </p>
         </div>
