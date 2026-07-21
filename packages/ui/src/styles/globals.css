@@ -1,12 +1,20 @@
 /**
- * Cardioline Design System — Global CSS Variables
+ * Beat Design System — Global CSS
+ * by Cardioline
  *
- * ShadCN-compatible CSS custom properties.
- * Colors are derived from Cardioline's brand identity:
- * Deep Navy Blue (#1840a2) + ECG Red Accent (#f83b3b)
+ * Brand colors sourced from cardioline.com CSS:
+ *   Primary Orange (#ee5b00) — --awb-color5
+ *   Deep Navy     (#071046) — --awb-color6
+ *   Light Blue    (#f1f4fe) — --awb-color2
+ *   Light Coral   (#ffe0e0) — --awb-color3
+ *   Lavender      (#ab8ed3) — --awb-color7
+ *
+ * Typography from cardioline.com:
+ *   Headings: 'Plus Jakarta Sans'
+ *   Body/UI:  'Inter'
  */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -14,92 +22,93 @@
 
 @layer base {
   :root {
-    /* ─── Cardioline Light Theme ────────────────────────────────── */
+    /* ─── Beat Design System — Light Theme ──────────────────────── */
 
     /* Canvas */
-    --background:         210 40% 98%;   /* Very light blue-white */
-    --foreground:         222 47% 11%;   /* Deep navy text */
+    --background:         0 0% 100%;          /* Pure white */
+    --foreground:         0 0% 20%;           /* #333 — body text */
 
     /* Card */
     --card:               0 0% 100%;
-    --card-foreground:    222 47% 11%;
+    --card-foreground:    0 0% 20%;
 
     /* Popover */
     --popover:            0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 0 0% 20%;
 
-    /* Primary — Cardioline Navy Blue (#1840a2 → hsl ~220 75% 37%) */
-    --primary:            220 68% 37%;
+    /* Primary — Cardioline Orange #ee5b00 → hsl(22, 100%, 47%) */
+    --primary:            22 100% 47%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary — Muted Blue */
-    --secondary:          214 32% 91%;
-    --secondary-foreground: 222 47% 20%;
+    /* Secondary — Light Blue Tint #f1f4fe → hsl(230, 85%, 97%) */
+    --secondary:          230 85% 97%;
+    --secondary-foreground: 231 93% 16%;
 
     /* Muted */
-    --muted:              210 40% 96%;
-    --muted-foreground:   215 20% 50%;
+    --muted:              210 20% 96%;
+    --muted-foreground:   0 0% 45%;           /* #747474 */
 
-    /* Accent — ECG Red (#f83b3b → hsl ~0 93% 60%) */
-    --accent:             0 90% 60%;
+    /* Accent — Deep Navy #071046 → hsl(231, 93%, 15%) */
+    --accent:             231 93% 15%;
     --accent-foreground:  0 0% 100%;
 
-    /* Destructive */
-    --destructive:        0 84% 60%;
+    /* Destructive — from cardioline.com #e0284f */
+    --destructive:        344 78% 52%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders & Input */
-    --border:             214 32% 88%;
-    --input:              214 32% 91%;
-    --ring:               220 68% 37%;
+    /* Borders & Inputs */
+    --border:             220 15% 88%;
+    --input:              220 15% 91%;
+    --ring:               22 100% 47%;        /* Orange focus ring */
 
     /* Border Radius */
     --radius: 0.5rem;
 
-    /* Chart colors */
-    --chart-1: 220 68% 37%;   /* Primary navy */
-    --chart-2: 0 90% 60%;     /* ECG red */
-    --chart-3: 142 72% 29%;   /* Success green */
-    --chart-4: 43 96% 56%;    /* Warning amber */
-    --chart-5: 262 83% 58%;   /* Purple */
+    /* Chart — ECG-inspired palette */
+    --chart-1: 22 100% 47%;    /* Primary orange */
+    --chart-2: 231 93% 15%;   /* Navy blue */
+    --chart-3: 142 40% 55%;   /* Success green #65bc7b */
+    --chart-4: 44 97% 48%;    /* Warning amber #fcb900 */
+    --chart-5: 270 45% 70%;   /* Lavender #ab8ed3 */
   }
 
   .dark {
-    /* ─── Cardioline Dark Theme ─────────────────────────────────── */
+    /* ─── Beat Design System — Dark Theme ───────────────────────── */
 
-    --background:         222 47% 6%;    /* Near-black navy */
-    --foreground:         210 40% 95%;   /* Clean off-white */
+    --background:         231 50% 7%;         /* Near-black navy */
+    --foreground:         0 0% 95%;
 
-    --card:               222 47% 9%;
-    --card-foreground:    210 40% 95%;
+    --card:               231 45% 10%;
+    --card-foreground:    0 0% 95%;
 
-    --popover:            222 47% 9%;
-    --popover-foreground: 210 40% 95%;
+    --popover:            231 45% 10%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary:            214 87% 62%;   /* Lighter blue for dark bg */
-    --primary-foreground: 222 47% 6%;
+    /* Primary stays orange but slightly lighter on dark */
+    --primary:            22 100% 55%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary:          217 32% 17%;
-    --secondary-foreground: 210 40% 85%;
+    --secondary:          231 30% 18%;
+    --secondary-foreground: 230 85% 85%;
 
-    --muted:              217 32% 14%;
-    --muted-foreground:   215 20% 55%;
+    --muted:              231 30% 14%;
+    --muted-foreground:   220 15% 55%;
 
-    --accent:             0 90% 65%;     /* ECG red lighter on dark */
+    --accent:             22 100% 55%;        /* Orange accent on dark */
     --accent-foreground:  0 0% 100%;
 
-    --destructive:        0 84% 55%;
+    --destructive:        344 78% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border:             217 32% 18%;
-    --input:              217 32% 18%;
-    --ring:               214 87% 62%;
+    --border:             231 30% 20%;
+    --input:              231 30% 18%;
+    --ring:               22 100% 55%;
 
-    --chart-1: 214 87% 62%;
-    --chart-2: 0 90% 65%;
-    --chart-3: 142 72% 45%;
-    --chart-4: 43 96% 60%;
-    --chart-5: 262 83% 68%;
+    --chart-1: 22 100% 55%;
+    --chart-2: 230 85% 70%;
+    --chart-3: 142 40% 60%;
+    --chart-4: 44 97% 55%;
+    --chart-5: 270 45% 75%;
   }
 }
 
@@ -117,46 +126,64 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
-    font-weight: 600;
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    font-weight: 700;
+    color: hsl(var(--accent));  /* Deep navy for headings */
   }
 }
 
 @layer components {
-  /* ─── ECG Grid Pattern (for backgrounds) ───────────────────── */
+  /* ─── ECG Grid Pattern ───────────────────────────────────────── */
   .ecg-grid {
     background-image:
-      linear-gradient(rgba(45, 106, 224, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(45, 106, 224, 0.05) 1px, transparent 1px);
+      linear-gradient(rgba(238, 91, 0, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(238, 91, 0, 0.04) 1px, transparent 1px);
     background-size: 20px 20px;
   }
 
-  .ecg-grid-dark {
-    background-image:
-      linear-gradient(rgba(94, 162, 255, 0.07) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(94, 162, 255, 0.07) 1px, transparent 1px);
-    background-size: 20px 20px;
+  /* ─── Beat Card Shadow ──────────────────────────────────────── */
+  .card-beat {
+    @apply bg-card rounded-xl border border-border;
+    box-shadow: 0 2px 12px -2px rgba(238, 91, 0, 0.06), 0 1px 4px -1px rgba(0, 0, 0, 0.06);
   }
 
-  /* ─── Medical Badge ──────────────────────────────────────────── */
-  .badge-medical {
-    @apply inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium;
+  /* ─── Orange Focus Ring ─────────────────────────────────────── */
+  .ring-beat {
+    box-shadow: 0 0 0 3px rgba(238, 91, 0, 0.20);
   }
 
-  /* ─── Cardioline Card ────────────────────────────────────────── */
-  .card-cardioline {
-    @apply bg-card rounded-xl border border-border shadow-sm;
-    box-shadow: 0 2px 12px -2px rgba(45, 106, 224, 0.08), 0 1px 4px -1px rgba(0, 0, 0, 0.06);
+  /* ─── Heartbeat Animation ───────────────────────────────────── */
+  @keyframes beat-pulse {
+    0%, 100% { transform: scale(1); }
+    14%       { transform: scale(1.08); }
+    28%       { transform: scale(1); }
+    42%       { transform: scale(1.04); }
+    70%       { transform: scale(1); }
   }
 
-  /* ─── ECG Wave Line Animation ────────────────────────────────── */
-  @keyframes ecg-pulse {
-    0%   { stroke-dashoffset: 1000; }
-    100% { stroke-dashoffset: 0; }
+  .animate-beat {
+    animation: beat-pulse 1.5s ease-in-out infinite;
+  }
+
+  /* ─── ECG Line Scroll ───────────────────────────────────────── */
+  @keyframes ecg-scroll {
+    0%   { stroke-dashoffset: 2000; }
+    100% { stroke-dashoffset: -2000; }
   }
 
   .ecg-wave {
-    stroke-dasharray: 1000;
-    animation: ecg-pulse 2s ease-in-out infinite;
+    animation: ecg-scroll 5s linear infinite;
+  }
+
+  /* ─── Shimmer Loading ────────────────────────────────────────── */
+  @keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg, transparent 0%, rgba(238,91,0,0.08) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
   }
 }

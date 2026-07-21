@@ -1,0 +1,2608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beat Design System — Cardioline</title>
+  <meta name="description" content="Beat Design System by Cardioline — Official design system documentation with all shadcn/ui components customized with Cardioline brand identity." />
+
+  <!-- Google Fonts: Plus Jakarta Sans + Inter + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <!-- Highlight.js for code syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+  <style>
+    /* ─── CSS Custom Properties — Beat Design System ─────────────── */
+    :root {
+      /* Brand colors from cardioline.com CSS */
+      --color-primary:       #ee5b00; /* awb-color5 — primary orange */
+      --color-primary-light: #ff7d38;
+      --color-primary-pale:  #fff5ee;
+      --color-navy:          #071046; /* awb-color6 — deep navy */
+      --color-navy-light:    #1b2576;
+      --color-navy-pale:     #f1f4fe; /* awb-color2 */
+      --color-coral:         #ffe0e0; /* awb-color3 */
+      --color-lavender:      #ab8ed3; /* awb-color7 */
+      --color-success:       #65bc7b;
+      --color-warning:       #fcb900;
+      --color-error:         #e0284f;
+
+      /* Neutrals */
+      --color-white:         #ffffff;
+      --color-gray-50:       #f9f9fb;
+      --color-gray-100:      #f1f4fe;
+      --color-gray-200:      #e9eaee;
+      --color-gray-300:      #d3d3d3;
+      --color-gray-400:      #959ea9;
+      --color-gray-500:      #747474;
+      --color-gray-600:      #4a4e57;
+      --color-gray-700:      #393939;
+      --color-gray-800:      #212934;
+      --color-gray-900:      #333333;
+
+      /* Typography */
+      --font-heading:        'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-body:           'Inter', system-ui, sans-serif;
+      --font-mono:           'JetBrains Mono', ui-monospace, monospace;
+
+      /* Spacing (4pt base) */
+      --space-1: 4px;  --space-2: 8px;   --space-3: 12px;  --space-4: 16px;
+      --space-5: 20px; --space-6: 24px;  --space-8: 32px;  --space-10: 40px;
+      --space-12: 48px; --space-16: 64px; --space-20: 80px;
+
+      /* Radius */
+      --radius-sm: 4px;   --radius-md: 8px;   --radius-lg: 12px;
+      --radius-xl: 16px;  --radius-full: 9999px;
+
+      /* Sidebar */
+      --sidebar-width: 260px;
+      --header-height: 60px;
+
+      /* Transitions */
+      --transition: 150ms ease;
+    }
+
+    /* ─── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--color-gray-50);
+      color: var(--color-gray-900);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ─── Layout ────────────────────────────────────────────────── */
+    .layout { display: flex; width: 100%; }
+
+    /* ─── Sidebar ───────────────────────────────────────────────── */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: var(--sidebar-width);
+      background: var(--color-navy);
+      overflow-y: auto;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+    .sidebar-header {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: sticky;
+      top: 0;
+      background: var(--color-navy);
+      z-index: 1;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .sidebar-logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(238,91,0,0.35);
+    }
+
+    .sidebar-logo-icon svg { width: 18px; height: 18px; stroke: white; }
+
+    .sidebar-brand {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-brand-sub {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .sidebar-brand-name {
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.1;
+    }
+
+    .sidebar-version {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      background: rgba(238,91,0,0.15);
+      border: 1px solid rgba(238,91,0,0.3);
+      border-radius: var(--radius-full);
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--color-primary-light);
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    .sidebar-nav { padding: 12px 0 20px; flex: 1; }
+
+    .nav-section { margin-bottom: 4px; }
+
+    .nav-section-title {
+      padding: 8px 20px 4px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      transition: all var(--transition);
+      border-left: 2px solid transparent;
+      cursor: pointer;
+    }
+
+    .nav-link svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.7; }
+
+    .nav-link:hover {
+      color: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.04);
+      border-left-color: rgba(238,91,0,0.4);
+    }
+
+    .nav-link.active {
+      color: #fff;
+      background: rgba(238,91,0,0.12);
+      border-left-color: var(--color-primary);
+    }
+
+    .nav-link.active svg { opacity: 1; }
+
+    /* ─── Main Content ──────────────────────────────────────────── */
+    .main {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      min-height: 100vh;
+    }
+
+    /* ─── Top Header ────────────────────────────────────────────── */
+    .header {
+      position: sticky;
+      top: 0;
+      height: var(--header-height);
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      z-index: 50;
+    }
+
+    .header-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--color-gray-500);
+    }
+
+    .header-breadcrumb span { color: var(--color-gray-900); font-weight: 500; }
+    .header-breadcrumb .sep { color: var(--color-gray-300); }
+
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+
+    .dark-toggle {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 12px;
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-md);
+      background: transparent;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--color-gray-600);
+      font-family: var(--font-body);
+      transition: all var(--transition);
+    }
+
+    .dark-toggle:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .dark-toggle svg { width: 14px; height: 14px; }
+
+    .github-link {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 14px;
+      background: var(--color-navy);
+      color: white;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background var(--transition);
+      font-family: var(--font-body);
+    }
+
+    .github-link:hover { background: var(--color-navy-light); }
+    .github-link svg { width: 14px; height: 14px; }
+
+    /* ─── Page Content ──────────────────────────────────────────── */
+    .content {
+      padding: 48px 40px 80px;
+      max-width: 960px;
+    }
+
+    /* ─── Section ───────────────────────────────────────────────── */
+    .section {
+      margin-bottom: 72px;
+      scroll-margin-top: 80px;
+    }
+
+    .section-header { margin-bottom: 24px; }
+
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--color-navy);
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .section-desc {
+      font-size: 15px;
+      color: var(--color-gray-500);
+      line-height: 1.6;
+      max-width: 600px;
+    }
+
+    /* ─── Component Preview Card ────────────────────────────────── */
+    .component-card {
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 24px;
+      background: white;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+
+    .component-preview {
+      padding: 40px;
+      background: white;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      min-height: 100px;
+      border-bottom: 1px solid var(--color-gray-200);
+      position: relative;
+    }
+
+    .component-preview.center {
+      justify-content: center;
+    }
+
+    .component-preview.column {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .component-preview.dark-bg {
+      background: var(--color-navy);
+    }
+
+    .component-code {
+      position: relative;
+    }
+
+    .component-code pre {
+      margin: 0 !important;
+      border-radius: 0 !important;
+      font-size: 12.5px !important;
+      line-height: 1.6 !important;
+      max-height: 200px;
+      overflow: auto;
+    }
+
+    .code-label {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 10px;
+      font-family: var(--font-mono);
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.08em;
+      pointer-events: none;
+    }
+
+    /* ─── Buttons ────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 16px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition);
+      border: 1px solid transparent;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    .btn svg { width: 14px; height: 14px; }
+
+    .btn:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(238,91,0,0.25);
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: white;
+      box-shadow: 0 2px 8px rgba(238,91,0,0.25);
+    }
+    .btn-primary:hover { background: #d44e00; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(238,91,0,0.3); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-navy {
+      background: var(--color-navy);
+      color: white;
+      box-shadow: 0 2px 8px rgba(7,16,70,0.25);
+    }
+    .btn-navy:hover { background: var(--color-navy-light); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+    .btn-outline:hover { background: var(--color-primary-pale); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--color-gray-700);
+      border-color: transparent;
+    }
+    .btn-ghost:hover { background: var(--color-gray-100); }
+
+    .btn-secondary {
+      background: var(--color-navy-pale);
+      color: var(--color-navy);
+      border-color: transparent;
+    }
+    .btn-secondary:hover { background: #dce4fc; }
+
+    .btn-destructive {
+      background: var(--color-error);
+      color: white;
+      box-shadow: 0 2px 8px rgba(224,40,79,0.2);
+    }
+    .btn-destructive:hover { background: #c41e41; }
+
+    .btn-sm  { height: 28px; padding: 0 12px; font-size: 12px; }
+    .btn-lg  { height: 44px; padding: 0 24px; font-size: 15px; }
+    .btn-xl  { height: 52px; padding: 0 32px; font-size: 15px; font-weight: 600; }
+    .btn-icon { width: 36px; padding: 0; }
+    .btn-icon-sm { width: 28px; height: 28px; padding: 0; }
+
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* ─── Inputs ─────────────────────────────────────────────────── */
+    .input {
+      display: flex;
+      height: 36px;
+      padding: 0 12px;
+      background: white;
+      border: 1px solid var(--color-gray-300);
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      color: var(--color-gray-900);
+      width: 100%;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+    }
+
+    .input::placeholder { color: var(--color-gray-400); }
+
+    .input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(238,91,0,0.12);
+    }
+
+    .input:disabled { background: var(--color-gray-100); color: var(--color-gray-400); cursor: not-allowed; }
+    .input.error { border-color: var(--color-error); box-shadow: 0 0 0 3px rgba(224,40,79,0.1); }
+
+    .input-group { display: flex; flex-direction: column; gap: 6px; width: 280px; }
+    .input-label { font-size: 12px; font-weight: 500; color: var(--color-gray-700); }
+    .input-hint  { font-size: 11px; color: var(--color-gray-400); }
+    .input-error { font-size: 11px; color: var(--color-error); }
+
+    textarea.input { height: auto; padding: 10px 12px; resize: vertical; min-height: 80px; }
+
+    /* ─── Badges ─────────────────────────────────────────────────── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 10px;
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      border: 1px solid transparent;
+    }
+
+    .badge-default     { background: var(--color-primary-pale); color: var(--color-primary); border-color: rgba(238,91,0,0.2); }
+    .badge-navy        { background: var(--color-navy-pale); color: var(--color-navy); border-color: rgba(7,16,70,0.15); }
+    .badge-outline     { background: transparent; color: var(--color-gray-600); border-color: var(--color-gray-300); }
+    .badge-success     { background: #f0faf3; color: #16a34a; border-color: rgba(22,163,74,0.2); }
+    .badge-warning     { background: #fef9e0; color: #b45309; border-color: rgba(252,185,0,0.3); }
+    .badge-destructive { background: #fff0f4; color: var(--color-error); border-color: rgba(224,40,79,0.2); }
+    .badge-lavender    { background: #f5f0fb; color: #7b57b3; border-color: rgba(171,142,211,0.3); }
+
+    .badge-dot { width: 6px; height: 6px; border-radius: var(--radius-full); }
+
+    /* ─── Card ──────────────────────────────────────────────────── */
+    .card {
+      background: white;
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+
+    .card:hover { box-shadow: 0 4px 16px rgba(238,91,0,0.08), 0 2px 8px rgba(0,0,0,0.04); }
+
+    .card-header  { padding: 20px 20px 0; }
+    .card-body    { padding: 16px 20px; }
+    .card-footer  { padding: 0 20px 20px; display: flex; align-items: center; justify-content: space-between; }
+
+    .card-title       { font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--color-navy); margin-bottom: 4px; }
+    .card-description { font-size: 13px; color: var(--color-gray-500); line-height: 1.5; }
+
+    .card-orange-top { border-top: 3px solid var(--color-primary); }
+    .card-navy-bg    { background: var(--color-navy); color: white; }
+    .card-navy-bg .card-title { color: white; }
+    .card-navy-bg .card-description { color: rgba(255,255,255,0.6); }
+
+    /* ─── Alert ─────────────────────────────────────────────────── */
+    .alert {
+      display: flex;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      font-size: 13.5px;
+    }
+
+    .alert svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+    .alert-title { font-weight: 600; margin-bottom: 2px; font-size: 13px; }
+    .alert-desc  { font-size: 12.5px; opacity: 0.85; }
+
+    .alert-default     { background: var(--color-navy-pale); border-color: rgba(7,16,70,0.15); color: var(--color-navy); }
+    .alert-success     { background: #f0faf3; border-color: rgba(22,163,74,0.25); color: #15803d; }
+    .alert-warning     { background: #fef9e0; border-color: rgba(252,185,0,0.35); color: #92400e; }
+    .alert-destructive { background: #fff0f4; border-color: rgba(224,40,79,0.25); color: var(--color-error); }
+    .alert-info        { background: var(--color-primary-pale); border-color: rgba(238,91,0,0.2); color: var(--color-primary); }
+
+    /* ─── Avatar ─────────────────────────────────────────────────── */
+    .avatar {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .avatar-sm  { width: 28px; height: 28px; font-size: 11px; }
+    .avatar-md  { width: 40px; height: 40px; font-size: 15px; }
+    .avatar-lg  { width: 56px; height: 56px; font-size: 20px; }
+    .avatar-xl  { width: 72px; height: 72px; font-size: 26px; }
+
+    .avatar-primary  { background: var(--color-primary); color: white; font-weight: 600; font-family: var(--font-heading); }
+    .avatar-navy     { background: var(--color-navy); color: white; font-weight: 600; font-family: var(--font-heading); }
+    .avatar-lavender { background: var(--color-lavender); color: white; font-weight: 600; font-family: var(--font-heading); }
+    .avatar-success  { background: var(--color-success); color: white; font-weight: 600; font-family: var(--font-heading); }
+
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .avatar-group { display: flex; flex-direction: row-reverse; }
+    .avatar-group .avatar { border: 2px solid white; margin-left: -8px; }
+    .avatar-group .avatar:last-child { margin-left: 0; }
+
+    /* ─── Switch ─────────────────────────────────────────────────── */
+    .switch-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .switch {
+      appearance: none;
+      width: 40px; height: 22px;
+      background: var(--color-gray-300);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: background var(--transition);
+      position: relative;
+    }
+
+    .switch::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 16px; height: 16px;
+      background: white;
+      border-radius: var(--radius-full);
+      transition: transform 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .switch:checked { background: var(--color-primary); }
+    .switch:checked::after { transform: translateX(18px); }
+    .switch:focus-visible { box-shadow: 0 0 0 3px rgba(238,91,0,0.25); outline: none; }
+
+    .switch-label { font-size: 13px; font-weight: 500; color: var(--color-gray-700); user-select: none; }
+
+    /* ─── Checkbox ──────────────────────────────────────────────── */
+    .checkbox-wrapper {
+      display: flex; align-items: center; gap: 8px; cursor: pointer;
+    }
+
+    .checkbox {
+      appearance: none;
+      width: 16px; height: 16px;
+      border: 1.5px solid var(--color-gray-300);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all var(--transition);
+      position: relative;
+      flex-shrink: 0;
+      background: white;
+    }
+
+    .checkbox:checked {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+
+    .checkbox:checked::after {
+      content: '';
+      position: absolute;
+      top: 2px; left: 5px;
+      width: 4px; height: 7px;
+      border-right: 2px solid white;
+      border-bottom: 2px solid white;
+      transform: rotate(45deg);
+    }
+
+    .checkbox:focus-visible { box-shadow: 0 0 0 3px rgba(238,91,0,0.25); outline: none; }
+    .checkbox-label { font-size: 13px; font-weight: 500; color: var(--color-gray-700); user-select: none; }
+
+    /* ─── Radio ─────────────────────────────────────────────────── */
+    .radio-wrapper { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+
+    .radio {
+      appearance: none;
+      width: 16px; height: 16px;
+      border: 1.5px solid var(--color-gray-300);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all var(--transition);
+      position: relative;
+      flex-shrink: 0;
+      background: white;
+    }
+
+    .radio:checked {
+      border-color: var(--color-primary);
+      border-width: 4px;
+      background: white;
+      box-shadow: inset 0 0 0 2px var(--color-primary);
+    }
+
+    .radio:focus-visible { box-shadow: 0 0 0 3px rgba(238,91,0,0.25); outline: none; }
+
+    /* ─── Select ─────────────────────────────────────────────────── */
+    .select {
+      appearance: none;
+      height: 36px;
+      padding: 0 36px 0 12px;
+      background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23747474' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
+      border: 1px solid var(--color-gray-300);
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      color: var(--color-gray-900);
+      cursor: pointer;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+      min-width: 180px;
+    }
+
+    .select:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(238,91,0,0.12);
+    }
+
+    /* ─── Tabs ──────────────────────────────────────────────────── */
+    .tabs { width: 100%; }
+
+    .tabs-list {
+      display: flex;
+      gap: 2px;
+      background: var(--color-gray-100);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      width: fit-content;
+    }
+
+    .tab-trigger {
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-gray-500);
+      cursor: pointer;
+      transition: all var(--transition);
+      border: none;
+      background: transparent;
+      font-family: var(--font-body);
+    }
+
+    .tab-trigger:hover { color: var(--color-gray-900); }
+    .tab-trigger.active {
+      background: white;
+      color: var(--color-navy);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      font-weight: 600;
+    }
+
+    .tab-content { display: none; padding: 16px 0; font-size: 14px; color: var(--color-gray-700); }
+    .tab-content.active { display: block; }
+
+    /* ─── Accordion ─────────────────────────────────────────────── */
+    .accordion { border: 1px solid var(--color-gray-200); border-radius: var(--radius-lg); overflow: hidden; }
+
+    .accordion-item { border-bottom: 1px solid var(--color-gray-200); }
+    .accordion-item:last-child { border-bottom: none; }
+
+    .accordion-trigger {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px;
+      background: white;
+      border: none;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-navy);
+      cursor: pointer;
+      text-align: left;
+      transition: background var(--transition);
+    }
+
+    .accordion-trigger:hover { background: var(--color-gray-50); }
+
+    .accordion-trigger svg {
+      width: 16px; height: 16px;
+      color: var(--color-gray-400);
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .accordion-trigger.open svg { transform: rotate(180deg); }
+    .accordion-trigger.open { color: var(--color-primary); }
+    .accordion-trigger.open svg { color: var(--color-primary); }
+
+    .accordion-content {
+      display: none;
+      padding: 0 16px 14px;
+      font-size: 13.5px;
+      color: var(--color-gray-600);
+      line-height: 1.6;
+      background: white;
+    }
+
+    .accordion-content.open { display: block; }
+
+    /* ─── Progress ──────────────────────────────────────────────── */
+    .progress-bar {
+      height: 8px;
+      background: var(--color-gray-200);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      background: var(--color-primary);
+      transition: width 0.5s ease;
+    }
+
+    .progress-fill.navy    { background: var(--color-navy); }
+    .progress-fill.success { background: var(--color-success); }
+    .progress-fill.striped {
+      background-image: repeating-linear-gradient(
+        -45deg, transparent, transparent 6px,
+        rgba(255,255,255,0.2) 6px, rgba(255,255,255,0.2) 12px
+      );
+    }
+
+    /* ─── Skeleton ───────────────────────────────────────────────── */
+    @keyframes skeleton-shimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, var(--color-gray-200) 25%, var(--color-gray-100) 50%, var(--color-gray-200) 75%);
+      background-size: 800px 100%;
+      animation: skeleton-shimmer 1.5s infinite linear;
+      border-radius: var(--radius-md);
+    }
+
+    /* ─── Separator ─────────────────────────────────────────────── */
+    .separator { height: 1px; background: var(--color-gray-200); margin: 16px 0; }
+    .separator-vertical { width: 1px; height: 100%; background: var(--color-gray-200); margin: 0 12px; }
+
+    /* ─── Tooltip ────────────────────────────────────────────────── */
+    .tooltip-wrapper { position: relative; display: inline-flex; }
+
+    .tooltip {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%; transform: translateX(-50%);
+      background: var(--color-gray-900);
+      color: white;
+      font-size: 11.5px;
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity var(--transition);
+      z-index: 200;
+    }
+
+    .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%; left: 50%; transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--color-gray-900);
+    }
+
+    .tooltip-wrapper:hover .tooltip { opacity: 1; }
+
+    /* ─── Table ──────────────────────────────────────────────────── */
+    .table-wrapper {
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+
+    thead { background: var(--color-gray-50); }
+    thead th {
+      padding: 10px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-gray-500);
+      border-bottom: 1px solid var(--color-gray-200);
+    }
+
+    tbody tr { border-bottom: 1px solid var(--color-gray-200); transition: background var(--transition); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--color-gray-50); }
+    tbody td { padding: 12px 16px; color: var(--color-gray-800); }
+
+    /* ─── Breadcrumb ─────────────────────────────────────────────── */
+    .breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+    .breadcrumb-item { color: var(--color-gray-500); }
+    .breadcrumb-item a { color: var(--color-primary); text-decoration: none; }
+    .breadcrumb-item a:hover { text-decoration: underline; }
+    .breadcrumb-sep { color: var(--color-gray-300); font-size: 12px; }
+    .breadcrumb-item:last-child { color: var(--color-gray-900); font-weight: 500; }
+
+    /* ─── Pagination ─────────────────────────────────────────────── */
+    .pagination { display: flex; align-items: center; gap: 4px; }
+
+    .page-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px;
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-md);
+      background: white;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-gray-700);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .page-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .page-btn.active { background: var(--color-primary); border-color: var(--color-primary); color: white; }
+    .page-btn svg { width: 13px; height: 13px; }
+
+    /* ─── Form Example ───────────────────────────────────────────── */
+    .form { display: flex; flex-direction: column; gap: 16px; max-width: 400px; width: 100%; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* ─── Color Swatches ─────────────────────────────────────────── */
+    .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+
+    .color-swatch {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--color-gray-200);
+    }
+
+    .swatch-color { height: 64px; }
+    .swatch-info  { padding: 8px 10px; background: white; }
+    .swatch-name  { font-size: 11.5px; font-weight: 600; color: var(--color-gray-800); }
+    .swatch-hex   { font-size: 10.5px; font-family: var(--font-mono); color: var(--color-gray-500); margin-top: 2px; }
+
+    /* ─── Type Scale ─────────────────────────────────────────────── */
+    .type-scale-item {
+      display: flex; align-items: baseline; gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--color-gray-100);
+    }
+
+    .type-scale-meta { min-width: 120px; }
+    .type-meta-label { font-size: 11px; font-weight: 600; color: var(--color-gray-400); font-family: var(--font-mono); }
+    .type-meta-size  { font-size: 11px; color: var(--color-gray-400); }
+
+    /* ─── Spacing Scale ──────────────────────────────────────────── */
+    .spacing-grid { display: flex; flex-direction: column; gap: 8px; }
+    .spacing-item { display: flex; align-items: center; gap: 12px; }
+    .spacing-bar  { height: 20px; background: var(--color-primary); border-radius: 3px; opacity: 0.8; }
+    .spacing-meta { font-size: 12px; font-family: var(--font-mono); color: var(--color-gray-500); min-width: 80px; }
+
+    /* ─── Icon Grid ─────────────────────────────────────────────── */
+    .icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; }
+    .icon-item {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      padding: 12px 8px;
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-md);
+      background: white;
+      transition: all var(--transition);
+      cursor: default;
+    }
+    .icon-item:hover { border-color: var(--color-primary); background: var(--color-primary-pale); }
+    .icon-item svg { width: 20px; height: 20px; color: var(--color-navy); }
+    .icon-item:hover svg { color: var(--color-primary); }
+    .icon-name { font-size: 9.5px; font-family: var(--font-mono); color: var(--color-gray-500); text-align: center; }
+
+    /* ─── Toast ─────────────────────────────────────────────────── */
+    .toast {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 14px 16px;
+      background: white;
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1), 0 1px 4px rgba(0,0,0,0.06);
+      max-width: 360px;
+      font-size: 13px;
+    }
+
+    .toast-icon { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; }
+    .toast-title { font-weight: 600; color: var(--color-gray-900); margin-bottom: 2px; }
+    .toast-desc  { font-size: 12px; color: var(--color-gray-500); }
+    .toast-close { margin-left: auto; color: var(--color-gray-400); cursor: pointer; }
+    .toast-close svg { width: 14px; height: 14px; }
+
+    .toast-success { border-left: 3px solid var(--color-success); }
+    .toast-warning { border-left: 3px solid var(--color-warning); }
+    .toast-error   { border-left: 3px solid var(--color-error); }
+    .toast-info    { border-left: 3px solid var(--color-primary); }
+
+    /* ─── Slider ─────────────────────────────────────────────────── */
+    .slider {
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      background: var(--color-gray-200);
+      border-radius: var(--radius-full);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 18px; height: 18px;
+      border-radius: var(--radius-full);
+      background: var(--color-primary);
+      border: 2px solid white;
+      box-shadow: 0 0 0 1px var(--color-primary), 0 1px 4px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: transform var(--transition);
+    }
+
+    .slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+    /* ─── Calendar ──────────────────────────────────────────────── */
+    .calendar {
+      width: 280px;
+      background: white;
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-lg);
+      padding: 12px;
+      font-size: 13px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .calendar-nav { border: none; background: none; cursor: pointer; color: var(--color-gray-500); padding: 4px; border-radius: var(--radius-sm); }
+    .calendar-nav:hover { background: var(--color-gray-100); color: var(--color-navy); }
+    .calendar-nav svg { width: 14px; height: 14px; }
+    .calendar-month { font-weight: 700; color: var(--color-navy); font-family: var(--font-heading); font-size: 14px; }
+
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .calendar-day-name { text-align: center; font-size: 10px; font-weight: 600; color: var(--color-gray-400); padding: 4px 0; letter-spacing: 0.05em; }
+    .calendar-day {
+      text-align: center; padding: 6px 0; border-radius: var(--radius-sm);
+      cursor: pointer; color: var(--color-gray-700); font-size: 12.5px;
+      transition: all var(--transition);
+    }
+    .calendar-day:hover { background: var(--color-primary-pale); color: var(--color-primary); }
+    .calendar-day.today { background: var(--color-navy); color: white; font-weight: 700; }
+    .calendar-day.selected { background: var(--color-primary); color: white; font-weight: 600; }
+    .calendar-day.other-month { color: var(--color-gray-300); }
+
+    /* ─── Command Palette ────────────────────────────────────────── */
+    .command-palette {
+      background: white;
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 16px 32px rgba(0,0,0,0.12);
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .command-input-wrapper {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--color-gray-200);
+    }
+
+    .command-input-wrapper svg { width: 16px; height: 16px; color: var(--color-gray-400); flex-shrink: 0; }
+
+    .command-input {
+      flex: 1;
+      border: none;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--color-gray-900);
+      outline: none;
+    }
+
+    .command-input::placeholder { color: var(--color-gray-400); }
+
+    .command-group { padding: 8px 0; }
+    .command-group-label {
+      padding: 4px 16px;
+      font-size: 10.5px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--color-gray-400);
+    }
+
+    .command-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 16px;
+      font-size: 13.5px;
+      color: var(--color-gray-700);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .command-item:hover, .command-item.selected {
+      background: var(--color-primary-pale);
+      color: var(--color-primary);
+    }
+
+    .command-item svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .command-shortcut { margin-left: auto; font-size: 10px; font-family: var(--font-mono); color: var(--color-gray-400); }
+
+    /* ─── Navigation ─────────────────────────────────────────────── */
+    .nav-bar {
+      display: flex; align-items: center;
+      background: white;
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-lg);
+      padding: 0 16px;
+      height: 52px;
+      gap: 4px;
+    }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 8px;
+      font-family: var(--font-heading); font-weight: 700;
+      font-size: 15px; color: var(--color-navy);
+      margin-right: 16px;
+    }
+
+    .nav-logo-dot { width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--color-primary); }
+
+    .nav-item {
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px; font-weight: 500;
+      color: var(--color-gray-600);
+      cursor: pointer;
+      transition: all var(--transition);
+      text-decoration: none;
+    }
+
+    .nav-item:hover { background: var(--color-gray-100); color: var(--color-gray-900); }
+    .nav-item.active { color: var(--color-primary); background: var(--color-primary-pale); }
+
+    .nav-spacer { flex: 1; }
+
+    /* ─── Hero Section ───────────────────────────────────────────── */
+    #hero {
+      background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+      color: white;
+      padding: 60px 40px;
+      margin-bottom: 0;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px;
+      background: rgba(238,91,0,0.2);
+      border: 1px solid rgba(238,91,0,0.35);
+      border-radius: var(--radius-full);
+      font-size: 11px; font-weight: 600;
+      color: var(--color-primary-light);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero-badge-dot {
+      width: 6px; height: 6px;
+      border-radius: var(--radius-full);
+      background: var(--color-primary-light);
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.8); }
+    }
+
+    .hero-title {
+      font-family: var(--font-heading);
+      font-size: 48px; font-weight: 800;
+      color: white; line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .hero-title-accent { color: var(--color-primary-light); }
+
+    .hero-subtitle {
+      font-size: 17px; color: rgba(255,255,255,0.65);
+      line-height: 1.6; max-width: 520px; margin-bottom: 28px;
+    }
+
+    .hero-meta { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .hero-stat { display: flex; align-items: center; gap: 6px; font-size: 13px; color: rgba(255,255,255,0.55); }
+    .hero-stat-num { font-family: var(--font-heading); font-weight: 700; font-size: 18px; color: white; }
+    .hero-stat-sep { color: rgba(255,255,255,0.2); }
+
+    /* ─── ECG Waveform Decoration ───────────────────────────────── */
+    .ecg-decoration {
+      position: absolute; right: 0; top: 0; bottom: 0; width: 40%;
+      pointer-events: none; overflow: hidden; opacity: 0.12;
+    }
+
+    /* ─── Back to Top ───────────────────────────────────────────── */
+    #back-to-top {
+      position: fixed; bottom: 24px; right: 24px;
+      width: 40px; height: 40px;
+      background: var(--color-primary);
+      color: white; border: none;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(238,91,0,0.35);
+      display: flex; align-items: center; justify-content: center;
+      transition: all var(--transition);
+      opacity: 0; transform: translateY(16px);
+      z-index: 200;
+    }
+
+    #back-to-top.visible { opacity: 1; transform: translateY(0); }
+    #back-to-top:hover { background: #d44e00; transform: translateY(-2px); }
+    #back-to-top svg { width: 16px; height: 16px; }
+
+    /* ─── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      :root { --sidebar-width: 0; }
+      .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+      .sidebar.open { transform: translateX(0); width: 260px; }
+      .main { margin-left: 0; }
+      .header { padding: 0 20px; }
+      .content { padding: 32px 20px 60px; }
+      #hero { padding: 40px 20px; }
+      .hero-title { font-size: 32px; }
+      .form-row { grid-template-columns: 1fr; }
+      .color-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+    }
+
+    /* ─── Utilities ─────────────────────────────────────────────── */
+    .flex { display: flex; }
+    .flex-wrap { flex-wrap: wrap; }
+    .items-center { align-items: center; }
+    .gap-2 { gap: 8px; }
+    .gap-3 { gap: 12px; }
+    .gap-4 { gap: 16px; }
+    .mt-2 { margin-top: 8px; }
+    .mt-3 { margin-top: 12px; }
+    .mt-4 { margin-top: 16px; }
+    .text-sm { font-size: 13px; }
+    .text-muted { color: var(--color-gray-500); }
+    .font-mono { font-family: var(--font-mono); }
+    .w-full { width: 100%; }
+    .w-280 { width: 280px; }
+    .relative { position: relative; }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <a href="#hero" class="sidebar-logo">
+      <div class="sidebar-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+      </div>
+      <div class="sidebar-brand">
+        <span class="sidebar-brand-sub">Cardioline</span>
+        <span class="sidebar-brand-name">Beat DS</span>
+        <span class="sidebar-version">v1.0.0</span>
+      </div>
+    </a>
+  </div>
+
+  <nav class="sidebar-nav" id="sidebar-nav">
+    <div class="nav-section">
+      <div class="nav-section-title">Foundation</div>
+      <a class="nav-link active" onclick="scrollTo('colors')">
+        <i data-lucide="palette"></i> Colors
+      </a>
+      <a class="nav-link" onclick="scrollTo('typography')">
+        <i data-lucide="type"></i> Typography
+      </a>
+      <a class="nav-link" onclick="scrollTo('spacing')">
+        <i data-lucide="move-horizontal"></i> Spacing
+      </a>
+      <a class="nav-link" onclick="scrollTo('icons')">
+        <i data-lucide="star"></i> Icons
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">Components</div>
+      <a class="nav-link" onclick="scrollTo('buttons')">
+        <i data-lucide="mouse-pointer-click"></i> Button
+      </a>
+      <a class="nav-link" onclick="scrollTo('inputs')">
+        <i data-lucide="text-cursor-input"></i> Input
+      </a>
+      <a class="nav-link" onclick="scrollTo('textarea')">
+        <i data-lucide="align-left"></i> Textarea
+      </a>
+      <a class="nav-link" onclick="scrollTo('select')">
+        <i data-lucide="chevrons-up-down"></i> Select
+      </a>
+      <a class="nav-link" onclick="scrollTo('checkbox')">
+        <i data-lucide="square-check"></i> Checkbox
+      </a>
+      <a class="nav-link" onclick="scrollTo('radio')">
+        <i data-lucide="circle-dot"></i> Radio
+      </a>
+      <a class="nav-link" onclick="scrollTo('switch')">
+        <i data-lucide="toggle-right"></i> Switch
+      </a>
+      <a class="nav-link" onclick="scrollTo('slider')">
+        <i data-lucide="sliders-horizontal"></i> Slider
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">Display</div>
+      <a class="nav-link" onclick="scrollTo('cards')">
+        <i data-lucide="square"></i> Card
+      </a>
+      <a class="nav-link" onclick="scrollTo('badges')">
+        <i data-lucide="tag"></i> Badge
+      </a>
+      <a class="nav-link" onclick="scrollTo('avatars')">
+        <i data-lucide="user-circle-2"></i> Avatar
+      </a>
+      <a class="nav-link" onclick="scrollTo('alerts')">
+        <i data-lucide="alert-circle"></i> Alert
+      </a>
+      <a class="nav-link" onclick="scrollTo('toast')">
+        <i data-lucide="bell"></i> Toast
+      </a>
+      <a class="nav-link" onclick="scrollTo('progress')">
+        <i data-lucide="bar-chart-2"></i> Progress
+      </a>
+      <a class="nav-link" onclick="scrollTo('skeleton')">
+        <i data-lucide="loader-2"></i> Skeleton
+      </a>
+      <a class="nav-link" onclick="scrollTo('separator')">
+        <i data-lucide="minus"></i> Separator
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">Navigation</div>
+      <a class="nav-link" onclick="scrollTo('tabs')">
+        <i data-lucide="layout-panel-top"></i> Tabs
+      </a>
+      <a class="nav-link" onclick="scrollTo('accordion')">
+        <i data-lucide="chevrons-down-up"></i> Accordion
+      </a>
+      <a class="nav-link" onclick="scrollTo('breadcrumb')">
+        <i data-lucide="git-branch"></i> Breadcrumb
+      </a>
+      <a class="nav-link" onclick="scrollTo('pagination')">
+        <i data-lucide="more-horizontal"></i> Pagination
+      </a>
+      <a class="nav-link" onclick="scrollTo('navbar')">
+        <i data-lucide="navigation"></i> Navigation Bar
+      </a>
+      <a class="nav-link" onclick="scrollTo('tooltip')">
+        <i data-lucide="message-square"></i> Tooltip
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">Complex</div>
+      <a class="nav-link" onclick="scrollTo('table')">
+        <i data-lucide="table"></i> Table
+      </a>
+      <a class="nav-link" onclick="scrollTo('form')">
+        <i data-lucide="file-text"></i> Form
+      </a>
+      <a class="nav-link" onclick="scrollTo('calendar')">
+        <i data-lucide="calendar"></i> Calendar
+      </a>
+      <a class="nav-link" onclick="scrollTo('command')">
+        <i data-lucide="terminal"></i> Command
+      </a>
+    </div>
+  </nav>
+</aside>
+
+<!-- Main Content -->
+<div class="main">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-breadcrumb">
+      <span>Beat Design System</span>
+      <span class="sep">/</span>
+      <span id="current-section">Overview</span>
+    </div>
+    <div class="header-actions">
+      <button class="dark-toggle" onclick="toggleDark()" title="Toggle dark mode">
+        <i data-lucide="moon" id="dark-icon"></i>
+        <span id="dark-label">Dark</span>
+      </button>
+      <a class="github-link" href="https://github.com/gabrielvaz/cardioline-design" target="_blank" rel="noopener">
+        <i data-lucide="github"></i>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Hero -->
+    <section class="section" id="hero" style="margin-bottom: 56px; background: linear-gradient(135deg, #071046 0%, #1b2576 60%, #071046 100%); border-radius: 16px; padding: 52px 48px; position: relative; overflow: hidden;">
+      <div style="position: absolute; right: -40px; top: -40px; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, rgba(238,91,0,0.15) 0%, transparent 70%);"></div>
+      <div style="position: absolute; right: 40px; bottom: -20px; opacity: 0.06;">
+        <svg width="200" height="80" viewBox="0 0 400 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polyline points="0,40 60,40 80,5 90,75 100,20 110,60 120,40 200,40 220,40 240,5 250,75 260,20 270,60 280,40 400,40" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Design System v1.0
+      </div>
+
+      <h1 class="hero-title">
+        Beat <span class="hero-title-accent">Design System</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Official Cardioline component library built on shadcn/ui. Colors and typography extracted directly from <strong style="color: rgba(255,255,255,0.85);">cardioline.com</strong> to ensure brand consistency across all digital products.
+      </p>
+
+      <div class="hero-meta">
+        <div class="hero-stat">
+          <span class="hero-stat-num">33</span>
+          <span>Components</span>
+        </div>
+        <span class="hero-stat-sep">·</span>
+        <div class="hero-stat">
+          <span class="hero-stat-num">2</span>
+          <span>Themes</span>
+        </div>
+        <span class="hero-stat-sep">·</span>
+        <div class="hero-stat">
+          <span class="hero-stat-num">100%</span>
+          <span>shadcn/ui compatible</span>
+        </div>
+        <span class="hero-stat-sep">·</span>
+        <div class="hero-stat" style="color: #ee5b00;">
+          <i data-lucide="zap" style="width:14px;height:14px;stroke:#ee5b00;"></i>
+          <span style="color:#ff9d6a;">Primary: #ee5b00</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLORS -->
+    <section class="section" id="colors">
+      <div class="section-header">
+        <div class="section-eyebrow">Foundation</div>
+        <h2 class="section-title">Colors</h2>
+        <p class="section-desc">Brand color palette extracted directly from cardioline.com CSS variables (<code style="font-family: var(--font-mono); font-size: 12px; background: #f1f4fe; padding: 2px 6px; border-radius: 4px;">--awb-color5</code>, <code style="font-family: var(--font-mono); font-size: 12px; background: #f1f4fe; padding: 2px 6px; border-radius: 4px;">--awb-color6</code>, etc.).</p>
+      </div>
+
+      <h3 style="font-family: var(--font-heading); font-size: 14px; font-weight: 700; color: var(--color-navy); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px;">Primary Brand Palette</h3>
+      <div class="color-grid" style="margin-bottom: 24px;">
+        <div class="color-swatch">
+          <div class="swatch-color" style="background: #ee5b00;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Primary Orange</div>
+            <div class="swatch-hex">#ee5b00</div>
+            <div class="swatch-hex" style="color: #65bc7b;">awb-color5</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background: #ff7d38;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Primary Light</div>
+            <div class="swatch-hex">#ff7d38</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background: #fff5ee;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Primary Pale</div>
+            <div class="swatch-hex">#fff5ee</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background: #071046;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Deep Navy</div>
+            <div class="swatch-hex">#071046</div>
+            <div class="swatch-hex" style="color: #65bc7b;">awb-color6</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background: #1b2576;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Navy Light</div>
+            <div class="swatch-hex">#1b2576</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background: #f1f4fe;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Navy Pale</div>
+            <div class="swatch-hex">#f1f4fe</div>
+            <div class="swatch-hex" style="color: #65bc7b;">awb-color2</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background: #ffe0e0;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Coral</div>
+            <div class="swatch-hex">#ffe0e0</div>
+            <div class="swatch-hex" style="color: #65bc7b;">awb-color3</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background: #ab8ed3;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Lavender</div>
+            <div class="swatch-hex">#ab8ed3</div>
+            <div class="swatch-hex" style="color: #65bc7b;">awb-color7</div>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="font-family: var(--font-heading); font-size: 11px; font-weight: 700; color: var(--color-navy); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em;">Semantic Colors</h3>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="swatch-color" style="background: #65bc7b;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Success</div>
+            <div class="swatch-hex">#65bc7b</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background: #fcb900;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Warning</div>
+            <div class="swatch-hex">#fcb900</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background: #e0284f;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Error</div>
+            <div class="swatch-hex">#e0284f</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background: #333333;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Body Text</div>
+            <div class="swatch-hex">#333333</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background: #747474;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Muted</div>
+            <div class="swatch-hex">#747474</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background: #e9eaee; border: 1px solid #d3d3d3;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Border</div>
+            <div class="swatch-hex">#e9eaee</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TYPOGRAPHY -->
+    <section class="section" id="typography">
+      <div class="section-header">
+        <div class="section-eyebrow">Foundation</div>
+        <h2 class="section-title">Typography</h2>
+        <p class="section-desc">Fonts used on cardioline.com: <strong>Plus Jakarta Sans</strong> for headings and <strong>Inter</strong> for body/UI text.</p>
+      </div>
+
+      <div class="component-card">
+        <div class="component-preview column" style="gap: 0;">
+          <div class="type-scale-item">
+            <div class="type-scale-meta">
+              <div class="type-meta-label">Display / 48px</div>
+              <div class="type-meta-size">Plus Jakarta Sans 800</div>
+            </div>
+            <div style="font-family: var(--font-heading); font-size: 48px; font-weight: 800; color: var(--color-navy); line-height: 1.1;">Cardiac Care</div>
+          </div>
+          <div class="type-scale-item">
+            <div class="type-scale-meta">
+              <div class="type-meta-label">H1 / 36px</div>
+              <div class="type-meta-size">Plus Jakarta Sans 700</div>
+            </div>
+            <div style="font-family: var(--font-heading); font-size: 36px; font-weight: 700; color: var(--color-navy);">Diagnostic Platform</div>
+          </div>
+          <div class="type-scale-item">
+            <div class="type-scale-meta">
+              <div class="type-meta-label">H2 / 28px</div>
+              <div class="type-meta-size">Plus Jakarta Sans 700</div>
+            </div>
+            <div style="font-family: var(--font-heading); font-size: 28px; font-weight: 700; color: var(--color-navy);">ECG Analysis Report</div>
+          </div>
+          <div class="type-scale-item">
+            <div class="type-scale-meta">
+              <div class="type-meta-label">H3 / 22px</div>
+              <div class="type-meta-size">Plus Jakarta Sans 600</div>
+            </div>
+            <div style="font-family: var(--font-heading); font-size: 22px; font-weight: 600; color: var(--color-navy);">Patient Overview</div>
+          </div>
+          <div class="type-scale-item">
+            <div class="type-scale-meta">
+              <div class="type-meta-label">Body / 16px</div>
+              <div class="type-meta-size">Inter 400</div>
+            </div>
+            <div style="font-size: 16px; color: var(--color-gray-900); max-width: 480px; line-height: 1.6;">Advanced cardiac diagnostics platform for clinicians. Powered by Cardioline technology with over 60 years of expertise.</div>
+          </div>
+          <div class="type-scale-item">
+            <div class="type-scale-meta">
+              <div class="type-meta-label">Small / 13px</div>
+              <div class="type-meta-size">Inter 400</div>
+            </div>
+            <div style="font-size: 13px; color: var(--color-gray-500);">Cardioline S.P.A. — Via Linz, 151 38121 Trento, Italy</div>
+          </div>
+          <div class="type-scale-item" style="border-bottom: none;">
+            <div class="type-scale-meta">
+              <div class="type-meta-label">Mono / 13px</div>
+              <div class="type-meta-size">JetBrains Mono</div>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 13px; color: var(--color-primary);">HR: 72bpm · QRS: 94ms · QTc: 412ms</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPACING -->
+    <section class="section" id="spacing">
+      <div class="section-header">
+        <div class="section-eyebrow">Foundation</div>
+        <h2 class="section-title">Spacing</h2>
+        <p class="section-desc">4pt base spacing system. All values are multiples of 4px for visual rhythm and consistency.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview column" style="gap: 8px; padding: 32px;">
+          <div class="spacing-grid" style="width: 100%;">
+            <div class="spacing-item"><span class="spacing-meta">sp-1 / 4px</span><div class="spacing-bar" style="width: 4px;"></div></div>
+            <div class="spacing-item"><span class="spacing-meta">sp-2 / 8px</span><div class="spacing-bar" style="width: 8px;"></div></div>
+            <div class="spacing-item"><span class="spacing-meta">sp-3 / 12px</span><div class="spacing-bar" style="width: 12px;"></div></div>
+            <div class="spacing-item"><span class="spacing-meta">sp-4 / 16px</span><div class="spacing-bar" style="width: 16px;"></div></div>
+            <div class="spacing-item"><span class="spacing-meta">sp-5 / 20px</span><div class="spacing-bar" style="width: 20px;"></div></div>
+            <div class="spacing-item"><span class="spacing-meta">sp-6 / 24px</span><div class="spacing-bar" style="width: 24px;"></div></div>
+            <div class="spacing-item"><span class="spacing-meta">sp-8 / 32px</span><div class="spacing-bar" style="width: 32px;"></div></div>
+            <div class="spacing-item"><span class="spacing-meta">sp-10 / 40px</span><div class="spacing-bar" style="width: 40px;"></div></div>
+            <div class="spacing-item"><span class="spacing-meta">sp-12 / 48px</span><div class="spacing-bar" style="width: 48px;"></div></div>
+            <div class="spacing-item"><span class="spacing-meta">sp-16 / 64px</span><div class="spacing-bar" style="width: 64px;"></div></div>
+            <div class="spacing-item"><span class="spacing-meta">sp-20 / 80px</span><div class="spacing-bar" style="width: 80px;"></div></div>
+            <div class="spacing-item"><span class="spacing-meta">sp-24 / 96px</span><div class="spacing-bar" style="width: 96px;"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUTTONS -->
+    <section class="section" id="buttons">
+      <div class="section-header">
+        <div class="section-eyebrow">Components</div>
+        <h2 class="section-title">Button</h2>
+        <p class="section-desc">Interactive trigger components for actions. Available in multiple variants and sizes to establish visual hierarchy.</p>
+      </div>
+
+      <div class="component-card">
+        <div class="component-preview">
+          <button class="btn btn-primary"><i data-lucide="activity"></i> Primary</button>
+          <button class="btn btn-navy">Navy</button>
+          <button class="btn btn-outline">Outline</button>
+          <button class="btn btn-secondary">Secondary</button>
+          <button class="btn btn-ghost">Ghost</button>
+          <button class="btn btn-destructive"><i data-lucide="trash-2"></i> Destructive</button>
+        </div>
+        <div class="component-code">
+          <pre><code class="language-tsx">import { Button } from '@cardioline/ui';
+
+&lt;Button variant="default"&gt;Primary&lt;/Button&gt;
+&lt;Button variant="outline"&gt;Outline&lt;/Button&gt;
+&lt;Button variant="ghost"&gt;Ghost&lt;/Button&gt;
+&lt;Button variant="secondary"&gt;Secondary&lt;/Button&gt;
+&lt;Button variant="destructive"&gt;Destructive&lt;/Button&gt;</code></pre>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px; font-size: 13px; font-weight: 600; color: var(--color-gray-700);">Sizes</div>
+      <div class="component-card">
+        <div class="component-preview" style="align-items: center;">
+          <button class="btn btn-primary btn-sm">Small</button>
+          <button class="btn btn-primary">Default</button>
+          <button class="btn btn-primary btn-lg">Large</button>
+          <button class="btn btn-primary btn-xl">Extra Large</button>
+          <button class="btn btn-outline btn-icon"><i data-lucide="settings"></i></button>
+          <button class="btn btn-primary" disabled>Disabled</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- INPUTS -->
+    <section class="section" id="inputs">
+      <div class="section-header">
+        <div class="section-eyebrow">Components</div>
+        <h2 class="section-title">Input</h2>
+        <p class="section-desc">Text input fields with consistent styling, states, and validation feedback.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview" style="flex-wrap: wrap; gap: 20px; align-items: flex-start;">
+          <div class="input-group">
+            <label class="input-label" for="demo-email">Email address</label>
+            <input class="input" id="demo-email" type="email" placeholder="clinician@hospital.com" />
+            <span class="input-hint">Enter your institutional email</span>
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="demo-pass">Password</label>
+            <input class="input" id="demo-pass" type="password" placeholder="••••••••" />
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="demo-dis">Disabled</label>
+            <input class="input" id="demo-dis" type="text" placeholder="Not available" disabled />
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="demo-err">Error state</label>
+            <input class="input error" id="demo-err" type="text" value="Invalid input" />
+            <span class="input-error">This field is required</span>
+          </div>
+        </div>
+        <div class="component-code">
+          <pre><code class="language-tsx">import { Input, Label } from '@cardioline/ui';
+
+&lt;div className="space-y-1.5"&gt;
+  &lt;Label htmlFor="email"&gt;Email&lt;/Label&gt;
+  &lt;Input id="email" type="email" placeholder="clinician@hospital.com" /&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEXTAREA -->
+    <section class="section" id="textarea">
+      <div class="section-header">
+        <div class="section-eyebrow">Components</div>
+        <h2 class="section-title">Textarea</h2>
+        <p class="section-desc">Multi-line text input for longer form content like clinical notes and observations.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview column">
+          <div class="input-group" style="width: 400px;">
+            <label class="input-label">Clinical notes</label>
+            <textarea class="input" rows="4" placeholder="Enter clinical observations, findings, and recommendations..."></textarea>
+            <span class="input-hint">Markdown formatting is supported</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SELECT -->
+    <section class="section" id="select">
+      <div class="section-header">
+        <div class="section-eyebrow">Components</div>
+        <h2 class="section-title">Select</h2>
+        <p class="section-desc">Dropdown selection component for choosing from a predefined set of options.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview" style="gap: 16px; flex-wrap: wrap;">
+          <div class="input-group" style="width: auto;">
+            <label class="input-label">Exam type</label>
+            <select class="select">
+              <option>Resting ECG</option>
+              <option>Stress Test ECG</option>
+              <option>Holter 24h</option>
+              <option>Holter 7 days</option>
+              <option>Blood Pressure (ABPM)</option>
+            </select>
+          </div>
+          <div class="input-group" style="width: auto;">
+            <label class="input-label">Lead configuration</label>
+            <select class="select">
+              <option>12 leads</option>
+              <option>15 leads</option>
+              <option>3 leads</option>
+              <option>Frank leads</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHECKBOX -->
+    <section class="section" id="checkbox">
+      <div class="section-header">
+        <div class="section-eyebrow">Components</div>
+        <h2 class="section-title">Checkbox</h2>
+        <p class="section-desc">Boolean selection control for multi-choice scenarios and settings toggles.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview column" style="gap: 12px;">
+          <label class="checkbox-wrapper"><input class="checkbox" type="checkbox" checked /> <span class="checkbox-label">Auto-generate ECG report</span></label>
+          <label class="checkbox-wrapper"><input class="checkbox" type="checkbox" /> <span class="checkbox-label">Enable telemedicine sharing</span></label>
+          <label class="checkbox-wrapper"><input class="checkbox" type="checkbox" checked /> <span class="checkbox-label">Send notification to physician</span></label>
+          <label class="checkbox-wrapper"><input class="checkbox" type="checkbox" disabled /> <span class="checkbox-label" style="opacity: 0.5;">AI analysis (unavailable)</span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- RADIO -->
+    <section class="section" id="radio">
+      <div class="section-header">
+        <div class="section-eyebrow">Components</div>
+        <h2 class="section-title">Radio Group</h2>
+        <p class="section-desc">Mutually exclusive selection within a group of options.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview column" style="gap: 10px;">
+          <label class="radio-wrapper"><input class="radio" type="radio" name="report" checked /> <span class="checkbox-label">PDF report</span></label>
+          <label class="radio-wrapper"><input class="radio" type="radio" name="report" /> <span class="checkbox-label">DICOM format</span></label>
+          <label class="radio-wrapper"><input class="radio" type="radio" name="report" /> <span class="checkbox-label">XML export</span></label>
+          <label class="radio-wrapper"><input class="radio" type="radio" name="report" disabled /> <span class="checkbox-label" style="opacity: 0.5;">HL7 (not configured)</span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- SWITCH -->
+    <section class="section" id="switch">
+      <div class="section-header">
+        <div class="section-eyebrow">Components</div>
+        <h2 class="section-title">Switch</h2>
+        <p class="section-desc">Toggle between two binary states. Used for immediate setting changes without form submission.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview column" style="gap: 14px;">
+          <label class="switch-wrapper"><input class="switch" type="checkbox" checked /> <span class="switch-label">Real-time monitoring</span></label>
+          <label class="switch-wrapper"><input class="switch" type="checkbox" /> <span class="switch-label">Auto-save reports</span></label>
+          <label class="switch-wrapper"><input class="switch" type="checkbox" checked /> <span class="switch-label">Dark mode ECG display</span></label>
+          <label class="switch-wrapper"><input class="switch" type="checkbox" disabled /> <span class="switch-label" style="opacity: 0.5;">AI interpretation (beta)</span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDER -->
+    <section class="section" id="slider">
+      <div class="section-header">
+        <div class="section-eyebrow">Components</div>
+        <h2 class="section-title">Slider</h2>
+        <p class="section-desc">Range input for selecting a value within a defined min/max. Useful for ECG gain and filter controls.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview column" style="gap: 20px;">
+          <div class="input-group w-full" style="width: 360px;">
+            <label class="input-label">ECG Signal Gain</label>
+            <input class="slider" type="range" min="1" max="10" value="5" />
+            <div class="flex" style="justify-content: space-between; font-size: 11px; color: var(--color-gray-400); margin-top: 4px;"><span>1x</span><span>10x</span></div>
+          </div>
+          <div class="input-group w-full" style="width: 360px;">
+            <label class="input-label">Sweep Speed (mm/s)</label>
+            <input class="slider" type="range" min="10" max="100" value="25" />
+            <div class="flex" style="justify-content: space-between; font-size: 11px; color: var(--color-gray-400); margin-top: 4px;"><span>10</span><span>100</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARDS -->
+    <section class="section" id="cards">
+      <div class="section-header">
+        <div class="section-eyebrow">Display</div>
+        <h2 class="section-title">Card</h2>
+        <p class="section-desc">Surface container for grouping related content. The primary building block for dashboards and data displays.</p>
+      </div>
+      <div class="component-preview" style="padding: 0; gap: 16px; flex-wrap: wrap; background: transparent; margin-bottom: 24px; border: none; display: flex;">
+        <div class="card" style="width: 220px;">
+          <div class="card-header">
+            <div class="card-title">Heart Rate</div>
+            <div class="card-description">Average over 24h monitoring</div>
+          </div>
+          <div class="card-body">
+            <div style="font-family: var(--font-mono); font-size: 36px; font-weight: 700; color: var(--color-primary);">72 <span style="font-size: 16px; color: var(--color-gray-400);">bpm</span></div>
+          </div>
+          <div class="card-footer">
+            <span class="badge badge-success"><span class="badge-dot" style="background: #65bc7b;"></span> Normal</span>
+            <span style="font-size: 11px; color: var(--color-gray-400);">Last update: 2min</span>
+          </div>
+        </div>
+
+        <div class="card card-orange-top" style="width: 220px;">
+          <div class="card-header">
+            <div class="card-title">QRS Duration</div>
+            <div class="card-description">Latest measurement</div>
+          </div>
+          <div class="card-body">
+            <div style="font-family: var(--font-mono); font-size: 36px; font-weight: 700; color: var(--color-navy);">94 <span style="font-size: 16px; color: var(--color-gray-400);">ms</span></div>
+          </div>
+          <div class="card-footer">
+            <span class="badge badge-navy">Standard</span>
+          </div>
+        </div>
+
+        <div class="card card-navy-bg" style="width: 220px;">
+          <div class="card-header">
+            <div class="card-title">Vireo Arc</div>
+            <div class="card-description">ECG diagnostic platform</div>
+          </div>
+          <div class="card-body">
+            <p style="font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5;">Advanced 12-lead analysis with AI interpretation.</p>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary btn-sm">Open App</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BADGES -->
+    <section class="section" id="badges">
+      <div class="section-header">
+        <div class="section-eyebrow">Display</div>
+        <h2 class="section-title">Badge</h2>
+        <p class="section-desc">Compact status indicators and labels for categorizing content or showing state.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview">
+          <span class="badge badge-default">Primary</span>
+          <span class="badge badge-navy">Navy</span>
+          <span class="badge badge-outline">Outline</span>
+          <span class="badge badge-success"><span class="badge-dot" style="background:#16a34a;"></span> Normal Sinus</span>
+          <span class="badge badge-warning"><span class="badge-dot" style="background:#d97706;"></span> Review Required</span>
+          <span class="badge badge-destructive"><span class="badge-dot" style="background:#e0284f;"></span> Alert</span>
+          <span class="badge badge-lavender">AI Analyzed</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- AVATARS -->
+    <section class="section" id="avatars">
+      <div class="section-header">
+        <div class="section-eyebrow">Display</div>
+        <h2 class="section-title">Avatar</h2>
+        <p class="section-desc">User representation with fallback initials. Supports group stacking for team views.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview" style="gap: 16px; flex-wrap: wrap; align-items: flex-end;">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+            <div class="avatar avatar-xl avatar-primary">MC</div>
+            <span class="text-sm text-muted">XL</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+            <div class="avatar avatar-lg avatar-navy">JR</div>
+            <span class="text-sm text-muted">LG</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+            <div class="avatar avatar-md avatar-lavender">AS</div>
+            <span class="text-sm text-muted">MD</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+            <div class="avatar avatar-sm avatar-success">PK</div>
+            <span class="text-sm text-muted">SM</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+            <div class="avatar-group" style="flex-direction: row; padding-left: 8px;">
+              <div class="avatar avatar-md avatar-primary" style="margin-left: -8px;">MC</div>
+              <div class="avatar avatar-md avatar-navy" style="margin-left: -8px;">JR</div>
+              <div class="avatar avatar-md avatar-lavender" style="margin-left: -8px;">AS</div>
+              <div class="avatar avatar-md" style="margin-left: -8px; background: var(--color-gray-200); color: var(--color-gray-600); font-size: 11px; font-weight: 700;">+4</div>
+            </div>
+            <span class="text-sm text-muted">Group</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALERTS -->
+    <section class="section" id="alerts">
+      <div class="section-header">
+        <div class="section-eyebrow">Display</div>
+        <h2 class="section-title">Alert</h2>
+        <p class="section-desc">Contextual feedback messages for user actions or system state changes.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview column" style="gap: 12px;">
+          <div class="alert alert-default">
+            <i data-lucide="info"></i>
+            <div><div class="alert-title">Exam Scheduled</div><div class="alert-desc">ECG recording will begin in 5 minutes. Please ensure patient is resting.</div></div>
+          </div>
+          <div class="alert alert-success">
+            <i data-lucide="check-circle-2"></i>
+            <div><div class="alert-title">Report Generated</div><div class="alert-desc">ECG report has been saved and sent to the cardiologist.</div></div>
+          </div>
+          <div class="alert alert-warning">
+            <i data-lucide="alert-triangle"></i>
+            <div><div class="alert-title">Signal Quality Low</div><div class="alert-desc">Lead V3 signal is noisy. Check electrode placement before proceeding.</div></div>
+          </div>
+          <div class="alert alert-destructive">
+            <i data-lucide="alert-octagon"></i>
+            <div><div class="alert-title">Critical: ST Elevation</div><div class="alert-desc">Significant ST elevation detected in leads II, III, aVF. Immediate medical review required.</div></div>
+          </div>
+          <div class="alert alert-info">
+            <i data-lucide="zap"></i>
+            <div><div class="alert-title">AI Analysis Complete</div><div class="alert-desc">Vireo Arc AI has flagged 2 findings for physician review.</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOAST -->
+    <section class="section" id="toast">
+      <div class="section-header">
+        <div class="section-eyebrow">Display</div>
+        <h2 class="section-title">Toast</h2>
+        <p class="section-desc">Transient notification messages. Auto-dismiss after 3–5 seconds. Non-blocking.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview column" style="gap: 10px; align-items: flex-start;">
+          <div class="toast toast-info">
+            <i data-lucide="activity" class="toast-icon" style="color: var(--color-primary);"></i>
+            <div><div class="toast-title">ECG Started</div><div class="toast-desc">Recording in progress...</div></div>
+            <div class="toast-close"><i data-lucide="x"></i></div>
+          </div>
+          <div class="toast toast-success">
+            <i data-lucide="check-circle" class="toast-icon" style="color: #16a34a;"></i>
+            <div><div class="toast-title">Report Saved</div><div class="toast-desc">ECG report exported successfully.</div></div>
+            <div class="toast-close"><i data-lucide="x"></i></div>
+          </div>
+          <div class="toast toast-warning">
+            <i data-lucide="alert-triangle" class="toast-icon" style="color: #d97706;"></i>
+            <div><div class="toast-title">Battery Low</div><div class="toast-desc">Device battery at 15%. Connect charger.</div></div>
+            <div class="toast-close"><i data-lucide="x"></i></div>
+          </div>
+          <div class="toast toast-error">
+            <i data-lucide="x-circle" class="toast-icon" style="color: var(--color-error);"></i>
+            <div><div class="toast-title">Connection Lost</div><div class="toast-desc">Unable to reach ECG server. Retrying...</div></div>
+            <div class="toast-close"><i data-lucide="x"></i></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROGRESS -->
+    <section class="section" id="progress">
+      <div class="section-header">
+        <div class="section-eyebrow">Display</div>
+        <h2 class="section-title">Progress</h2>
+        <p class="section-desc">Visual indicator for task completion, loading states, or process tracking.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview column" style="gap: 20px;">
+          <div class="input-group w-full" style="width: 100%;">
+            <label class="input-label">Recording progress — 72%</label>
+            <div class="progress-bar"><div class="progress-fill" style="width: 72%;"></div></div>
+          </div>
+          <div class="input-group w-full" style="width: 100%;">
+            <label class="input-label">Upload complete — 100%</label>
+            <div class="progress-bar"><div class="progress-fill success" style="width: 100%;"></div></div>
+          </div>
+          <div class="input-group w-full" style="width: 100%;">
+            <label class="input-label">Analysis in progress — 38%</label>
+            <div class="progress-bar"><div class="progress-fill navy" style="width: 38%;"></div></div>
+          </div>
+          <div class="input-group w-full" style="width: 100%;">
+            <label class="input-label">Striped — 55%</label>
+            <div class="progress-bar"><div class="progress-fill striped" style="width: 55%;"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKELETON -->
+    <section class="section" id="skeleton">
+      <div class="section-header">
+        <div class="section-eyebrow">Display</div>
+        <h2 class="section-title">Skeleton</h2>
+        <p class="section-desc">Loading placeholder that mimics the shape of content while data is being fetched.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview column" style="gap: 12px;">
+          <div class="flex items-center gap-3" style="width: 100%;">
+            <div class="skeleton" style="width: 44px; height: 44px; border-radius: 50%;"></div>
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+              <div class="skeleton" style="width: 180px; height: 14px;"></div>
+              <div class="skeleton" style="width: 120px; height: 12px;"></div>
+            </div>
+          </div>
+          <div class="skeleton" style="width: 100%; height: 120px; border-radius: 10px;"></div>
+          <div style="display: flex; gap: 8px;">
+            <div class="skeleton" style="width: 80px; height: 32px; border-radius: 8px;"></div>
+            <div class="skeleton" style="width: 80px; height: 32px; border-radius: 8px;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEPARATOR -->
+    <section class="section" id="separator">
+      <div class="section-header">
+        <div class="section-eyebrow">Display</div>
+        <h2 class="section-title">Separator</h2>
+        <p class="section-desc">Thin visual divider for separating content groups and sections.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview column" style="width: 100%;">
+          <p style="font-size: 14px; color: var(--color-gray-700);">Patient information</p>
+          <div class="separator"></div>
+          <p style="font-size: 14px; color: var(--color-gray-700);">ECG Findings</p>
+          <div class="separator"></div>
+          <p style="font-size: 14px; color: var(--color-gray-700);">Physician signature</p>
+          <div style="display: flex; align-items: center; margin-top: 8px;">
+            <span style="font-size: 13px; color: var(--color-gray-600);">Horizontal</span>
+            <div class="separator-vertical" style="height: 20px;"></div>
+            <span style="font-size: 13px; color: var(--color-gray-600);">Vertical</span>
+            <div class="separator-vertical" style="height: 20px;"></div>
+            <span style="font-size: 13px; color: var(--color-gray-600);">Separator</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TABS -->
+    <section class="section" id="tabs">
+      <div class="section-header">
+        <div class="section-eyebrow">Navigation</div>
+        <h2 class="section-title">Tabs</h2>
+        <p class="section-desc">Switch between different views or sections within the same page context.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview column" style="align-items: flex-start; gap: 0;">
+          <div class="tabs">
+            <div class="tabs-list">
+              <button class="tab-trigger active" onclick="switchTab(this, 'overview')">Overview</button>
+              <button class="tab-trigger" onclick="switchTab(this, 'waveform')">Waveform</button>
+              <button class="tab-trigger" onclick="switchTab(this, 'intervals')">Intervals</button>
+              <button class="tab-trigger" onclick="switchTab(this, 'report')">Report</button>
+            </div>
+            <div class="tab-content active" id="tab-overview">
+              <p>Patient: John Smith · DOB: 1968-03-14 · HR: 72 bpm · Rhythm: Normal Sinus</p>
+            </div>
+            <div class="tab-content" id="tab-waveform">
+              <p>12-lead waveform display with gain control (10mm/mV) and 25mm/s sweep speed.</p>
+            </div>
+            <div class="tab-content" id="tab-intervals">
+              <p>PR: 168ms · QRS: 94ms · QT: 398ms · QTc: 412ms · QRS Axis: +45°</p>
+            </div>
+            <div class="tab-content" id="tab-report">
+              <p>Normal ECG. No ST changes. No conduction abnormalities. Sinus rhythm.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACCORDION -->
+    <section class="section" id="accordion">
+      <div class="section-header">
+        <div class="section-eyebrow">Navigation</div>
+        <h2 class="section-title">Accordion</h2>
+        <p class="section-desc">Collapsible content sections for progressive disclosure of information.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview column" style="padding: 0;">
+          <div class="accordion" style="width: 100%;">
+            <div class="accordion-item">
+              <button class="accordion-trigger open" onclick="toggleAccordion(this)">
+                What is the QRS complex?
+                <i data-lucide="chevron-down"></i>
+              </button>
+              <div class="accordion-content open">The QRS complex represents ventricular depolarization — the electrical activation of both ventricles. Normal duration is 80–100ms. Widening may indicate bundle branch block or ventricular conduction delay.</div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-trigger" onclick="toggleAccordion(this)">
+                How is QTc calculated?
+                <i data-lucide="chevron-down"></i>
+              </button>
+              <div class="accordion-content">QTc is the corrected QT interval adjusted for heart rate, calculated using Bazett's formula: QTc = QT / √RR. Normal values are &lt;450ms for men and &lt;470ms for women. Values above 500ms indicate high risk.</div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-trigger" onclick="toggleAccordion(this)">
+                What does ST elevation indicate?
+                <i data-lucide="chevron-down"></i>
+              </button>
+              <div class="accordion-content">ST elevation ≥1mm in two or more contiguous leads may indicate acute myocardial infarction (STEMI) and requires immediate medical intervention. Other causes include pericarditis and Brugada syndrome.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BREADCRUMB -->
+    <section class="section" id="breadcrumb">
+      <div class="section-header">
+        <div class="section-eyebrow">Navigation</div>
+        <h2 class="section-title">Breadcrumb</h2>
+        <p class="section-desc">Hierarchical path indicator showing the user's current location within the application.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview column" style="gap: 12px;">
+          <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="#">Vireo Arc</a></div>
+            <span class="breadcrumb-sep">/</span>
+            <div class="breadcrumb-item"><a href="#">Patients</a></div>
+            <span class="breadcrumb-sep">/</span>
+            <div class="breadcrumb-item">John Smith</div>
+          </div>
+          <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="#">Dashboard</a></div>
+            <span class="breadcrumb-sep">/</span>
+            <div class="breadcrumb-item"><a href="#">ECG Reports</a></div>
+            <span class="breadcrumb-sep">/</span>
+            <div class="breadcrumb-item"><a href="#">2026-07-21</a></div>
+            <span class="breadcrumb-sep">/</span>
+            <div class="breadcrumb-item">Resting ECG</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGINATION -->
+    <section class="section" id="pagination">
+      <div class="section-header">
+        <div class="section-eyebrow">Navigation</div>
+        <h2 class="section-title">Pagination</h2>
+        <p class="section-desc">Navigate through multi-page datasets. Typically used for patient lists and exam histories.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview center">
+          <div class="pagination">
+            <button class="page-btn"><i data-lucide="chevron-left"></i></button>
+            <button class="page-btn">1</button>
+            <button class="page-btn active">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+            <button class="page-btn">5</button>
+            <span style="font-size: 13px; color: var(--color-gray-400); padding: 0 4px;">...</span>
+            <button class="page-btn">24</button>
+            <button class="page-btn"><i data-lucide="chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NAVBAR -->
+    <section class="section" id="navbar">
+      <div class="section-header">
+        <div class="section-eyebrow">Navigation</div>
+        <h2 class="section-title">Navigation Bar</h2>
+        <p class="section-desc">Horizontal top navigation for primary application sections.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview" style="padding: 0;">
+          <div class="nav-bar" style="width: 100%; border: none; border-radius: 0; padding: 0 20px;">
+            <div class="nav-logo">
+              <div class="nav-logo-dot"></div>
+              Vireo Arc
+            </div>
+            <a class="nav-item active" href="#">Dashboard</a>
+            <a class="nav-item" href="#">Patients</a>
+            <a class="nav-item" href="#">ECG Reports</a>
+            <a class="nav-item" href="#">Analytics</a>
+            <a class="nav-item" href="#">Settings</a>
+            <div class="nav-spacer"></div>
+            <div class="avatar avatar-sm avatar-primary">JR</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOOLTIP -->
+    <section class="section" id="tooltip">
+      <div class="section-header">
+        <div class="section-eyebrow">Navigation</div>
+        <h2 class="section-title">Tooltip</h2>
+        <p class="section-desc">Contextual information overlay triggered by hovering over an element.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview center" style="gap: 24px; padding: 60px 40px;">
+          <div class="tooltip-wrapper">
+            <button class="btn btn-primary">Heart Rate <i data-lucide="info"></i></button>
+            <div class="tooltip">72 bpm — Normal Sinus Rhythm</div>
+          </div>
+          <div class="tooltip-wrapper">
+            <button class="btn btn-outline">QRS Duration</button>
+            <div class="tooltip">94ms — Within normal range (80–100ms)</div>
+          </div>
+          <div class="tooltip-wrapper">
+            <div class="avatar avatar-md avatar-primary">JR</div>
+            <div class="tooltip">Dr. João Rodrigues — Cardiologist</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TABLE -->
+    <section class="section" id="table">
+      <div class="section-header">
+        <div class="section-eyebrow">Complex</div>
+        <h2 class="section-title">Table</h2>
+        <p class="section-desc">Structured data display for patient lists, exam histories, and measurement records.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview" style="padding: 0; border: none;">
+          <div class="table-wrapper" style="width: 100%;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Patient</th>
+                  <th>Exam Date</th>
+                  <th>Type</th>
+                  <th>Heart Rate</th>
+                  <th>QTc</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="flex items-center gap-2"><div class="avatar avatar-sm avatar-primary">MC</div> Maria Chen</div></td>
+                  <td>2026-07-21</td>
+                  <td>Resting ECG</td>
+                  <td style="font-family: var(--font-mono);">68 bpm</td>
+                  <td style="font-family: var(--font-mono);">408ms</td>
+                  <td><span class="badge badge-success">Normal</span></td>
+                </tr>
+                <tr>
+                  <td><div class="flex items-center gap-2"><div class="avatar avatar-sm avatar-navy">JR</div> James Rodriguez</div></td>
+                  <td>2026-07-20</td>
+                  <td>Holter 24h</td>
+                  <td style="font-family: var(--font-mono);">82 bpm</td>
+                  <td style="font-family: var(--font-mono);">431ms</td>
+                  <td><span class="badge badge-warning">Review</span></td>
+                </tr>
+                <tr>
+                  <td><div class="flex items-center gap-2"><div class="avatar avatar-sm avatar-lavender">AS</div> Anna Schäfer</div></td>
+                  <td>2026-07-19</td>
+                  <td>Stress Test</td>
+                  <td style="font-family: var(--font-mono);">156 bpm</td>
+                  <td style="font-family: var(--font-mono);">502ms</td>
+                  <td><span class="badge badge-destructive">Alert</span></td>
+                </tr>
+                <tr>
+                  <td><div class="flex items-center gap-2"><div class="avatar avatar-sm avatar-success">PK</div> Pedro Kim</div></td>
+                  <td>2026-07-18</td>
+                  <td>Resting ECG</td>
+                  <td style="font-family: var(--font-mono);">74 bpm</td>
+                  <td style="font-family: var(--font-mono);">416ms</td>
+                  <td><span class="badge badge-success">Normal</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORM -->
+    <section class="section" id="form">
+      <div class="section-header">
+        <div class="section-eyebrow">Complex</div>
+        <h2 class="section-title">Form</h2>
+        <p class="section-desc">Complete form example with validation, accessible labels, and grouped fields.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview column" style="align-items: flex-start;">
+          <form class="form" onsubmit="return false;">
+            <div style="font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--color-navy);">New Patient Record</div>
+            <div class="form-row">
+              <div class="input-group" style="width: 100%;">
+                <label class="input-label">First name *</label>
+                <input class="input" type="text" placeholder="John" required />
+              </div>
+              <div class="input-group" style="width: 100%;">
+                <label class="input-label">Last name *</label>
+                <input class="input" type="text" placeholder="Smith" required />
+              </div>
+            </div>
+            <div class="input-group" style="width: 100%;">
+              <label class="input-label">Date of birth *</label>
+              <input class="input" type="date" required />
+            </div>
+            <div class="input-group" style="width: 100%;">
+              <label class="input-label">Referring physician</label>
+              <select class="select" style="width: 100%; min-width: unset;">
+                <option value="">Select a physician...</option>
+                <option>Dr. Elena Russo</option>
+                <option>Dr. Marco Bianchi</option>
+                <option>Dr. Laura Ferretti</option>
+              </select>
+            </div>
+            <div class="input-group" style="width: 100%;">
+              <label class="input-label">Clinical notes</label>
+              <textarea class="input" rows="3" placeholder="Symptoms, medical history, medications..."></textarea>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <label class="checkbox-wrapper"><input class="checkbox" type="checkbox" checked /> <span class="checkbox-label">Send report via email</span></label>
+              <label class="checkbox-wrapper"><input class="checkbox" type="checkbox" /> <span class="checkbox-label">Include in telemedicine queue</span></label>
+            </div>
+            <div class="flex gap-3">
+              <button type="submit" class="btn btn-primary"><i data-lucide="save"></i> Save Patient</button>
+              <button type="reset" class="btn btn-ghost">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- CALENDAR -->
+    <section class="section" id="calendar">
+      <div class="section-header">
+        <div class="section-eyebrow">Complex</div>
+        <h2 class="section-title">Calendar</h2>
+        <p class="section-desc">Date picker for scheduling exams and navigating temporal data.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview center">
+          <div class="calendar">
+            <div class="calendar-header">
+              <button class="calendar-nav"><i data-lucide="chevron-left"></i></button>
+              <span class="calendar-month">July 2026</span>
+              <button class="calendar-nav"><i data-lucide="chevron-right"></i></button>
+            </div>
+            <div class="calendar-grid">
+              <div class="calendar-day-name">SU</div>
+              <div class="calendar-day-name">MO</div>
+              <div class="calendar-day-name">TU</div>
+              <div class="calendar-day-name">WE</div>
+              <div class="calendar-day-name">TH</div>
+              <div class="calendar-day-name">FR</div>
+              <div class="calendar-day-name">SA</div>
+              <div class="calendar-day other-month">29</div>
+              <div class="calendar-day other-month">30</div>
+              <div class="calendar-day">1</div>
+              <div class="calendar-day">2</div>
+              <div class="calendar-day">3</div>
+              <div class="calendar-day">4</div>
+              <div class="calendar-day">5</div>
+              <div class="calendar-day">6</div>
+              <div class="calendar-day">7</div>
+              <div class="calendar-day">8</div>
+              <div class="calendar-day">9</div>
+              <div class="calendar-day">10</div>
+              <div class="calendar-day">11</div>
+              <div class="calendar-day">12</div>
+              <div class="calendar-day">13</div>
+              <div class="calendar-day">14</div>
+              <div class="calendar-day">15</div>
+              <div class="calendar-day">16</div>
+              <div class="calendar-day">17</div>
+              <div class="calendar-day">18</div>
+              <div class="calendar-day">19</div>
+              <div class="calendar-day selected">20</div>
+              <div class="calendar-day today">21</div>
+              <div class="calendar-day">22</div>
+              <div class="calendar-day">23</div>
+              <div class="calendar-day">24</div>
+              <div class="calendar-day">25</div>
+              <div class="calendar-day">26</div>
+              <div class="calendar-day">27</div>
+              <div class="calendar-day">28</div>
+              <div class="calendar-day">29</div>
+              <div class="calendar-day">30</div>
+              <div class="calendar-day">31</div>
+              <div class="calendar-day other-month">1</div>
+              <div class="calendar-day other-month">2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMMAND PALETTE -->
+    <section class="section" id="command">
+      <div class="section-header">
+        <div class="section-eyebrow">Complex</div>
+        <h2 class="section-title">Command Palette</h2>
+        <p class="section-desc">Keyboard-driven command interface. Trigger with <kbd style="font-family: var(--font-mono); font-size: 11px; background: var(--color-gray-100); border: 1px solid var(--color-gray-200); border-radius: 4px; padding: 1px 5px;">⌘K</kbd> for quick navigation and actions.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview center">
+          <div class="command-palette">
+            <div class="command-input-wrapper">
+              <i data-lucide="search"></i>
+              <input class="command-input" type="text" placeholder="Search patients, exams, settings..." />
+              <span style="font-size: 10px; font-family: var(--font-mono); color: var(--color-gray-400); background: var(--color-gray-100); border: 1px solid var(--color-gray-200); border-radius: 4px; padding: 2px 6px;">ESC</span>
+            </div>
+            <div class="command-group">
+              <div class="command-group-label">Quick Actions</div>
+              <div class="command-item selected">
+                <i data-lucide="plus-circle"></i>
+                New ECG Recording
+                <span class="command-shortcut">⌘N</span>
+              </div>
+              <div class="command-item">
+                <i data-lucide="user-plus"></i>
+                Register New Patient
+                <span class="command-shortcut">⌘P</span>
+              </div>
+            </div>
+            <div class="command-group" style="border-top: 1px solid var(--color-gray-100);">
+              <div class="command-group-label">Recent Patients</div>
+              <div class="command-item">
+                <i data-lucide="user"></i>
+                Maria Chen — ECG 2026-07-21
+              </div>
+              <div class="command-item">
+                <i data-lucide="user"></i>
+                James Rodriguez — Holter 2026-07-20
+              </div>
+              <div class="command-item">
+                <i data-lucide="user"></i>
+                Anna Schäfer — Stress Test 2026-07-19
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ICONS -->
+    <section class="section" id="icons">
+      <div class="section-header">
+        <div class="section-eyebrow">Foundation</div>
+        <h2 class="section-title">Icons</h2>
+        <p class="section-desc">Beat DS uses <a href="https://lucide.dev" target="_blank" style="color: var(--color-primary);">Lucide React</a> — a consistent, stroke-based icon set with 1,000+ icons.</p>
+      </div>
+      <div class="component-card">
+        <div class="component-preview" style="padding: 24px;">
+          <div class="icon-grid" style="width: 100%;">
+            <div class="icon-item"><i data-lucide="activity"></i><span class="icon-name">activity</span></div>
+            <div class="icon-item"><i data-lucide="heart"></i><span class="icon-name">heart</span></div>
+            <div class="icon-item"><i data-lucide="heart-pulse"></i><span class="icon-name">heart-pulse</span></div>
+            <div class="icon-item"><i data-lucide="stethoscope"></i><span class="icon-name">stethoscope</span></div>
+            <div class="icon-item"><i data-lucide="user"></i><span class="icon-name">user</span></div>
+            <div class="icon-item"><i data-lucide="users"></i><span class="icon-name">users</span></div>
+            <div class="icon-item"><i data-lucide="file-text"></i><span class="icon-name">file-text</span></div>
+            <div class="icon-item"><i data-lucide="clipboard"></i><span class="icon-name">clipboard</span></div>
+            <div class="icon-item"><i data-lucide="calendar"></i><span class="icon-name">calendar</span></div>
+            <div class="icon-item"><i data-lucide="clock"></i><span class="icon-name">clock</span></div>
+            <div class="icon-item"><i data-lucide="search"></i><span class="icon-name">search</span></div>
+            <div class="icon-item"><i data-lucide="settings"></i><span class="icon-name">settings</span></div>
+            <div class="icon-item"><i data-lucide="bell"></i><span class="icon-name">bell</span></div>
+            <div class="icon-item"><i data-lucide="mail"></i><span class="icon-name">mail</span></div>
+            <div class="icon-item"><i data-lucide="download"></i><span class="icon-name">download</span></div>
+            <div class="icon-item"><i data-lucide="upload"></i><span class="icon-name">upload</span></div>
+            <div class="icon-item"><i data-lucide="share-2"></i><span class="icon-name">share-2</span></div>
+            <div class="icon-item"><i data-lucide="printer"></i><span class="icon-name">printer</span></div>
+            <div class="icon-item"><i data-lucide="zap"></i><span class="icon-name">zap</span></div>
+            <div class="icon-item"><i data-lucide="alert-triangle"></i><span class="icon-name">alert-triangle</span></div>
+            <div class="icon-item"><i data-lucide="check-circle"></i><span class="icon-name">check-circle</span></div>
+            <div class="icon-item"><i data-lucide="x-circle"></i><span class="icon-name">x-circle</span></div>
+            <div class="icon-item"><i data-lucide="wifi"></i><span class="icon-name">wifi</span></div>
+            <div class="icon-item"><i data-lucide="bluetooth"></i><span class="icon-name">bluetooth</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- Back to Top -->
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+  <i data-lucide="chevron-up"></i>
+</button>
+
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  // Sidebar navigation active state
+  function scrollTo(sectionId) {
+    const el = document.getElementById(sectionId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    document.getElementById('current-section').textContent = event.currentTarget.textContent.trim();
+  }
+
+  // Back to top
+  window.addEventListener('scroll', () => {
+    const btn = document.getElementById('back-to-top');
+    btn.classList.toggle('visible', window.scrollY > 400);
+  });
+
+  // Tabs
+  function switchTab(trigger, tabId) {
+    trigger.closest('.tabs').querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('active'));
+    trigger.classList.add('active');
+    trigger.closest('.tabs').querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+  }
+
+  // Accordion
+  function toggleAccordion(trigger) {
+    const content = trigger.nextElementSibling;
+    const isOpen = trigger.classList.contains('open');
+    trigger.classList.toggle('open', !isOpen);
+    content.classList.toggle('open', !isOpen);
+  }
+
+  // Dark mode
+  let isDark = false;
+  function toggleDark() {
+    isDark = !isDark;
+    document.documentElement.style.setProperty('--color-gray-50', isDark ? '#0f1729' : '#f9f9fb');
+    document.documentElement.style.setProperty('--color-gray-100', isDark ? '#1a2540' : '#f1f4fe');
+    document.documentElement.style.setProperty('--color-gray-200', isDark ? '#243050' : '#e9eaee');
+    document.documentElement.style.setProperty('--color-gray-900', isDark ? '#f0f4ff' : '#333333');
+    document.documentElement.style.setProperty('--color-gray-700', isDark ? '#c8d4e8' : '#393939');
+    document.documentElement.style.setProperty('--color-gray-500', isDark ? '#8a9ab8' : '#747474');
+    document.body.style.background = isDark ? '#0b1529' : '';
+    document.querySelectorAll('.card, .component-card, .component-preview:not(.dark-bg), .accordion, .command-palette, .calendar, .accordion-trigger, .accordion-content, .table-wrapper, table thead').forEach(el => {
+      el.style.background = isDark ? '#111f40' : '';
+      el.style.color = isDark ? '#f0f4ff' : '';
+    });
+    document.querySelectorAll('input.input, textarea.input, select.select').forEach(el => {
+      el.style.background = isDark ? '#1a2540' : '';
+      el.style.borderColor = isDark ? '#2d3d60' : '';
+      el.style.color = isDark ? '#f0f4ff' : '';
+    });
+    document.getElementById('dark-icon').setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+    document.getElementById('dark-label').textContent = isDark ? 'Light' : 'Dark';
+    lucide.createIcons();
+  }
+
+  // Syntax highlighting
+  hljs.highlightAll();
+</script>
+</body>
+</html>

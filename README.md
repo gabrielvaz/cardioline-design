@@ -1,41 +1,56 @@
 # Cardioline Design Monorepo
 
-Monorepo oficial da Cardioline para o Design System e aplicações de cardiologia diagnóstica.
+Official Cardioline monorepo for the **Beat Design System** and all Cardioline digital products.
 
-## Estrutura
+## Structure
 
 ```
 cardioline-design/
 ├── packages/
-│   └── ui/                     # Design System Cardioline (ShadCN customizado)
+│   └── ui/                     # Beat Design System (@cardioline/ui)
 ├── apps/
-│   └── vireo-arc/              # App de ECG/Eletrocardiograma
+│   └── vireo-arc/              # ECG / Electrocardiogram App
+├── docs/                       # GitHub Pages — Design System Documentation
 └── turbo.json
 ```
 
 ## Packages
 
-### `@cardioline/ui`
-Design System oficial da Cardioline construído sobre ShadCN/UI, com tokens de cores e componentes customizados conforme a identidade visual da marca.
+### `@cardioline/ui` — Beat Design System
+Official Cardioline design system built on top of shadcn/ui.
+Colors and typography extracted directly from [cardioline.com](https://www.cardioline.com):
+- **Primary**: Orange `#ee5b00`
+- **Accent / Dark**: Navy `#071046`
+- **Fonts**: Plus Jakarta Sans (headings) + Inter (body)
+
+→ [Package README](./packages/ui/README.md)
 
 ## Apps
 
 ### Vireo Arc
-Aplicativo de ECG e eletrocardiograma da Cardioline. Interface moderna para leitura, interpretação e gestão de exames cardíacos.
+ECG / Electrocardiogram application by Cardioline. Modern interface for cardiac exam reading, interpretation and management.
 
-## Desenvolvimento
+→ [App README](./apps/vireo-arc/README.md)
+
+## Documentation
+
+Live Beat Design System documentation:
+
+→ **[beat.cardioline.design](https://gabrielvaz.github.io/cardioline-design/)** (GitHub Pages)
+
+## Development
 
 ```bash
-# Instalar dependências
+# Install dependencies
 npm install
 
-# Rodar todos os apps em dev
+# Run all apps in dev mode
 npm run dev
 
-# Rodar app específico
+# Run a specific app
 cd apps/vireo-arc && npm run dev
 
-# Build geral
+# Full build
 npm run build
 ```
 
@@ -43,7 +58,11 @@ npm run build
 
 - **Monorepo**: Turborepo + npm workspaces
 - **Framework**: Next.js 15 (App Router)
-- **Design System**: ShadCN/UI customizado para a Cardioline
-- **Styling**: Tailwind CSS v4
+- **Design System**: shadcn/ui customized for Cardioline
+- **Styling**: Tailwind CSS v3
 - **Language**: TypeScript
 - **Icons**: Lucide React
+
+## Contributing
+
+All code, comments, documentation and UI strings must be written in **English only**.

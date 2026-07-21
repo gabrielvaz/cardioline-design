@@ -1,18 +1,19 @@
 import type { Metadata } from 'next';
-import { Inter, DM_Sans, JetBrains_Mono } from 'next/font/google';
+import { Plus_Jakarta_Sans, Inter, JetBrains_Mono } from 'next/font/google';
 import '@cardioline/ui/src/styles/globals.css';
+
+/* Cardioline brand fonts — extracted from cardioline.com */
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-heading',
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700', '800'],
+});
 
 const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-sans',
   display: 'swap',
-});
-
-const dmSans = DM_Sans({
-  subsets: ['latin'],
-  variable: '--font-dm-sans',
-  display: 'swap',
-  weight: ['300', '400', '500', '600', '700'],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -28,12 +29,12 @@ export const metadata: Metadata = {
     template: '%s | Vireo Arc',
   },
   description:
-    'Plataforma avançada de eletrocardiograma e diagnóstico cardíaco. Powered by Cardioline.',
-  keywords: ['ECG', 'eletrocardiograma', 'cardiologia', 'Cardioline', 'diagnóstico cardíaco'],
+    'Advanced electrocardiogram and cardiac diagnostic platform. Powered by Cardioline.',
+  keywords: ['ECG', 'electrocardiogram', 'cardiology', 'Cardioline', 'cardiac diagnostics'],
   authors: [{ name: 'Cardioline' }],
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#1840a2' },
-    { media: '(prefers-color-scheme: dark)',  color: '#111f47' },
+    { media: '(prefers-color-scheme: light)', color: '#ee5b00' },
+    { media: '(prefers-color-scheme: dark)',  color: '#071046' },
   ],
   icons: {
     icon: '/favicon.ico',
@@ -47,8 +48,8 @@ export default function RootLayout({
 }) {
   return (
     <html
-      lang="pt-BR"
-      className={`${inter.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}
+      lang="en"
+      className={`${inter.variable} ${plusJakartaSans.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-background font-sans antialiased">

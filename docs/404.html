@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Page Not Found | Beat Design System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #071046;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .container { max-width: 480px; padding: 40px 24px; }
+
+    .ecg-icon {
+      width: 64px; height: 64px;
+      background: linear-gradient(135deg, #ee5b00, #ff7d38);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+      box-shadow: 0 8px 24px rgba(238,91,0,0.35);
+    }
+
+    .ecg-icon svg { width: 32px; height: 32px; stroke: white; }
+
+    .code {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 80px;
+      font-weight: 800;
+      color: #ee5b00;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    p {
+      color: rgba(255,255,255,0.55);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: #ee5b00;
+      color: white;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: background 0.15s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn:hover { background: #d44e00; }
+    .btn svg { width: 16px; height: 16px; }
+
+    .brand {
+      margin-top: 40px;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="ecg-icon">
+      <i data-lucide="activity"></i>
+    </div>
+    <div class="code">404</div>
+    <h1>Signal Lost</h1>
+    <p>The page you are looking for could not be found. It may have been moved, renamed, or does not exist.</p>
+    <a href="./index.html" class="btn">
+      <i data-lucide="arrow-left"></i>
+      Back to Design System
+    </a>
+    <div class="brand">Beat Design System · Cardioline</div>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
