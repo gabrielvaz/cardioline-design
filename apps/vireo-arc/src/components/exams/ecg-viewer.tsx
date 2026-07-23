@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft, ChevronUp, Download, Edit3, Printer } from 'lucide-react';
 import { Button, cn, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@cardioline/ui';
 import { PrototypeToast } from '@/components/ui/prototype-toast';
+import { pageSubtitleClassName, pageTitleClassName } from '@/components/ui/page-header';
 
 type Exam = { id: string; name: string; type: string; date: string; result: string };
 const leads = ['I', 'II', 'III', 'aVR', 'aVL', 'aVF', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6'];
@@ -20,7 +21,7 @@ export function EcgViewer({ exam }: { exam: Exam }) {
   const [toast, setToast] = React.useState<string | null>(null);
   return <div className="-m-6 min-h-[calc(100vh-4rem)] bg-[#f8fafc] text-slate-700">
     <header className="flex items-center justify-between border-b border-slate-100 bg-white px-5 py-3">
-      <div className="flex min-w-0 items-center gap-2"><Button asChild variant="ghost" size="sm" className="text-slate-600"><Link href="/exams"><ArrowLeft className="mr-1" />Back</Link></Button><div className="ml-4 min-w-0"><h1 className="truncate text-xl font-bold text-[#071046]">{exam.name}</h1><p className="text-xs text-slate-500">Captured: {exam.date} · Reviewed: Oct 25, 2026 09:32</p></div></div>
+      <div className="flex min-w-0 items-center gap-2"><Button asChild variant="ghost" size="sm" className="text-slate-600"><Link href="/exams"><ArrowLeft className="mr-1" />Back</Link></Button><div className="ml-4 min-w-0"><h1 className={`truncate ${pageTitleClassName}`}>{exam.name}</h1><p className={pageSubtitleClassName}>Captured: {exam.date} · Reviewed: Oct 25, 2026 09:32</p></div></div>
       <div className="hidden items-center gap-6 text-center lg:flex">{[['31235674','Patient ID'],['46','Age'],['Male','Gender'],['80 kg','Weight'],['180 cm','Height'],['98','Pressure']].map(([value,label]) => <div key={label}><p className="text-sm font-bold text-slate-800">{value}</p><p className="text-[11px] text-slate-400">{label}</p></div>)}<Button size="icon" variant="ghost" aria-label="Print ECG" onClick={() => window.print()}><Printer /></Button><Button size="icon" variant="ghost" aria-label="Download ECG" onClick={() => setToast(`${exam.id} ECG export downloaded.`)}><Download /></Button></div>
     </header>
     <div className="grid min-h-[calc(100vh-8.75rem)] grid-cols-1 xl:grid-cols-[minmax(0,1fr)_400px]">

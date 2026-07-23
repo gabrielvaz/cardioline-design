@@ -22,6 +22,7 @@ import { SelectionCheckbox } from "@/components/ui/selection-checkbox";
 import { TableSettingsMenu } from "@/components/ui/table-settings-menu";
 import { useGlobalTableDensity } from "@/components/ui/use-global-table-density";
 import { AdvancedSearchModal } from "@/components/ui/advanced-search-modal";
+import { PageHeader } from "@/components/ui/page-header";
 
 type SortKey = "name" | "id" | "dob" | "lastExam" | "status";
 type PatientFilters = {
@@ -60,7 +61,7 @@ export default function PatientsPage() {
     patientTableColumns.map((column) => column.id),
   );
   const [density, setDensity] = useGlobalTableDensity();
-  const pageSize = 10;
+  const [pageSize, setPageSize] = React.useState(10);
   React.useEffect(
     () => setQuery(new URLSearchParams(window.location.search).get("q") ?? ""),
     [],
@@ -85,23 +86,23 @@ export default function PatientsPage() {
   };
   const isVisible = (column: string) => visibleColumns.includes(column);
   const densityClass =
-    density === "compact" ? "py-2" : density === "spacious" ? "py-6" : "py-4";
+    density === "compact"
+      ? "whitespace-nowrap py-2"
+      : density === "spacious"
+        ? "whitespace-normal break-words py-6"
+        : "whitespace-nowrap py-4";
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-[#071046]">Patients</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Manage and view patient records.
-          </p>
-        </div>
-        <Button asChild className="bg-primary text-white">
+      <PageHeader
+        title="Patients"
+        description="Manage and view patient records."
+        actions={<Button asChild className="bg-primary text-white">
           <Link href="/patients/new">
             <Plus className="mr-2" />
             Add Patient
           </Link>
-        </Button>
-      </div>
+        </Button>}
+      />
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
           <div className="relative w-full sm:w-[310px]">
@@ -287,6 +288,10 @@ export default function PatientsPage() {
             total={list.length}
             pageSize={pageSize}
             onPageChange={setPage}
+            onPageSizeChange={(nextPageSize) => {
+              setPageSize(nextPageSize);
+              setPage(1);
+            }}
           />
         </CardContent>
       </Card>

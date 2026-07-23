@@ -12,6 +12,7 @@ import { PrototypeToast } from "@/components/ui/prototype-toast";
 import { TanstackExamTable } from "@/components/exams/tanstack-exam-table";
 import { TableSettingsMenu } from "@/components/ui/table-settings-menu";
 import { useGlobalTableDensity } from "@/components/ui/use-global-table-density";
+import { PageHeader } from "@/components/ui/page-header";
 
 const filterDefinitions: Record<string, ExamFilterOption[]> = {
   Period: [
@@ -98,17 +99,16 @@ export default function ExamsPage() {
   return (
     <div className="space-y-6">
       <section className="space-y-5">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <h1 className="text-3xl font-bold tracking-tight text-[#071046]">
-            Exam list
-          </h1>
-          <Button
+        <PageHeader
+          title="Exam list"
+          description="Review, filter and manage clinical examinations."
+          actions={<Button
             onClick={() => setToast("Report area opened.")}
             className="h-11 shrink-0 bg-primary px-5 text-white"
           >
             Report area
-          </Button>
-        </div>
+          </Button>}
+        />
 
         <div className="overflow-x-auto pb-1">
           <div className="flex min-w-full w-max items-center gap-2 pr-1">

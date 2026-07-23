@@ -7,19 +7,23 @@ import {
   ArrowUpDown,
   Baby,
   Clock3,
-  Grid2X2,
-  LayoutList,
+  Filter,
   Search,
-  Settings2,
   Stethoscope,
-  TableProperties,
   UserRound,
+  UserRoundPlus,
 } from "lucide-react";
 import {
   Button,
   Card,
   CardContent,
   Checkbox,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -34,6 +38,13 @@ import {
   SelectValue,
   cn,
 } from "@cardioline/ui";
+import { PrototypeToast } from "@/components/ui/prototype-toast";
+import {
+  TableSettingsMenu,
+  type TableDensity,
+} from "@/components/ui/table-settings-menu";
+import { useGlobalTableDensity } from "@/components/ui/use-global-table-density";
+import { PageHeader } from "@/components/ui/page-header";
 import { inboxExams } from "@/lib/mock-data";
 
 type ViewMode = "cards" | "table";
@@ -64,16 +75,40 @@ const criteria: { id: Criterion; label: string; description: string }[] = [
   },
 ];
 
+const inboxTableColumns = [
+  { id: "priority", label: "Priority" },
+  { id: "patient", label: "Patient", locked: true },
+  { id: "exam", label: "Exam" },
+  { id: "received", label: "Received" },
+  { id: "factors", label: "Priority factors" },
+  { id: "actions", label: "Actions", locked: true },
+];
+
+const reportingProfessionals = [
+  { name: "Dr. Sarah Jenkins", specialty: "Cardiologist", assigned: 8, online: true },
+  { name: "Dr. Miguel Oliveira", specialty: "Cardiologist", assigned: 5, online: true },
+  { name: "Dr. Elena Rossi", specialty: "Electrophysiologist", assigned: 11, online: false },
+  { name: "Dr. Lucas Martin", specialty: "Cardiologist", assigned: 3, online: true },
+];
+
 export function ExamInbox() {
   const [view, setView] = React.useState<ViewMode>("cards");
   const [sort, setSort] = React.useState<SortMode>("priority");
   const [query, setQuery] = React.useState("");
+  const [density, setDensity] = useGlobalTableDensity();
+  const [visibleColumns, setVisibleColumns] = React.useState(
+    inboxTableColumns.map((column) => column.id),
+  );
   const [activeCriteria, setActiveCriteria] = React.useState<Criterion[]>([
     "emergency",
     "pediatric",
     "elderly",
     "waiting",
   ]);
+  const [assignmentExam, setAssignmentExam] = React.useState<InboxExam | null>(
+    null,
+  );
+  const [toast, setToast] = React.useState<string | null>(null);
 
   const toggleCriterion = (criterion: Criterion) =>
     setActiveCriteria((current) =>
@@ -125,42 +160,32 @@ export function ExamInbox() {
 
   return (
     <div className="space-y-6">
-      <header className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
-        <div>
-          <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
-            <Stethoscope className="h-4 w-4 text-[#ee5b00]" />
-            My reporting worklist
-          </div>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-[#071046]">
-            Exam Inbox
-          </h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Exams assigned to you, ranked by clinical priority and waiting time.
-          </p>
-        </div>
-        <div className="grid grid-cols-3 divide-x divide-gray-200 overflow-hidden rounded-lg border border-gray-200 bg-white text-center shadow-sm">
+      <PageHeader
+        title="Exam Inbox"
+        description="Exams assigned to you, ranked by clinical priority and waiting time."
+        actions={<div className="grid grid-cols-3 divide-x divide-gray-200 overflow-hidden rounded-lg border border-gray-200 bg-white text-center shadow-sm">
           <Metric label="Awaiting report" value={String(exams.length)} />
           <Metric label="Urgent now" value={String(urgentCount)} alert />
           <Metric label="Avg. wait" value={formatMinutes(averageWait)} />
-        </div>
-      </header>
+        </div>}
+      />
 
-      <section className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="relative w-full sm:max-w-sm">
+      <section className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative w-full sm:w-[310px]">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <Input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search patient, ID, exam or unit..."
-              className="h-10 border-gray-200 bg-gray-50 pl-9"
+              className="h-10 border-gray-200 bg-white pl-9"
             />
-          </div>
+        </div>
+        <div className="flex flex-wrap items-center justify-end gap-2 self-end sm:self-auto">
           <Select
             value={sort}
             onValueChange={(value) => setSort(value as SortMode)}
           >
-            <SelectTrigger className="h-10 min-w-[200px]">
+            <SelectTrigger className="h-10 min-w-[190px]">
               <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
               <SelectValue />
             </SelectTrigger>
@@ -171,13 +196,18 @@ export function ExamInbox() {
               <SelectItem value="patient">Patient name</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-        <div className="flex items-center gap-2 self-end lg:self-auto">
           <PrioritySettings
             activeCriteria={activeCriteria}
             onToggle={toggleCriterion}
           />
-          <ViewSettings view={view} onViewChange={setView} />
+          <TableSettingsMenu
+            columns={inboxTableColumns}
+            visibleColumns={visibleColumns}
+            onVisibleColumnsChange={setVisibleColumns}
+            density={density}
+            onDensityChange={setDensity}
+            view={{ value: view, onValueChange: setView }}
+          />
         </div>
       </section>
 
@@ -191,10 +221,29 @@ export function ExamInbox() {
         </p>
       </div>
       {view === "cards" ? (
-        <CardGrid exams={exams} score={priorityScore} />
+        <CardGrid
+          exams={exams}
+          score={priorityScore}
+          onAssign={setAssignmentExam}
+        />
       ) : (
-        <InboxTable exams={exams} score={priorityScore} />
+        <InboxTable
+          exams={exams}
+          score={priorityScore}
+          density={density}
+          visibleColumns={visibleColumns}
+          onAssign={setAssignmentExam}
+        />
       )}
+      <AssignmentDialog
+        exam={assignmentExam}
+        onOpenChange={(open) => !open && setAssignmentExam(null)}
+        onAssign={(professional) => {
+          setToast(`${assignmentExam?.id} assigned to ${professional}.`);
+          setAssignmentExam(null);
+        }}
+      />
+      <PrototypeToast message={toast} onClose={() => setToast(null)} />
     </div>
   );
 }
@@ -234,8 +283,8 @@ function PrioritySettings({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="h-10 border-gray-200">
-          <Settings2 className="mr-2" />
-          Priority rules{" "}
+          <Filter className="mr-2" />
+          Filter{" "}
           <span className="ml-1 rounded bg-muted px-1.5 py-0.5 text-[11px]">
             {activeCriteria.length}
           </span>
@@ -275,64 +324,25 @@ function PrioritySettings({
   );
 }
 
-function ViewSettings({
-  view,
-  onViewChange,
-}: {
-  view: ViewMode;
-  onViewChange: (view: ViewMode) => void;
-}) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          size="icon"
-          variant="outline"
-          aria-label="Change inbox view"
-          title="Change inbox view"
-          className="h-10 w-10 border-gray-200"
-        >
-          {view === "cards" ? <Grid2X2 /> : <TableProperties />}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuLabel>View type</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={() => onViewChange("cards")}>
-          <Grid2X2 className={view === "cards" ? "text-primary" : ""} />
-          Cards{" "}
-          {view === "cards" && (
-            <span className="ml-auto text-xs text-primary">Active</span>
-          )}
-        </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => onViewChange("table")}>
-          <LayoutList className={view === "table" ? "text-primary" : ""} />
-          Table{" "}
-          {view === "table" && (
-            <span className="ml-auto text-xs text-primary">Active</span>
-          )}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
 function CardGrid({
   exams,
   score,
+  onAssign,
 }: {
   exams: InboxExam[];
   score: (exam: InboxExam) => number;
+  onAssign: (exam: InboxExam) => void;
 }) {
   if (!exams.length) return <EmptyState />;
   return (
-    <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
+    <div className="grid gap-4">
       {exams.map((exam, index) => (
         <InboxCard
           key={exam.id}
           exam={exam}
           score={score(exam)}
           index={index}
+          onAssign={onAssign}
         />
       ))}
     </div>
@@ -343,31 +353,25 @@ function InboxCard({
   exam,
   score,
   index,
+  onAssign,
 }: {
   exam: InboxExam;
   score: number;
   index: number;
+  onAssign: (exam: InboxExam) => void;
 }) {
   const reasons = priorityReasons(exam);
-  const urgent = score >= 70;
+  const featured = index === 0;
   return (
     <Card
       className={cn(
-        "group relative overflow-hidden border-gray-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-md",
-        urgent && "border-red-200",
+        "group relative overflow-hidden border-gray-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-orange-200",
+        featured
+          ? "bg-white shadow-xl shadow-slate-950/10 hover:shadow-xl dark:bg-card dark:shadow-black/30"
+          : "bg-slate-50/80 shadow-sm hover:shadow-md dark:bg-muted",
       )}
     >
-      <div
-        className={cn(
-          "absolute inset-y-0 left-0 w-1",
-          urgent
-            ? "bg-red-500"
-            : score >= 40
-              ? "bg-orange-400"
-              : "bg-slate-300",
-        )}
-      />
-      <CardContent className="p-5 pl-6">
+      <CardContent className={featured ? "p-6" : "p-5"}>
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
@@ -378,11 +382,19 @@ function InboxCard({
             </div>
             <h2
               title={exam.patient}
-              className="mt-3 truncate text-lg font-semibold text-gray-900"
+              className={cn(
+                "mt-3 truncate font-semibold text-gray-900",
+                featured ? "text-xl" : "text-lg",
+              )}
             >
               {exam.patient}
             </h2>
-            <p className="mt-0.5 text-sm text-gray-500">
+            <p
+              className={cn(
+                "mt-0.5 text-gray-500",
+                featured ? "text-base" : "text-sm",
+              )}
+            >
               {exam.patientId} · {exam.age} years
             </p>
           </div>
@@ -395,7 +407,14 @@ function InboxCard({
         </div>
         <div className="mt-5 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5">
           <div className="flex items-center justify-between gap-3">
-            <span className="font-medium text-gray-900">{exam.type}</span>
+            <span
+              className={cn(
+                "font-medium text-gray-900",
+                featured && "text-base",
+              )}
+            >
+              {exam.type}
+            </span>
             <span className="inline-flex items-center gap-1 text-xs font-medium text-gray-500">
               <Clock3 className="h-3.5 w-3.5" />
               {exam.received}
@@ -405,7 +424,12 @@ function InboxCard({
             {exam.unit}
           </p>
         </div>
-        <p className="mt-4 line-clamp-2 min-h-10 text-sm leading-5 text-gray-600">
+        <p
+          className={cn(
+            "mt-4 line-clamp-2 min-h-10 text-gray-600",
+            featured ? "text-base leading-6" : "text-sm leading-5",
+          )}
+        >
           {exam.note}
         </p>
         <div className="mt-4 flex min-h-6 flex-wrap gap-1.5">
@@ -413,16 +437,30 @@ function InboxCard({
             <PriorityReason key={reason} reason={reason} />
           ))}
         </div>
-        <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-4">
-          <span className="text-xs text-gray-500">
+        <div className="mt-5 flex items-center justify-between gap-3 border-t border-gray-100 pt-4">
+          <span className={cn("text-gray-500", featured ? "text-sm" : "text-xs")}>
             Waiting{" "}
             <span className="font-semibold text-gray-700">
               {formatMinutes(exam.waitingMinutes)}
             </span>
           </span>
-          <Button asChild size="sm" className="bg-primary text-white">
-            <Link href={`/exams/${exam.id}`}>Start report</Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => onAssign(exam)}
+            >
+              <UserRoundPlus className="mr-2" />
+              Assign
+            </Button>
+            <Button
+              asChild
+              size={featured ? "default" : "sm"}
+              variant={featured ? "default" : "outline"}
+            >
+              <Link href={`/exams/${exam.id}`}>Start report</Link>
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -432,11 +470,24 @@ function InboxCard({
 function InboxTable({
   exams,
   score,
+  density,
+  visibleColumns,
+  onAssign,
 }: {
   exams: InboxExam[];
   score: (exam: InboxExam) => number;
+  density: TableDensity;
+  visibleColumns: string[];
+  onAssign: (exam: InboxExam) => void;
 }) {
   if (!exams.length) return <EmptyState />;
+  const isVisible = (column: string) => visibleColumns.includes(column);
+  const densityClass =
+    density === "compact"
+      ? "whitespace-nowrap py-2"
+      : density === "spacious"
+        ? "whitespace-normal break-words py-6"
+        : "whitespace-nowrap py-4";
   return (
     <Card className="border-gray-200 bg-white shadow-sm">
       <CardContent className="p-0">
@@ -444,12 +495,12 @@ function InboxTable({
           <table className="min-w-[900px] w-full text-left text-sm">
             <thead className="bg-gray-50 text-xs text-gray-500">
               <tr>
-                <th className="px-5 py-4">Priority</th>
-                <th className="px-5 py-4">Patient</th>
-                <th className="px-5 py-4">Exam</th>
-                <th className="px-5 py-4">Received</th>
-                <th className="px-5 py-4">Priority factors</th>
-                <th className="px-5 py-4 text-right">Action</th>
+                {isVisible("priority") && <th className={`px-5 ${densityClass}`}>Priority</th>}
+                <th className={`px-5 ${densityClass}`}>Patient</th>
+                {isVisible("exam") && <th className={`px-5 ${densityClass}`}>Exam</th>}
+                {isVisible("received") && <th className={`px-5 ${densityClass}`}>Received</th>}
+                {isVisible("factors") && <th className={`px-5 ${densityClass}`}>Priority factors</th>}
+                <th className={`px-5 text-right ${densityClass}`}>Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -458,10 +509,8 @@ function InboxTable({
                   key={exam.id}
                   className="transition-colors hover:bg-orange-50/70"
                 >
-                  <td className="px-5 py-4">
-                    <PriorityPill score={score(exam)} />
-                  </td>
-                  <td className="px-5 py-4">
+                  {isVisible("priority") && <td className={`px-5 ${densityClass}`}><PriorityPill score={score(exam)} /></td>}
+                  <td className={`px-5 ${densityClass}`}>
                     <div className="font-medium text-gray-900">
                       {exam.patient}
                     </div>
@@ -469,29 +518,42 @@ function InboxTable({
                       {exam.patientId} · {exam.age} years
                     </div>
                   </td>
-                  <td className="px-5 py-4">
+                  {isVisible("exam") && <td className={`px-5 ${densityClass}`}>
                     <div className="font-medium text-gray-800">{exam.type}</div>
-                    <div className="mt-0.5 max-w-48 truncate text-xs text-gray-500">
+                    <div
+                      className={cn(
+                        "mt-0.5 text-xs text-gray-500",
+                        density === "spacious"
+                          ? "whitespace-normal break-words"
+                          : "max-w-48 truncate",
+                      )}
+                    >
                       {exam.unit}
                     </div>
-                  </td>
-                  <td className="px-5 py-4 text-gray-600">
+                  </td>}
+                  {isVisible("received") && <td className={`px-5 text-gray-600 ${densityClass}`}>
                     <div>{exam.received}</div>
                     <div className="mt-0.5 text-xs text-gray-400">
                       Waiting {formatMinutes(exam.waitingMinutes)}
                     </div>
-                  </td>
-                  <td className="px-5 py-4">
+                  </td>}
+                  {isVisible("factors") && <td className={`px-5 ${densityClass}`}>
                     <div className="flex max-w-64 flex-wrap gap-1.5">
                       {priorityReasons(exam).map((reason) => (
                         <PriorityReason key={reason} reason={reason} />
                       ))}
                     </div>
-                  </td>
-                  <td className="px-5 py-4 text-right">
-                    <Button asChild size="sm" variant="outline">
-                      <Link href={`/exams/${exam.id}`}>Report</Link>
-                    </Button>
+                  </td>}
+                  <td className={`px-5 text-right ${densityClass}`}>
+                    <div className="flex justify-end gap-2">
+                      <Button size="sm" variant="outline" onClick={() => onAssign(exam)}>
+                        <UserRoundPlus className="mr-2" />
+                        Assign
+                      </Button>
+                      <Button asChild size="sm" variant="outline">
+                        <Link href={`/exams/${exam.id}`}>Report</Link>
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -500,6 +562,123 @@ function InboxTable({
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+function AssignmentDialog({
+  exam,
+  onOpenChange,
+  onAssign,
+}: {
+  exam: InboxExam | null;
+  onOpenChange: (open: boolean) => void;
+  onAssign: (professional: string) => void;
+}) {
+  const [professional, setProfessional] = React.useState(
+    reportingProfessionals[0].name,
+  );
+  const [query, setQuery] = React.useState("");
+
+  React.useEffect(() => {
+    if (exam) {
+      setProfessional(reportingProfessionals[0].name);
+      setQuery("");
+    }
+  }, [exam]);
+
+  const professionals = reportingProfessionals.filter((item) =>
+    `${item.name} ${item.specialty}`.toLowerCase().includes(query.toLowerCase()),
+  );
+
+  return (
+    <Dialog open={Boolean(exam)} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Assign exam</DialogTitle>
+          <DialogDescription>
+            Choose the reporting professional responsible for {exam?.id}.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+          <p className="font-medium text-gray-900">{exam?.patient}</p>
+          <p className="mt-1 text-sm text-gray-500">
+            {exam?.type} · {exam?.patientId}
+          </p>
+        </div>
+        <div className="space-y-3">
+          <div>
+            <p className="text-sm font-medium text-gray-900">
+              Reporting professional
+            </p>
+            <p className="mt-1 text-xs text-gray-500">
+              Select one professional to receive this exam.
+            </p>
+          </div>
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search doctors..."
+              className="h-10 bg-white pl-9"
+            />
+          </div>
+          <div className="max-h-64 space-y-2 overflow-y-auto pr-1">
+            {professionals.map((item) => {
+              const selected = item.name === professional;
+              return (
+                <button
+                  key={item.name}
+                  type="button"
+                  onClick={() => setProfessional(item.name)}
+                  className={cn(
+                    "flex w-full items-center gap-3 rounded-lg border p-3 text-left transition-colors",
+                    selected
+                      ? "border-orange-200 bg-orange-50"
+                      : "border-gray-200 bg-white hover:border-orange-200 hover:bg-orange-50/50",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "h-2.5 w-2.5 shrink-0 rounded-full",
+                      item.online ? "bg-green-500" : "bg-gray-300",
+                    )}
+                    aria-label={item.online ? "Online" : "Offline"}
+                  />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-semibold text-gray-900">
+                      {item.name}
+                    </span>
+                    <span className="block truncate text-xs text-gray-500">
+                      {item.specialty} · {item.online ? "Online" : "Offline"}
+                    </span>
+                  </span>
+                  <span className="shrink-0 text-right">
+                    <span className="block text-sm font-semibold text-gray-900">
+                      {item.assigned}
+                    </span>
+                    <span className="block text-[11px] text-gray-500">
+                      assigned
+                    </span>
+                  </span>
+                </button>
+              );
+            })}
+            {!professionals.length && (
+              <p className="rounded-lg border border-dashed border-gray-200 px-3 py-6 text-center text-sm text-gray-500">
+                No professionals match this search.
+              </p>
+            )}
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="secondary" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
+          <Button onClick={() => onAssign(professional)}>Assign exam</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 

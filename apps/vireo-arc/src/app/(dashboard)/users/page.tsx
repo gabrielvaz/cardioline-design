@@ -16,12 +16,11 @@ const users = [
 ] as const;
 
 type SortKey = 0 | 1 | 2 | 3;
-const pageSize = 5;
-
 export default function UsersPage() {
   const [query, setQuery] = React.useState('');
   const [status, setStatus] = React.useState('All');
   const [page, setPage] = React.useState(1);
+  const [pageSize, setPageSize] = React.useState(10);
   const [sort, setSort] = React.useState<{ key: SortKey; direction: SortDirection }>({ key: 0, direction: 'asc' });
   const [toast, setToast] = React.useState<string | null>(null);
 
@@ -84,7 +83,7 @@ export default function UsersPage() {
             </table>
             {!visible.length && <p className="p-10 text-center text-sm text-muted-foreground">No users found.</p>}
           </div>
-          <TablePagination page={page} pageCount={pageCount} total={filtered.length} pageSize={pageSize} onPageChange={setPage} />
+          <TablePagination page={page} pageCount={pageCount} total={filtered.length} pageSize={pageSize} onPageChange={setPage} onPageSizeChange={(nextPageSize) => { setPageSize(nextPageSize); setPage(1); }} />
         </CardContent>
       </Card>
       <PrototypeToast message={toast} onClose={() => setToast(null)} />

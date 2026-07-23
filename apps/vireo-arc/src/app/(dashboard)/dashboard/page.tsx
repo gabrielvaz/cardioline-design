@@ -2,14 +2,12 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Activity, Users, Clock, AlertTriangle, FileText } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@cardioline/ui';
+import { PageHeader } from '@/components/ui/page-header';
 
 export default function DashboardPage() {
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-[#071046]">Dashboard</h1>
-        <p className="text-sm text-gray-500 mt-1">Overview of patient exams and recent activity.</p>
-      </div>
+      <PageHeader title="Dashboard" description="Overview of patient exams and recent activity." />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="border-gray-200 shadow-sm bg-white">

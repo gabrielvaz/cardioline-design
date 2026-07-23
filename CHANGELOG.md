@@ -11,6 +11,8 @@ All notable prototype UI changes are documented here.
 
 ### Added
 
+- Added the Exam Inbox as a clinical worklist with urgency rules, Cards/Table settings, and mock reassignment of examinations to reporting professionals.
+- Added configurable pagination sizes (10, 20, 50 and 100) to paginated clinical lists.
 - Complete mock flows for exam filtering, advanced search, reports, ECG and PDF report viewers.
 - Patient creation and editing with a shared, fully populated form; patient and exam pagination, sorting, filters, actions and confirmation dialogs.
 - Consolidated Settings navigation with account, configuration and administration areas for users, sites, groups, roles and devices.
@@ -19,6 +21,10 @@ All notable prototype UI changes are documented here.
 
 ### Changed
 
+- Unified the Dashboard, Inbox, Patients, Exams, Reports, Settings and ECG workspace page headers through a shared title and subtitle treatment.
+- Updated sidebar branding to present Vireo ARC in the navigation header and Cardioline alongside the signed-in professional.
+- Made Spacious table density allow multi-line values instead of truncating clinical data.
+- Simplified the Exam Inbox card view to a single-column clinical worklist with neutral row actions and no decorative side rail.
 - Refined the exam workspace: hidden navigation on exam views, ECG loading state, interactive lead measurements and clinical sidebar states.
 - Standardized table headers, row hover behavior, controls, dropdowns, checkboxes and destructive-action confirmation patterns across the prototype.
 - Improved sidebar states (expanded, compact and drawer), navigation organization and Cardioline logo sizing.

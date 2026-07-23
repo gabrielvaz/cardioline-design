@@ -29,6 +29,7 @@ import {
 import { TableSettingsMenu } from "@/components/ui/table-settings-menu";
 import { useGlobalTableDensity } from "@/components/ui/use-global-table-density";
 import { AdvancedSearchModal } from "@/components/ui/advanced-search-modal";
+import { PageHeader } from "@/components/ui/page-header";
 
 type SortKey = "id" | "patient" | "date" | "status";
 const reportTableColumns = [
@@ -81,18 +82,18 @@ export default function ReportsPage() {
     );
   const isVisible = (column: string) => visibleColumns.includes(column);
   const densityClass =
-    density === "compact" ? "py-2" : density === "spacious" ? "py-6" : "py-4";
+    density === "compact"
+      ? "whitespace-nowrap py-2"
+      : density === "spacious"
+        ? "whitespace-normal break-words py-6"
+        : "whitespace-nowrap py-4";
   const statuses = ["Finalized", "Pending Review", "Draft"];
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-[#071046]">
-          Reports
-        </h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Generated medical reports and findings.
-        </p>
-      </div>
+      <PageHeader
+        title="Reports"
+        description="Generated medical reports and findings."
+      />
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
           <div className="relative w-full sm:w-[310px]">

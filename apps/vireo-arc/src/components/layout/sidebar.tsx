@@ -35,7 +35,7 @@ const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Exam Inbox", href: "/exam-inbox", icon: Inbox },
   { name: "Patients", href: "/patients", icon: Users },
-  { name: "Exams & ECG", href: "/exams", icon: Activity },
+  { name: "Exams and ECG", href: "/exams", icon: Activity },
   { name: "Reports", href: "/reports", icon: FileText },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
@@ -115,14 +115,9 @@ function SidebarPanel({
       >
         {expanded ? (
           <>
-            <Image
-              src="https://cardioline.com/wp-content/uploads/2022/08/logo.png"
-              alt="Cardioline Logo"
-              width={42}
-              height={8}
-              sizes="42px"
-              className="h-2 w-auto object-contain"
-            />
+            <span className="font-heading text-base font-bold tracking-[0.12em] text-[#071046]">
+              Vireo <span className="text-[#ee5b00]">ARC</span>
+            </span>
             <button
               onClick={onCollapse}
               title="Collapse sidebar"
@@ -138,9 +133,9 @@ function SidebarPanel({
               onClick={onExpand}
               title="Expand sidebar"
               aria-label="Expand sidebar"
-              className="font-heading text-xl font-extrabold tracking-[0.2em] text-[#ee5b00]"
+              className="font-heading text-xl font-extrabold text-[#071046]"
             >
-              C
+              V
             </button>
             {canHide && (
               <button
@@ -187,6 +182,18 @@ function SidebarPanel({
           );
         })}
       </nav>
+      {expanded && (
+        <div className="px-4 pb-6">
+          <Image
+            src="https://cardioline.com/wp-content/uploads/2022/08/logo.png"
+            alt="Cardioline"
+            width={42}
+            height={8}
+            sizes="42px"
+            className="h-2 w-auto object-contain"
+          />
+        </div>
+      )}
       <UserMenu expanded={expanded} />
     </div>
   );
@@ -226,7 +233,9 @@ function UserMenu({ expanded }: { expanded: boolean }) {
                 <p className="truncate text-sm font-semibold text-gray-900">
                   Dr. Sarah Jenkins
                 </p>
-                <p className="truncate text-xs text-gray-500">Cardiologist</p>
+                <p className="mt-1 truncate text-xs text-gray-500">
+                  Cardiologist
+                </p>
               </div>
               <DropdownMenuTrigger asChild>
                 <button
