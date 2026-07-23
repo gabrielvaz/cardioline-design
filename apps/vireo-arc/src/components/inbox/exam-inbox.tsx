@@ -6,8 +6,9 @@ import {
   AlertTriangle,
   ArrowUpDown,
   Baby,
+  ChevronDown,
+  ChevronUp,
   Clock3,
-  Filter,
   Search,
   Stethoscope,
   UserRound,
@@ -19,12 +20,6 @@ import {
   Card,
   CardContent,
   Checkbox,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
   Input,
   Select,
   SelectContent,
@@ -82,6 +77,7 @@ export function ExamInbox() {
   const [view, setView] = React.useState<ViewMode>("cards");
   const [sort, setSort] = React.useState<SortMode>("priority");
   const [query, setQuery] = React.useState("");
+  const [filtersShown, setFiltersShown] = React.useState(true);
   const [density, setDensity] = useGlobalTableDensity();
   const [visibleColumns, setVisibleColumns] = React.useState(
     inboxTableColumns.map((column) => column.id),
@@ -183,10 +179,14 @@ export function ExamInbox() {
               <SelectItem value="patient">Patient name</SelectItem>
             </SelectContent>
           </Select>
-          <PrioritySettings
-            activeCriteria={activeCriteria}
-            onToggle={toggleCriterion}
-          />
+          <Button
+            variant="outline"
+            onClick={() => setFiltersShown((shown) => !shown)}
+            className="h-10 border-gray-200"
+          >
+            {filtersShown ? <ChevronUp className="mr-2" /> : <ChevronDown className="mr-2" />}
+            {filtersShown ? "Hide filters" : "Show filters"}
+          </Button>
         </div>
         <div className="flex flex-wrap items-center justify-end gap-2 self-end sm:self-auto">
           <TableToolbarMenu
@@ -199,6 +199,38 @@ export function ExamInbox() {
           />
         </div>
       </section>
+
+      {filtersShown && (
+        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+          <p className="text-sm font-semibold text-gray-900">
+            Clinical priority criteria
+          </p>
+          <p className="mt-1 text-xs text-gray-500">
+            These rules compose the default urgency score for your inbox.
+          </p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            {criteria.map((criterion) => (
+              <label
+                key={criterion.id}
+                className="flex cursor-pointer items-start gap-3 rounded-md border border-gray-100 px-3 py-3 transition-colors hover:bg-muted"
+              >
+                <Checkbox
+                  checked={activeCriteria.includes(criterion.id)}
+                  onCheckedChange={() => toggleCriterion(criterion.id)}
+                />
+                <span>
+                  <span className="block text-sm font-medium text-foreground">
+                    {criterion.label}
+                  </span>
+                  <span className="mt-0.5 block text-xs text-muted-foreground">
+                    {criterion.description}
+                  </span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="flex items-center justify-between px-1">
         <p className="text-sm text-gray-500">
@@ -258,58 +290,6 @@ function Metric({
       </p>
       <p className="mt-0.5 text-[11px] font-medium text-gray-500">{label}</p>
     </div>
-  );
-}
-
-function PrioritySettings({
-  activeCriteria,
-  onToggle,
-}: {
-  activeCriteria: Criterion[];
-  onToggle: (criterion: Criterion) => void;
-}) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="h-10 border-gray-200">
-          <Filter className="mr-2" />
-          Filter{" "}
-          <span className="ml-1 rounded bg-muted px-1.5 py-0.5 text-[11px]">
-            {activeCriteria.length}
-          </span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-80 p-2">
-        <DropdownMenuLabel>Clinical priority criteria</DropdownMenuLabel>
-        <p className="px-3 pb-2 text-xs leading-5 text-muted-foreground">
-          These rules compose the default urgency score for your inbox.
-        </p>
-        <DropdownMenuSeparator />
-        {criteria.map((criterion) => (
-          <label
-            key={criterion.id}
-            className="flex cursor-pointer items-start gap-3 rounded-md px-3 py-3 transition-colors hover:bg-muted"
-          >
-            <Checkbox
-              checked={activeCriteria.includes(criterion.id)}
-              onCheckedChange={() => onToggle(criterion.id)}
-            />
-            <span>
-              <span className="block text-sm font-medium text-foreground">
-                {criterion.label}
-              </span>
-              <span className="mt-0.5 block text-xs text-muted-foreground">
-                {criterion.description}
-              </span>
-            </span>
-          </label>
-        ))}
-        <DropdownMenuSeparator />
-        <p className="px-3 py-2 text-xs text-muted-foreground">
-          The selected rules are applied immediately.
-        </p>
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 }
 

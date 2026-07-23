@@ -3,20 +3,21 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Edit, Filter, Plus, Search, SlidersHorizontal } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Edit,
+  Plus,
+  Search,
+  SlidersHorizontal,
+} from "lucide-react";
 import {
   Badge,
   Button,
   Card,
   CardContent,
-  Checkbox,
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
   Input,
-  Label,
+  MultiSelectDropdown,
   RowActionsMenu,
   Select,
   SelectContent,
@@ -62,7 +63,7 @@ export default function PatientsPage() {
   const router = useRouter();
   const [query, setQuery] = React.useState("");
   const [page, setPage] = React.useState(1);
-  const [filtersOpen, setFiltersOpen] = React.useState(false);
+  const [filtersShown, setFiltersShown] = React.useState(true);
   const [advancedOpen, setAdvancedOpen] = React.useState(false);
   const [filters, setFilters] = React.useState<PatientFilters>(emptyFilters);
   const [sort, setSort] = React.useState<{
@@ -93,10 +94,13 @@ export default function PatientsPage() {
     );
     setPage(1);
   };
-  const applyFilters = (next: PatientFilters) => {
-    setFilters(next);
+  const updateFilters = (patch: Partial<PatientFilters>) => {
+    setFilters((current) => ({ ...current, ...patch }));
     setPage(1);
-    setFiltersOpen(false);
+  };
+  const clearFilters = () => {
+    setFilters(emptyFilters);
+    setPage(1);
   };
   const isVisible = (column: string) => visibleColumns.includes(column);
   const densityClass =
@@ -137,15 +141,10 @@ export default function PatientsPage() {
           </Button>
           <Button
             variant="outline"
-            onClick={() => setFiltersOpen(true)}
-            className={
-              hasFilters(filters)
-                ? "border-orange-200 bg-orange-50 text-[#ee5b00]"
-                : "border-gray-200 text-gray-600"
-            }
+            onClick={() => setFiltersShown((shown) => !shown)}
           >
-            <Filter className="mr-2" />
-            Filter{hasFilters(filters) ? " · active" : ""}
+            {filtersShown ? <ChevronUp className="mr-2" /> : <ChevronDown className="mr-2" />}
+            {filtersShown ? "Hide filters" : "Show filters"}
           </Button>
         </div>
         <div className="flex items-center gap-2 self-end sm:self-auto">
@@ -158,6 +157,65 @@ export default function PatientsPage() {
           />
         </div>
       </div>
+
+      {filtersShown && (
+        <div className="overflow-x-auto pb-1">
+          <div className="flex min-w-full w-max items-center gap-3 pr-1">
+            <MultiSelectDropdown
+              label="Status"
+              options={[{ label: "Active" }, { label: "Critical" }, { label: "Inactive" }]}
+              value={filters.status}
+              onChange={(values) => updateFilters({ status: values })}
+              align="start"
+            />
+            <div className="flex shrink-0 items-center gap-1.5">
+              <span className="text-xs font-medium text-gray-500">Born</span>
+              <Input
+                type="date"
+                value={filters.bornFrom}
+                onChange={(event) => updateFilters({ bornFrom: event.target.value })}
+                className="h-9 w-[145px] border-gray-200 bg-white text-sm"
+                aria-label="Born from"
+              />
+              <span className="text-xs text-gray-400">to</span>
+              <Input
+                type="date"
+                value={filters.bornTo}
+                onChange={(event) => updateFilters({ bornTo: event.target.value })}
+                className="h-9 w-[145px] border-gray-200 bg-white text-sm"
+                aria-label="Born to"
+              />
+            </div>
+            <div className="flex shrink-0 items-center gap-1.5">
+              <span className="text-xs font-medium text-gray-500">Last exam</span>
+              <Select
+                value={filters.examPeriod || "any"}
+                onValueChange={(value) =>
+                  updateFilters({ examPeriod: value === "any" ? "" : value })
+                }
+              >
+                <SelectTrigger className="h-9 w-[150px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="any">Any period</SelectItem>
+                  <SelectItem value="today">Today</SelectItem>
+                  <SelectItem value="week">Last 7 days</SelectItem>
+                  <SelectItem value="month">Last 30 days</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="ml-1 shrink-0 text-sm font-medium text-gray-600 underline underline-offset-2 hover:text-[#071046]"
+            >
+              Clear all
+            </button>
+          </div>
+        </div>
+      )}
+
       <Card className="border-gray-200 bg-white shadow-sm">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
@@ -312,12 +370,6 @@ export default function PatientsPage() {
           />
         </CardContent>
       </Card>
-      <PatientFilterModal
-        open={filtersOpen}
-        values={filters}
-        onCancel={() => setFiltersOpen(false)}
-        onApply={applyFilters}
-      />
       <AdvancedSearchModal
         open={advancedOpen}
         onOpenChange={setAdvancedOpen}
@@ -344,115 +396,6 @@ export default function PatientsPage() {
   );
 }
 
-function PatientFilterModal({
-  open,
-  values,
-  onCancel,
-  onApply,
-}: {
-  open: boolean;
-  values: PatientFilters;
-  onCancel: () => void;
-  onApply: (filters: PatientFilters) => void;
-}) {
-  const [draft, setDraft] = React.useState(values);
-  React.useEffect(() => {
-    if (open) setDraft(values);
-  }, [open, values]);
-  const toggleStatus = (value: string) =>
-    setDraft((current) => ({
-      ...current,
-      status: current.status.includes(value)
-        ? current.status.filter((item) => item !== value)
-        : [...current.status, value],
-    }));
-  const periods = [
-    ["any", "Any period"],
-    ["today", "Today"],
-    ["week", "Last 7 days"],
-    ["month", "Last 30 days"],
-  ] as const;
-  return (
-    <Dialog open={open} onOpenChange={(next) => { if (!next) onCancel(); }}>
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>Filter patients</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-6 sm:grid-cols-2">
-          <div className="space-y-3">
-            <Label>Date of birth</Label>
-            <Input
-              type="date"
-              value={draft.bornFrom}
-              onChange={(event) =>
-                setDraft({ ...draft, bornFrom: event.target.value })
-              }
-            />
-            <Input
-              type="date"
-              value={draft.bornTo}
-              onChange={(event) =>
-                setDraft({ ...draft, bornTo: event.target.value })
-              }
-            />
-          </div>
-          <div className="space-y-3">
-            <Label htmlFor="last-exam-period">Last exam date</Label>
-            <Select
-              value={draft.examPeriod || "any"}
-              onValueChange={(value) =>
-                setDraft({ ...draft, examPeriod: value === "any" ? "" : value })
-              }
-            >
-              <SelectTrigger id="last-exam-period" className="h-10 w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {periods.map(([value, label]) => (
-                  <SelectItem key={value} value={value}>{label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2 sm:col-span-2">
-            <Label>Status</Label>
-            <div className="grid gap-1 sm:grid-cols-3">
-              {["Active", "Critical", "Inactive"].map((status) => (
-                <label
-                  key={status}
-                  className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm text-foreground transition-colors hover:bg-muted"
-                >
-                  <Checkbox
-                    checked={draft.status.includes(status)}
-                    onCheckedChange={() => toggleStatus(status)}
-                  />
-                  {status}
-                </label>
-              ))}
-            </div>
-          </div>
-        </div>
-        <DialogFooter className="sm:justify-between">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setDraft(emptyFilters)}
-          >
-            Clear
-          </Button>
-          <div className="flex justify-end gap-3">
-            <Button type="button" variant="secondary" onClick={onCancel}>
-              Cancel
-            </Button>
-            <Button type="button" onClick={() => onApply(draft)}>
-              Apply filters
-            </Button>
-          </div>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
 function matchesFilters(
   patient: (typeof patients)[number],
   query: string,
@@ -475,12 +418,6 @@ function matchesFilters(
   if (filters.examPeriod === "month" && !/(min|hour|day|week)/.test(time))
     return false;
   return true;
-}
-function hasFilters(filters: PatientFilters) {
-  return (
-    filters.status.length > 0 ||
-    Boolean(filters.bornFrom || filters.bornTo || filters.examPeriod)
-  );
 }
 function compare(a: string, b: string, direction: SortDirection) {
   const result = a.localeCompare(b, undefined, { numeric: true });

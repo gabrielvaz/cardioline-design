@@ -3,9 +3,10 @@
 import * as React from "react";
 import Link from "next/link";
 import {
+  ChevronDown,
+  ChevronUp,
   Download,
   FileText,
-  Filter,
   Search,
   SlidersHorizontal,
 } from "lucide-react";
@@ -13,13 +14,8 @@ import {
   Button,
   Card,
   CardContent,
-  Checkbox,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
   Input,
+  MultiSelectDropdown,
   RowActionsMenu,
   TableToolbarMenu,
 } from "@cardioline/ui";
@@ -45,6 +41,7 @@ const reportTableColumns = [
 export default function ReportsPage() {
   const [query, setQuery] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState<string[]>([]);
+  const [filtersShown, setFiltersShown] = React.useState(true);
   const [advancedOpen, setAdvancedOpen] = React.useState(false);
   const [sort, setSort] = React.useState<{
     key: SortKey;
@@ -79,12 +76,6 @@ export default function ReportsPage() {
         ? { key, direction: current.direction === "asc" ? "desc" : "asc" }
         : { key, direction: "asc" },
     );
-  const toggleStatus = (status: string) =>
-    setStatusFilter((current) =>
-      current.includes(status)
-        ? current.filter((value) => value !== status)
-        : [...current, status],
-    );
   const isVisible = (column: string) => visibleColumns.includes(column);
   const densityClass =
     density === "compact"
@@ -115,12 +106,13 @@ export default function ReportsPage() {
             <SlidersHorizontal className="mr-2" />
             Advanced Search
           </Button>
-          <ReportFilter
-            statusFilter={statusFilter}
-            onToggleStatus={toggleStatus}
-            onClear={() => setStatusFilter([])}
-            statuses={statuses}
-          />
+          <Button
+            variant="outline"
+            onClick={() => setFiltersShown((shown) => !shown)}
+          >
+            {filtersShown ? <ChevronUp className="mr-2" /> : <ChevronDown className="mr-2" />}
+            {filtersShown ? "Hide filters" : "Show filters"}
+          </Button>
         </div>
         <div className="flex items-center gap-2 self-end sm:self-auto">
           <TableToolbarMenu
@@ -132,6 +124,28 @@ export default function ReportsPage() {
           />
         </div>
       </div>
+
+      {filtersShown && (
+        <div className="overflow-x-auto pb-1">
+          <div className="flex min-w-full w-max items-center gap-3 pr-1">
+            <MultiSelectDropdown
+              label="Status"
+              options={statuses.map((label) => ({ label }))}
+              value={statusFilter}
+              onChange={setStatusFilter}
+              align="start"
+            />
+            <button
+              type="button"
+              onClick={() => setStatusFilter([])}
+              className="ml-1 shrink-0 text-sm font-medium text-gray-600 underline underline-offset-2 hover:text-[#071046]"
+            >
+              Clear all
+            </button>
+          </div>
+        </div>
+      )}
+
       <Card className="border-gray-200 bg-white shadow-sm">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
@@ -290,60 +304,6 @@ export default function ReportsPage() {
       />
       <PrototypeToast message={toast} onClose={() => setToast(null)} />
     </div>
-  );
-}
-
-function ReportFilter({
-  statusFilter,
-  onToggleStatus,
-  onClear,
-  statuses,
-}: {
-  statusFilter: string[];
-  onToggleStatus: (status: string) => void;
-  onClear: () => void;
-  statuses: string[];
-}) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          className={
-            statusFilter.length
-              ? "border-orange-200 bg-orange-50 text-[#ee5b00]"
-              : ""
-          }
-        >
-          <Filter className="mr-2" />
-          Filter{statusFilter.length ? ` · ${statusFilter.length}` : ""}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-60">
-        <DropdownMenuLabel>Report status</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {statuses.map((status) => (
-          <label
-            key={status}
-            className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-foreground"
-          >
-            <Checkbox
-              checked={statusFilter.includes(status)}
-              onCheckedChange={() => onToggleStatus(status)}
-            />
-            {status}
-          </label>
-        ))}
-        <DropdownMenuSeparator />
-        <button
-          type="button"
-          onClick={onClear}
-          className="w-full px-3 py-2 text-left text-xs font-semibold text-muted-foreground hover:text-foreground"
-        >
-          Clear filters
-        </button>
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 }
 
