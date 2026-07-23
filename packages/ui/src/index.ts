@@ -69,6 +69,9 @@ export type { TableColumnSetting, TableDensity, TableViewSetting } from './block
 
 export { ConfirmDialog } from './blocks/confirm-dialog';
 
+export { RowActionsMenu } from './blocks/row-actions-menu';
+export type { RowAction } from './blocks/row-actions-menu';
+
 /* ─── Utilities ──────────────────────────────────────────────── */
 export { cn } from './lib/utils';
 

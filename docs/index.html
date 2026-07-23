@@ -1592,6 +1592,9 @@
       <a class="nav-link" onclick="scrollToSection('blocks')">
         <i data-lucide="shield-alert"></i> ConfirmDialog
       </a>
+      <a class="nav-link" onclick="scrollToSection('blocks')">
+        <i data-lucide="more-horizontal"></i> RowActionsMenu
+      </a>
     </div>
 
     <div class="nav-section">
@@ -2338,6 +2341,47 @@
         </div>
       </div>
       <p class="section-desc" style="margin-top: -8px;">Wraps Beat's <code>AlertDialog</code>. <code>destructive</code> defaults to <code>true</code> for a red confirm action; set <code>false</code> for a neutral confirmation. <code>confirmLabel</code> defaults to "Delete".</p>
+
+      <div style="margin-bottom: 12px; font-size: 13px; font-weight: 600; color: var(--color-gray-700);">RowActionsMenu</div>
+      <div class="component-card">
+        <div class="component-preview" style="align-items: flex-start; min-height: 220px;">
+          <div style="position: relative; display: inline-block;">
+            <button type="button" class="btn btn-ghost btn-icon" aria-label="More actions for this row" aria-expanded="true">
+              <i data-lucide="more-horizontal"></i>
+            </button>
+            <div class="command-palette" style="position: absolute; top: calc(100% + 8px); left: 0; width: 200px; max-width: 80vw;">
+              <div class="command-group">
+                <div class="command-item">
+                  <i data-lucide="pen-line"></i> Edit
+                </div>
+                <div class="command-item">
+                  <i data-lucide="copy"></i> Duplicate
+                </div>
+              </div>
+              <div class="command-group" style="border-top: 1px solid var(--color-gray-100);">
+                <div class="command-item" style="color: var(--color-error);">
+                  <i data-lucide="trash-2"></i> Delete
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="component-code">
+          <pre><code class="language-tsx">import { RowActionsMenu } from '@cardioline/ui';
+
+&lt;RowActionsMenu
+  name={row.name}
+  actions={[
+    { icon: PenLine, label: 'Edit', onSelect: () => editRow(row) },
+    { icon: Copy, label: 'Duplicate', onSelect: () => duplicateRow(row) },
+  ]}
+  confirmTitle="Delete Patient"
+  confirmDescription="Are you sure you want to delete this patient? This action is permanent and cannot be undone."
+  onDelete={() => deleteRow(row)}
+/&gt;</code></pre>
+        </div>
+      </div>
+      <p class="section-desc" style="margin-top: -8px;">A kebab-triggered menu that always ends in a Delete item wired to Beat's <code>ConfirmDialog</code>. Optional <code>actions</code> render above the separator; <code>icon</code> per action is optional. The caller supplies <code>confirmTitle</code> and <code>confirmDescription</code>, so the block carries no baked-in copy. <code>deleteLabel</code> defaults to "Delete".</p>
     </section>
 
     <!-- CARDS -->

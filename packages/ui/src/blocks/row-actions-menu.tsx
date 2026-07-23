@@ -2,32 +2,38 @@
 
 import * as React from 'react';
 import { MoreHorizontal, Trash2, type LucideIcon } from 'lucide-react';
+import { Button } from '../components/button';
 import {
-  Button,
-  ConfirmDialog,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@cardioline/ui';
+} from '../components/dropdown-menu';
+import { ConfirmDialog } from './confirm-dialog';
 
-export type RowAction = { icon: LucideIcon; label: string; onSelect: () => void };
+export type RowAction = { icon?: LucideIcon; label: string; onSelect: () => void };
 
 /**
- * Shared row "more" menu. Always ends in a Delete item that opens an
+ * Generic row "more" menu block. Always ends in a Delete item that opens an
  * irreversible confirmation before calling onDelete. Optional `actions`
- * render above the Delete separator.
+ * render above the Delete separator. The caller supplies the exact confirm
+ * copy via `confirmTitle`/`confirmDescription`, so this block carries no
+ * baked-in wording.
  */
 export function RowActionsMenu({
-  entity,
   name,
   actions = [],
+  deleteLabel = 'Delete',
+  confirmTitle,
+  confirmDescription,
   onDelete,
 }: {
-  entity: string;
   name: string;
   actions?: RowAction[];
+  deleteLabel?: string;
+  confirmTitle: string;
+  confirmDescription: string;
   onDelete: () => void;
 }) {
   const [confirmOpen, setConfirmOpen] = React.useState(false);
@@ -42,7 +48,7 @@ export function RowActionsMenu({
         <DropdownMenuContent>
           {actions.map((action) => (
             <DropdownMenuItem key={action.label} onSelect={() => action.onSelect()}>
-              <action.icon />
+              {action.icon ? <action.icon /> : null}
               {action.label}
             </DropdownMenuItem>
           ))}
@@ -50,14 +56,14 @@ export function RowActionsMenu({
           {/* Defer opening so the menu fully closes first (avoids focus contention). */}
           <DropdownMenuItem destructive onSelect={() => window.setTimeout(() => setConfirmOpen(true), 0)}>
             <Trash2 />
-            Delete
+            {deleteLabel}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <ConfirmDialog
         open={confirmOpen}
-        title={`Delete ${entity}`}
-        description={`Are you sure you want to delete this ${entity.toLowerCase()}? This action is permanent and cannot be undone.`}
+        title={confirmTitle}
+        description={confirmDescription}
         onCancel={() => setConfirmOpen(false)}
         onConfirm={() => {
           setConfirmOpen(false);

@@ -16,9 +16,8 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { ArrowDown, ArrowUp, ChevronsUpDown, Download, Eye, FileText, PenLine, Repeat2, UserRound } from 'lucide-react';
-import { Button, Card, CardContent, type TableDensity } from '@cardioline/ui';
+import { Button, Card, CardContent, RowActionsMenu, type TableDensity } from '@cardioline/ui';
 import { exams, reports } from '@/lib/mock-data';
-import { RowActionsMenu } from '@/components/ui/row-actions-menu';
 import { PrototypeToast } from '@/components/ui/prototype-toast';
 import { TablePagination } from '@/components/ui/table-pagination';
 
@@ -60,7 +59,8 @@ export function TanstackExamTable({ query, visibleColumns, density }: { query: s
         {report ? <Button asChild size="icon" variant="ghost"><Link href={`/reports/${report.id}`} aria-label="View report"><FileText /></Link></Button> : <Button size="icon" variant="ghost" disabled aria-label="Report unavailable"><FileText /></Button>}
         <Button size="icon" variant="ghost" onClick={() => setToast(`${exam.id} downloaded.`)} aria-label="Download exam"><Download /></Button>
         <RowActionsMenu
-          entity="Exam"
+          confirmTitle="Delete Exam"
+          confirmDescription="Are you sure you want to delete this exam? This action is permanent and cannot be undone."
           name={exam.id}
           actions={[
             { icon: PenLine, label: 'Sign report', onSelect: () => setToast(`Sign report started for ${exam.id}.`) },

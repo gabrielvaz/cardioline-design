@@ -17,6 +17,7 @@ import {
   DialogTitle,
   Input,
   Label,
+  RowActionsMenu,
   Select,
   SelectContent,
   SelectItem,
@@ -33,7 +34,6 @@ import {
 import { useGlobalTableDensity } from "@/components/ui/use-global-table-density";
 import { AdvancedSearchModal } from "@/components/ui/advanced-search-modal";
 import { PageHeader } from "@/components/ui/page-header";
-import { RowActionsMenu } from "@/components/ui/row-actions-menu";
 import { PrototypeToast } from "@/components/ui/prototype-toast";
 
 type SortKey = "name" | "id" | "dob" | "lastExam" | "status";
@@ -279,7 +279,8 @@ export default function PatientsPage() {
                           </Link>
                         </Button>
                         <RowActionsMenu
-                          entity="Patient"
+                          confirmTitle="Delete Patient"
+                          confirmDescription="Are you sure you want to delete this patient? This action is permanent and cannot be undone."
                           name={patient.name}
                           onDelete={() => {
                             setRemovedIds((ids) => [...ids, patient.id]);

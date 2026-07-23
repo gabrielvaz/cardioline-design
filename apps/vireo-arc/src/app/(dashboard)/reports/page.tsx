@@ -20,6 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   Input,
+  RowActionsMenu,
   TableToolbarMenu,
 } from "@cardioline/ui";
 import { reports } from "@/lib/mock-data";
@@ -30,7 +31,6 @@ import {
 import { useGlobalTableDensity } from "@/components/ui/use-global-table-density";
 import { AdvancedSearchModal } from "@/components/ui/advanced-search-modal";
 import { PageHeader } from "@/components/ui/page-header";
-import { RowActionsMenu } from "@/components/ui/row-actions-menu";
 import { PrototypeToast } from "@/components/ui/prototype-toast";
 
 type SortKey = "id" | "patient" | "date" | "status";
@@ -245,7 +245,8 @@ export default function ReportsPage() {
                           </a>
                         </Button>
                         <RowActionsMenu
-                          entity="Report"
+                          confirmTitle="Delete Report"
+                          confirmDescription="Are you sure you want to delete this report? This action is permanent and cannot be undone."
                           name={`${report.type} ${report.id}`}
                           onDelete={() => {
                             setRemovedIds((ids) => [...ids, report.id]);
