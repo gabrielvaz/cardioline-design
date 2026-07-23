@@ -6,6 +6,7 @@ import { EcgViewer } from "./ecg-viewer";
 
 type Exam = {
   id: string;
+  patientId: string;
   name: string;
   type: string;
   date: string;

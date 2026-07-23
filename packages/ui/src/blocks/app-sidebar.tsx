@@ -60,7 +60,7 @@ export function AppSidebar({
           onClick={closeDrawer}
           className="fixed inset-0 z-40 bg-slate-950/35 backdrop-blur-[1px]"
         />
-        <aside className="fixed inset-y-0 left-0 z-50 w-64 animate-in slide-in-from-left duration-200">
+        <aside className="fixed inset-y-0 left-0 z-50 w-64 animate-in slide-in-from-left duration-300 ease-out">
           <SidebarPanel
             expanded
             items={items}
@@ -83,7 +83,7 @@ export function AppSidebar({
   return (
     <aside
       className={cn(
-        'h-full shrink-0 border-r border-border bg-card transition-[width] duration-200',
+        'h-full shrink-0 overflow-hidden border-r border-border bg-card transition-[width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         mode === 'expanded' ? 'w-64' : 'w-[72px]',
       )}
     >
@@ -128,49 +128,55 @@ function SidebarPanel({
 }) {
   return (
     <div className="flex h-full flex-col bg-card">
-      <div
-        className={cn(
-          'flex h-16 items-center border-b border-border',
-          expanded ? 'justify-between px-5' : 'justify-center',
-        )}
-      >
-        {expanded ? (
-          <>
-            {logo}
+      <div className="relative flex h-16 shrink-0 items-center overflow-hidden border-b border-border">
+        <div
+          className={cn(
+            'absolute inset-0 flex items-center justify-between px-5 transition-all duration-200 ease-out',
+            expanded ? 'translate-x-0 opacity-100' : '-translate-x-2 opacity-0 pointer-events-none',
+          )}
+          aria-hidden={!expanded}
+        >
+          <span className="min-w-0 whitespace-nowrap">{logo}</span>
+          <button
+            type="button"
+            onClick={onCollapse}
+            title="Collapse sidebar"
+            aria-label="Collapse sidebar"
+            className="shrink-0 rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <PanelLeftClose className="h-5 w-5" />
+          </button>
+        </div>
+        <div
+          className={cn(
+            'absolute inset-0 flex flex-col items-center justify-center gap-1 transition-all duration-200 ease-out',
+            expanded ? 'translate-x-2 opacity-0 pointer-events-none' : 'translate-x-0 opacity-100',
+          )}
+          aria-hidden={expanded}
+        >
+          <button
+            type="button"
+            onClick={onExpand}
+            title="Expand sidebar"
+            aria-label="Expand sidebar"
+            tabIndex={expanded ? -1 : 0}
+            className="flex items-center justify-center rounded-md transition-transform duration-200 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {collapsedLogo}
+          </button>
+          {canHide && (
             <button
               type="button"
-              onClick={onCollapse}
-              title="Collapse sidebar"
-              aria-label="Collapse sidebar"
-              className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              onClick={onHide}
+              title="Hide sidebar"
+              aria-label="Hide sidebar"
+              tabIndex={expanded ? -1 : 0}
+              className="rounded p-1 text-muted-foreground transition-colors hover:bg-muted"
             >
-              <PanelLeftClose className="h-5 w-5" />
+              <EyeOff className="h-4 w-4" />
             </button>
-          </>
-        ) : (
-          <div className="flex flex-col items-center gap-1">
-            <button
-              type="button"
-              onClick={onExpand}
-              title="Expand sidebar"
-              aria-label="Expand sidebar"
-              className="flex items-center justify-center"
-            >
-              {collapsedLogo}
-            </button>
-            {canHide && (
-              <button
-                type="button"
-                onClick={onHide}
-                title="Hide sidebar"
-                aria-label="Hide sidebar"
-                className="rounded p-1 text-muted-foreground transition-colors hover:bg-muted"
-              >
-                <EyeOff className="h-4 w-4" />
-              </button>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
       <nav
         className={cn('flex flex-col flex-1 gap-1 py-5', expanded ? 'px-4' : 'px-2')}

@@ -11,6 +11,9 @@ All notable prototype UI changes are documented here.
 
 ### Added
 
+- Added Dashboard Exam Inbox and weekly operational analytics widgets, including mock exam/report volume and median report-time trends.
+- Reused the searchable reporting-professional assignment dialog from Exam Inbox in the main exam list.
+- Added patient editing directly from the ECG workspace, plus a format choice before saving an examination.
 - Added a Beat Design System "Blocks" layer (MultiSelectDropdown, TableToolbarMenu, ConfirmDialog, RowActionsMenu, AppSidebar): generic, slot-driven composites now consumed by Vireo Arc, with the local duplicates removed so Beat is the single source of truth.
 - Added a repository-local Beat Design System skill and Markdown component catalog for agent consumption.
 - Added active component search to the Beat Design System documentation sidebar.
@@ -24,6 +27,11 @@ All notable prototype UI changes are documented here.
 
 ### Changed
 
+- Made the ECG waveform dynamically use the available viewport height when measurements are hidden.
+- Replaced the ECG save-format dropdown with selectable format cards for faster visual comparison.
+- Made the Beat sidebar collapse and expand with a smoother transition while keeping the Vireo ARC wordmark stable.
+- Increased the ECG workspace's vertical density on large displays and refined lead-table hover behavior.
+- Refined the sign-in card with a slow moving brand border, expanded breathing room, Vireo ARC wordmark, and a persistent theme toggle.
 - Standardized Vireo Arc modal and confirmation-dialog transitions with an eased fade for opening and closing.
 - Updated Beat documentation buttons to demonstrate leading Lucide icons and removed decorative toast side rails.
 - Reorganized clinical list controls so search, ordering, advanced search and filters follow a consistent workflow hierarchy.

@@ -1,9 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { Eye, EyeOff, Loader2, ArrowRight } from 'lucide-react';
-import { cn } from '@cardioline/ui';
+import { Eye, EyeOff, Loader2, ArrowRight, Moon, Sun } from 'lucide-react';
+import { Button, cn } from '@cardioline/ui';
 import { useRouter } from 'next/navigation';
+import { useTheme } from '@/components/theme/theme-provider';
 
 /* ─── Clean Light-themed Input ──────────────────────────────── */
 function Input({ className, ...props }: React.InputHTMLAttributes<HTMLInputElement>) {
@@ -32,12 +33,12 @@ function Label({ className, ...props }: React.LabelHTMLAttributes<HTMLLabelEleme
 /* ─── Official Cardioline Logo ───────────────────────────────── */
 function CardiolineLogo() {
   return (
-    <div className="flex justify-center mb-2">
+    <div className="mt-4 flex justify-center">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img 
         src="https://cardioline.com/wp-content/uploads/2022/08/logo.png" 
         alt="Cardioline Logo" 
-        className="h-5 w-auto object-contain"
+        className="h-3.5 w-auto object-contain"
       />
     </div>
   );
@@ -51,6 +52,7 @@ export function LoginForm() {
   const [isLoading, setIsLoading]       = React.useState(false);
   const [error, setError]               = React.useState('');
   const router = useRouter();
+  const { theme, toggleTheme } = useTheme();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -70,33 +72,24 @@ export function LoginForm() {
 
   return (
     <div
-      className="relative rounded-2xl overflow-hidden bg-white"
+      className="relative overflow-hidden rounded-2xl p-px"
       style={{
-        boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(238, 91, 0, 0.15)',
+        boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.05)',
       }}
     >
-      {/* Top gradient accent line (kept as requested) */}
+      {/* Slow moving brand accent, visible only as the card border. */}
       <div
-        className="absolute top-0 inset-x-0 h-[2px]"
-        style={{
-          background:
-            'linear-gradient(90deg, transparent, rgba(238,91,0,0.9) 30%, rgba(238,91,0,0.5) 70%, transparent)',
-        }}
+        className="login-border-orbit pointer-events-none absolute -inset-[120%]"
         aria-hidden="true"
       />
 
-      <div className="p-8">
-        {/* Logo */}
-        <CardiolineLogo />
-        
-        {/* App Name */}
-        <div className="text-center mt-3">
-          <p className="text-[10px] font-bold tracking-[0.2em] text-[#071046]/50 uppercase">
-            Platform
+      <div className="relative rounded-[15px] bg-white p-16">
+        {/* Product wordmark follows the same signature used in the sidebar. */}
+        <div className="mb-8 text-center">
+          <p className="font-heading text-2xl font-bold tracking-[0.12em] text-accent">
+            Vireo <span className="text-primary">ARC</span>
           </p>
-          <p className="text-xl font-bold text-[#071046] leading-none font-heading tracking-tight mt-1">
-            Vireo Arc
-          </p>
+          <CardiolineLogo />
         </div>
 
         {/* Form */}
@@ -215,6 +208,43 @@ export function LoginForm() {
           </p>
         </div>
       </div>
+
+      <Button
+        type="button"
+        variant="outline"
+        size="icon"
+        aria-label={theme === 'dark' ? 'Use light mode' : 'Use dark mode'}
+        className="fixed bottom-6 right-6 z-20 rounded-full bg-card shadow-md"
+        onClick={toggleTheme}
+      >
+        {theme === 'dark' ? <Sun /> : <Moon />}
+      </Button>
+
+      <style jsx>{`
+        .login-border-orbit {
+          background: conic-gradient(
+            from 0deg,
+            transparent 0deg,
+            hsl(var(--primary) / 0.12) 80deg,
+            hsl(var(--primary) / 0.9) 145deg,
+            hsl(var(--primary) / 0.2) 210deg,
+            transparent 290deg
+          );
+          animation: login-border-orbit 14s linear infinite;
+        }
+
+        @keyframes login-border-orbit {
+          to {
+            transform: rotate(1turn);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .login-border-orbit {
+            animation: none;
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -57,7 +57,9 @@ const devices = [
 ] as const;
 
 export const exams = Array.from({ length: 30 }, (_, index) => {
-  const patient = patients[index % 5];
+  // Keep ECG history on 80% of the mock patient population. The final four
+  // patients intentionally have no examinations so the empty state is usable.
+  const patient = patients[index % 16];
   const day = 24 - Math.floor(index / 4);
   const hour = String(8 + (index % 7)).padStart(2, "0");
   const minute = String((index * 13) % 60).padStart(2, "0");
@@ -191,6 +193,16 @@ export const inboxExams = [
     unit: "Farmacia delle Colline",
     note: "Hypertension follow-up",
   },
+] as const;
+
+/** Weekly dashboard analytics used only by the front-end prototype. */
+export const dashboardWeeklyPerformance = [
+  { week: "W40", exams: 102, reports: 78, medianMinutesToReport: 96 },
+  { week: "W41", exams: 118, reports: 91, medianMinutesToReport: 84 },
+  { week: "W42", exams: 111, reports: 96, medianMinutesToReport: 73 },
+  { week: "W43", exams: 126, reports: 104, medianMinutesToReport: 68 },
+  { week: "W44", exams: 124, reports: 109, medianMinutesToReport: 61 },
+  { week: "W45", exams: 132, reports: 116, medianMinutesToReport: 58 },
 ] as const;
 
 export const reports = [

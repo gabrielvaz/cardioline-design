@@ -19,12 +19,6 @@ import {
   Card,
   CardContent,
   Checkbox,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -44,6 +38,7 @@ import {
 import { PrototypeToast } from "@/components/ui/prototype-toast";
 import { useGlobalTableDensity } from "@/components/ui/use-global-table-density";
 import { PageHeader } from "@/components/ui/page-header";
+import { AssignmentDialog } from "@/components/exams/assignment-dialog";
 import { inboxExams } from "@/lib/mock-data";
 
 type ViewMode = "cards" | "table";
@@ -81,13 +76,6 @@ const inboxTableColumns = [
   { id: "received", label: "Received" },
   { id: "factors", label: "Priority factors" },
   { id: "actions", label: "Actions", locked: true },
-];
-
-const reportingProfessionals = [
-  { name: "Dr. Sarah Jenkins", specialty: "Cardiologist", assigned: 8, online: true },
-  { name: "Dr. Miguel Oliveira", specialty: "Cardiologist", assigned: 5, online: true },
-  { name: "Dr. Elena Rossi", specialty: "Electrophysiologist", assigned: 11, online: false },
-  { name: "Dr. Lucas Martin", specialty: "Cardiologist", assigned: 3, online: true },
 ];
 
 export function ExamInbox() {
@@ -563,123 +551,6 @@ function InboxTable({
         </div>
       </CardContent>
     </Card>
-  );
-}
-
-function AssignmentDialog({
-  exam,
-  onOpenChange,
-  onAssign,
-}: {
-  exam: InboxExam | null;
-  onOpenChange: (open: boolean) => void;
-  onAssign: (professional: string) => void;
-}) {
-  const [professional, setProfessional] = React.useState(
-    reportingProfessionals[0].name,
-  );
-  const [query, setQuery] = React.useState("");
-
-  React.useEffect(() => {
-    if (exam) {
-      setProfessional(reportingProfessionals[0].name);
-      setQuery("");
-    }
-  }, [exam]);
-
-  const professionals = reportingProfessionals.filter((item) =>
-    `${item.name} ${item.specialty}`.toLowerCase().includes(query.toLowerCase()),
-  );
-
-  return (
-    <Dialog open={Boolean(exam)} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Assign exam</DialogTitle>
-          <DialogDescription>
-            Choose the reporting professional responsible for {exam?.id}.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
-          <p className="font-medium text-gray-900">{exam?.patient}</p>
-          <p className="mt-1 text-sm text-gray-500">
-            {exam?.type} · {exam?.patientId}
-          </p>
-        </div>
-        <div className="space-y-3">
-          <div>
-            <p className="text-sm font-medium text-gray-900">
-              Reporting professional
-            </p>
-            <p className="mt-1 text-xs text-gray-500">
-              Select one professional to receive this exam.
-            </p>
-          </div>
-          <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-            <Input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search doctors..."
-              className="h-10 bg-white pl-9"
-            />
-          </div>
-          <div className="max-h-64 space-y-2 overflow-y-auto pr-1">
-            {professionals.map((item) => {
-              const selected = item.name === professional;
-              return (
-                <button
-                  key={item.name}
-                  type="button"
-                  onClick={() => setProfessional(item.name)}
-                  className={cn(
-                    "flex w-full items-center gap-3 rounded-lg border p-3 text-left transition-colors",
-                    selected
-                      ? "border-orange-200 bg-orange-50"
-                      : "border-gray-200 bg-white hover:border-orange-200 hover:bg-orange-50/50",
-                  )}
-                >
-                  <span
-                    className={cn(
-                      "h-2.5 w-2.5 shrink-0 rounded-full",
-                      item.online ? "bg-green-500" : "bg-gray-300",
-                    )}
-                    aria-label={item.online ? "Online" : "Offline"}
-                  />
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-semibold text-gray-900">
-                      {item.name}
-                    </span>
-                    <span className="block truncate text-xs text-gray-500">
-                      {item.specialty} · {item.online ? "Online" : "Offline"}
-                    </span>
-                  </span>
-                  <span className="shrink-0 text-right">
-                    <span className="block text-sm font-semibold text-gray-900">
-                      {item.assigned}
-                    </span>
-                    <span className="block text-[11px] text-gray-500">
-                      assigned
-                    </span>
-                  </span>
-                </button>
-              );
-            })}
-            {!professionals.length && (
-              <p className="rounded-lg border border-dashed border-gray-200 px-3 py-6 text-center text-sm text-gray-500">
-                No professionals match this search.
-              </p>
-            )}
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="secondary" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
-          <Button onClick={() => onAssign(professional)}>Assign exam</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
   );
 }
 

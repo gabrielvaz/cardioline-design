@@ -20,6 +20,7 @@ import { Button, Card, CardContent, RowActionsMenu, type TableDensity } from '@c
 import { exams, reports } from '@/lib/mock-data';
 import { PrototypeToast } from '@/components/ui/prototype-toast';
 import { TablePagination } from '@/components/ui/table-pagination';
+import { AssignmentDialog, type AssignableExam } from '@/components/exams/assignment-dialog';
 
 type ExamRow = (typeof exams)[number] & { key: number; unit: string; modifiedBy: string };
 
@@ -39,6 +40,7 @@ export function TanstackExamTable({ query, visibleColumns, density }: { query: s
   const [sorting, setSorting] = React.useState<SortingState>([{ id: 'date', desc: true }]);
   const [pagination, setPagination] = React.useState<PaginationState>({ pageIndex: 0, pageSize: 10 });
   const [toast, setToast] = React.useState<string | null>(null);
+  const [assignmentExam, setAssignmentExam] = React.useState<AssignableExam | null>(null);
   const columnVisibility = React.useMemo(() => Object.fromEntries(Object.keys(visibilityLabels).map((id) => [id, visibleColumns.includes(id)])), [visibleColumns]);
   const cellDensity = density === 'compact' ? 'whitespace-nowrap py-2' : density === 'spacious' ? 'whitespace-normal break-words py-5' : 'whitespace-nowrap py-3';
 
@@ -65,7 +67,7 @@ export function TanstackExamTable({ query, visibleColumns, density }: { query: s
           actions={[
             { icon: PenLine, label: 'Sign report', onSelect: () => setToast(`Sign report started for ${exam.id}.`) },
             { icon: Repeat2, label: 'Reassociate', onSelect: () => setToast(`Reassociate started for ${exam.id}.`) },
-            { icon: UserRound, label: 'Assign to a doctor', onSelect: () => setToast(`Assign to a doctor started for ${exam.id}.`) },
+            { icon: UserRound, label: 'Assign to a doctor', onSelect: () => setAssignmentExam({ id: exam.id, patient: exam.name, patientId: exam.patientId, type: exam.type }) },
           ]}
           onDelete={() => setToast(`${exam.id} deleted from this mock list.`)}
         />
@@ -91,6 +93,7 @@ export function TanstackExamTable({ query, visibleColumns, density }: { query: s
 
   return <>
     <Card className="border-gray-200 bg-white shadow-sm"><CardContent className="p-0"><div className="overflow-x-auto"><table className="min-w-[1100px] w-full text-left text-sm"><thead className="bg-gray-50 text-xs text-gray-600">{table.getHeaderGroups().map((headerGroup) => <tr key={headerGroup.id}>{headerGroup.headers.map((header) => <th key={header.id} className={`px-4 ${cellDensity}`}><TanstackHeader header={header} /></th>)}</tr>)}</thead><tbody className="divide-y divide-gray-100">{table.getRowModel().rows.map((row) => <tr key={row.id} onClick={() => router.push(`/exams/${row.original.id}`)} className="cursor-pointer transition-colors hover:bg-orange-50/70">{row.getVisibleCells().map((cell) => <td key={cell.id} title={cell.column.id === 'actions' ? undefined : String(cell.getValue() ?? '')} className={`px-4 ${cellDensity}`}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>)}</tr>)}</tbody></table>{!table.getRowModel().rows.length && <p className="p-10 text-center text-sm text-gray-500">No exams match these filters.</p>}</div><TablePagination page={table.getState().pagination.pageIndex + 1} pageCount={table.getPageCount()} total={total} pageSize={table.getState().pagination.pageSize} onPageChange={(page) => table.setPageIndex(page - 1)} onPageSizeChange={(pageSize) => { table.setPageSize(pageSize); table.setPageIndex(0); }} /></CardContent></Card>
+    <AssignmentDialog exam={assignmentExam} onOpenChange={(open) => !open && setAssignmentExam(null)} onAssign={(professional) => { setToast(`${assignmentExam?.id} assigned to ${professional}.`); setAssignmentExam(null); }} />
     <PrototypeToast message={toast} onClose={() => setToast(null)} />
   </>;
 }
