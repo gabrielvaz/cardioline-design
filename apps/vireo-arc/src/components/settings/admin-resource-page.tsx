@@ -3,12 +3,11 @@
 import * as React from 'react';
 import { Plus, Search, Trash2 } from 'lucide-react';
 import {
-  Badge, Button, Card, CardContent,
+  Badge, Button, Card, CardContent, ConfirmDialog,
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
   Input, Label,
 } from '@cardioline/ui';
 import { PrototypeToast } from '@/components/ui/prototype-toast';
-import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 const seedData = {
   Users: ['Carlos Almeida', 'Andrea Bigazzi', 'Gabriel Kruschewsky Mattos Vaz'],

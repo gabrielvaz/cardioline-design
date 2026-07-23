@@ -1589,6 +1589,9 @@
       <a class="nav-link" onclick="scrollToSection('blocks')">
         <i data-lucide="settings-2"></i> TableToolbarMenu
       </a>
+      <a class="nav-link" onclick="scrollToSection('blocks')">
+        <i data-lucide="shield-alert"></i> ConfirmDialog
+      </a>
     </div>
 
     <div class="nav-section">
@@ -2309,6 +2312,32 @@
         </div>
       </div>
       <p class="section-desc" style="margin-top: -8px;">Locked columns (<code>locked: true</code>) stay checked and disabled. An optional <code>view</code> prop adds a Cards/Table toggle above the density control.</p>
+
+      <div style="margin-bottom: 12px; font-size: 13px; font-weight: 600; color: var(--color-gray-700);">ConfirmDialog</div>
+      <div class="component-card">
+        <div class="component-preview" style="min-height: 220px;">
+          <div class="command-palette" style="max-width: 360px; padding: 24px;">
+            <div style="font-size: 16px; font-weight: 600; color: var(--color-gray-900); margin-bottom: 8px;">Delete Patient</div>
+            <div style="font-size: 14px; color: var(--color-gray-600); line-height: 1.5;">Are you sure you want to delete this patient? This action is permanent and the data cannot be recovered.</div>
+            <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px;">
+              <button type="button" class="btn btn-outline btn-sm">Cancel</button>
+              <button type="button" class="btn btn-destructive btn-sm"><i data-lucide="trash-2"></i> Delete</button>
+            </div>
+          </div>
+        </div>
+        <div class="component-code">
+          <pre><code class="language-tsx">import { ConfirmDialog } from '@cardioline/ui';
+
+&lt;ConfirmDialog
+  open={confirmDelete}
+  title="Delete Patient"
+  description="Are you sure you want to delete this patient? This action is permanent and the data cannot be recovered."
+  onCancel={() => setConfirmDelete(false)}
+  onConfirm={() => handleDelete()}
+/&gt;</code></pre>
+        </div>
+      </div>
+      <p class="section-desc" style="margin-top: -8px;">Wraps Beat's <code>AlertDialog</code>. <code>destructive</code> defaults to <code>true</code> for a red confirm action; set <code>false</code> for a neutral confirmation. <code>confirmLabel</code> defaults to "Delete".</p>
     </section>
 
     <!-- CARDS -->

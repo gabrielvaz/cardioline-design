@@ -67,6 +67,8 @@ export type { MultiSelectOption } from './blocks/multi-select-dropdown';
 export { TableToolbarMenu } from './blocks/table-toolbar-menu';
 export type { TableColumnSetting, TableDensity, TableViewSetting } from './blocks/table-toolbar-menu';
 
+export { ConfirmDialog } from './blocks/confirm-dialog';
+
 /* ─── Utilities ──────────────────────────────────────────────── */
 export { cn } from './lib/utils';
 

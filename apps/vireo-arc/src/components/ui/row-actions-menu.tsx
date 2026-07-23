@@ -4,13 +4,13 @@ import * as React from 'react';
 import { MoreHorizontal, Trash2, type LucideIcon } from 'lucide-react';
 import {
   Button,
+  ConfirmDialog,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@cardioline/ui';
-import { ConfirmDialog } from './confirm-dialog';
 
 export type RowAction = { icon: LucideIcon; label: string; onSelect: () => void };
 

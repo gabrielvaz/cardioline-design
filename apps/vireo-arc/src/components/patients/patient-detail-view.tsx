@@ -4,10 +4,9 @@ import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FileText, MoreVertical, Pencil, Plus, Search } from 'lucide-react';
-import { Button, Card, CardContent, Input } from '@cardioline/ui';
+import { Button, Card, CardContent, ConfirmDialog, Input } from '@cardioline/ui';
 import { exams, reports } from '@/lib/mock-data';
 import { TablePagination } from '@/components/ui/table-pagination';
-import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { SortableHeader, type SortDirection } from '@/components/ui/sortable-header';
 
 type Patient = { id: string; name: string; dob: string; status: string; lastExam: string };
