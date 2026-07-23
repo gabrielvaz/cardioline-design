@@ -1595,6 +1595,9 @@
       <a class="nav-link" onclick="scrollToSection('blocks')">
         <i data-lucide="more-horizontal"></i> RowActionsMenu
       </a>
+      <a class="nav-link" onclick="scrollToSection('blocks')">
+        <i data-lucide="panel-left"></i> AppSidebar
+      </a>
     </div>
 
     <div class="nav-section">
@@ -2382,6 +2385,92 @@
         </div>
       </div>
       <p class="section-desc" style="margin-top: -8px;">A kebab-triggered menu that always ends in a Delete item wired to Beat's <code>ConfirmDialog</code>. Optional <code>actions</code> render above the separator; <code>icon</code> per action is optional. The caller supplies <code>confirmTitle</code> and <code>confirmDescription</code>, so the block carries no baked-in copy. <code>deleteLabel</code> defaults to "Delete".</p>
+
+      <div style="margin-bottom: 12px; font-size: 13px; font-weight: 600; color: var(--color-gray-700);">AppSidebar</div>
+      <div class="component-card">
+        <div class="component-preview" style="align-items: flex-start; gap: 24px; flex-wrap: wrap; min-height: 280px;">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+            <div style="width: 168px; height: 240px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--color-gray-200); border-radius: var(--radius-lg); background: var(--color-white);">
+              <div style="display: flex; height: 40px; align-items: center; justify-content: space-between; padding: 0 12px; border-bottom: 1px solid var(--color-gray-200);">
+                <span style="font-family: var(--font-heading); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--color-navy);">Vireo <span style="color: var(--color-primary);">ARC</span></span>
+                <i data-lucide="panel-left-close" style="width: 14px; height: 14px; color: var(--color-gray-500);"></i>
+              </div>
+              <div style="display: flex; flex: 1; flex-direction: column; gap: 4px; padding: 10px 8px;">
+                <div style="display: flex; align-items: center; gap: 8px; border-radius: var(--radius-md); background: var(--color-primary-pale); padding: 6px 8px; font-size: 11px; font-weight: 600; color: var(--color-primary);">
+                  <i data-lucide="layout-dashboard" style="width: 14px; height: 14px;"></i> Dashboard
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; border-radius: var(--radius-md); padding: 6px 8px; font-size: 11px; color: var(--color-gray-600);">
+                  <i data-lucide="users" style="width: 14px; height: 14px;"></i> Patients
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; border-radius: var(--radius-md); padding: 6px 8px; font-size: 11px; color: var(--color-gray-600);">
+                  <i data-lucide="activity" style="width: 14px; height: 14px;"></i> Exams &amp; ECG
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--color-gray-200); padding: 8px 12px;">
+                <div style="display: flex; width: 22px; height: 22px; align-items: center; justify-content: center; border-radius: var(--radius-full); background: var(--color-navy); font-size: 9px; font-weight: 700; color: var(--color-white);">SJ</div>
+                <span style="font-size: 10px; color: var(--color-gray-600);">Dr. Sarah Jenkins</span>
+              </div>
+            </div>
+            <span class="text-sm" style="font-weight: 600; color: var(--color-gray-700);">Expanded</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+            <div style="width: 64px; height: 240px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--color-gray-200); border-radius: var(--radius-lg); background: var(--color-white);">
+              <div style="display: flex; height: 40px; align-items: center; justify-content: center; border-bottom: 1px solid var(--color-gray-200);">
+                <span style="font-family: var(--font-heading); font-size: 14px; font-weight: 800; color: var(--color-navy);">V</span>
+              </div>
+              <div style="display: flex; flex: 1; flex-direction: column; align-items: center; gap: 6px; padding: 10px 6px;">
+                <div style="display: flex; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: var(--radius-md); background: var(--color-primary-pale); color: var(--color-primary);">
+                  <i data-lucide="layout-dashboard" style="width: 14px; height: 14px;"></i>
+                </div>
+                <div style="display: flex; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: var(--radius-md); color: var(--color-gray-600);">
+                  <i data-lucide="users" style="width: 14px; height: 14px;"></i>
+                </div>
+                <div style="display: flex; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: var(--radius-md); color: var(--color-gray-600);">
+                  <i data-lucide="activity" style="width: 14px; height: 14px;"></i>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: center; border-top: 1px solid var(--color-gray-200); padding: 8px;">
+                <div style="display: flex; width: 22px; height: 22px; align-items: center; justify-content: center; border-radius: var(--radius-full); background: var(--color-navy); font-size: 9px; font-weight: 700; color: var(--color-white);">SJ</div>
+              </div>
+            </div>
+            <span class="text-sm" style="font-weight: 600; color: var(--color-gray-700);">Collapsed</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+            <div style="position: relative; width: 168px; height: 240px; overflow: hidden; border-radius: var(--radius-lg); background: rgba(2, 4, 10, 0.35);">
+              <div style="position: absolute; inset: 0 auto 0 0; display: flex; width: 130px; flex-direction: column; border-right: 1px solid var(--color-gray-200); background: var(--color-white); box-shadow: 4px 0 16px rgba(0,0,0,0.12);">
+                <div style="display: flex; height: 36px; align-items: center; justify-content: space-between; padding: 0 10px; border-bottom: 1px solid var(--color-gray-200);">
+                  <span style="font-family: var(--font-heading); font-size: 10px; font-weight: 700; color: var(--color-navy);">Vireo <span style="color: var(--color-primary);">ARC</span></span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px; padding: 8px 6px;">
+                  <div style="display: flex; align-items: center; gap: 6px; border-radius: var(--radius-md); background: var(--color-primary-pale); padding: 5px 6px; font-size: 10px; font-weight: 600; color: var(--color-primary);">
+                    <i data-lucide="file-text" style="width: 12px; height: 12px;"></i> Reports
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span class="text-sm" style="font-weight: 600; color: var(--color-gray-700);">Drawer</span>
+          </div>
+        </div>
+        <div class="component-code">
+          <pre><code class="language-tsx">import { AppSidebar } from '@cardioline/ui';
+
+&lt;AppSidebar
+  mode={mode}
+  onModeChange={setMode}
+  items={items}
+  logo={&lt;Logo /&gt;}
+  collapsedLogo={&lt;span&gt;V&lt;/span&gt;}
+  footer={&lt;UserMenu /&gt;}
+  canHide={canHide}
+  drawerOpen={drawerOpen}
+  onDrawerOpenChange={setDrawerOpen}
+  renderLink={(item, content) => &lt;Link href={item.href}&gt;{content}&lt;/Link&gt;}
+/&gt;</code></pre>
+        </div>
+      </div>
+      <p class="section-desc" style="margin-top: -8px;">Three-mode collapsible shell: <code>expanded</code> (<code>w-64</code>), <code>collapsed</code> (icon-only, <code>w-[72px]</code>) and <code>hidden</code>, which renders as a scrim-backed drawer when <code>drawerOpen</code>. <code>canHide</code> gates the collapsed-state hide-to-drawer control. Default <code>renderLink</code> renders a plain <code>&lt;a href&gt;</code>; the app overrides it with its own router link.</p>
     </section>
 
     <!-- CARDS -->

@@ -72,6 +72,9 @@ export { ConfirmDialog } from './blocks/confirm-dialog';
 export { RowActionsMenu } from './blocks/row-actions-menu';
 export type { RowAction } from './blocks/row-actions-menu';
 
+export { AppSidebar } from './blocks/app-sidebar';
+export type { SidebarItem, SidebarMode } from './blocks/app-sidebar';
+
 /* ─── Utilities ──────────────────────────────────────────────── */
 export { cn } from './lib/utils';
 
