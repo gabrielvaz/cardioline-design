@@ -85,23 +85,23 @@
   .dark {
     /* ─── Beat Design System — Dark Theme ───────────────────────── */
 
-    --background:         231 50% 7%;         /* Near-black navy */
+    --background:         231 52% 5%;         /* Deep Vireo navy canvas */
     --foreground:         0 0% 95%;
 
-    --card:               231 45% 10%;
+    --card:               231 44% 8%;
     --card-foreground:    0 0% 95%;
 
-    --popover:            231 45% 10%;
+    --popover:            231 44% 8%;
     --popover-foreground: 0 0% 95%;
 
     /* Primary stays orange but slightly lighter on dark */
     --primary:            22 100% 55%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary:          231 30% 18%;
+    --secondary:          231 31% 14%;
     --secondary-foreground: 230 85% 85%;
 
-    --muted:              231 30% 14%;
+    --muted:              231 31% 11%;
     --muted-foreground:   220 15% 55%;
 
     --accent:             22 100% 55%;        /* Orange accent on dark */
@@ -110,8 +110,8 @@
     --destructive:        344 78% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border:             231 30% 20%;
-    --input:              231 30% 18%;
+    --border:             231 30% 16%;
+    --input:              231 31% 13%;
     --ring:               22 100% 55%;
 
     --chart-1: 22 100% 55%;
@@ -174,6 +174,27 @@
       linear-gradient(rgba(238, 91, 0, 0.04) 1px, transparent 1px),
       linear-gradient(90deg, rgba(238, 91, 0, 0.04) 1px, transparent 1px);
     background-size: 20px 20px;
+  }
+
+  /* ECG paper keeps its clinical grid in light mode and becomes a low-glare
+     navy tracing surface in dark mode. */
+  .ecg-waveform {
+    background-color: #fffdfb;
+    background-image:
+      linear-gradient(rgba(238, 91, 0, .11) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(238, 91, 0, .11) 1px, transparent 1px),
+      linear-gradient(rgba(238, 91, 0, .22) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(238, 91, 0, .22) 1px, transparent 1px);
+    background-size: 5px 5px, 5px 5px, 25px 25px, 25px 25px;
+  }
+
+  .dark .ecg-waveform {
+    background-color: #070d18;
+    background-image:
+      linear-gradient(rgba(117, 157, 199, .08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(117, 157, 199, .08) 1px, transparent 1px),
+      linear-gradient(rgba(117, 157, 199, .16) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(117, 157, 199, .16) 1px, transparent 1px);
   }
 
   /* ─── Beat Card Shadow ──────────────────────────────────────── */
@@ -296,5 +317,55 @@
 
   [role="dialog"][aria-labelledby="patient-filters-title"] .mt-7.flex.justify-end.gap-3 > :first-child {
     margin-right: auto;
+  }
+
+  /* Dark-mode bridge for the existing clinical screens, which intentionally use
+     Beat's light utility palette extensively.  Semantic UI primitives already
+     read CSS tokens; these rules bring the legacy utility usage along too. */
+  /* Exact class matching is important here: a selector such as
+     [class*="bg-orange-50"] would also match hover:bg-orange-50 and make the
+     hover tint permanently visible on table rows. */
+  .dark .bg-white { background-color: hsl(var(--card)); }
+  .dark .bg-gray-50, .dark [class~="bg-gray-50/70"], .dark .bg-slate-50, .dark [class~="bg-slate-50/60"] { background-color: hsl(var(--background)); }
+  .dark .bg-gray-100, .dark .bg-slate-100 { background-color: hsl(var(--muted)); }
+  .dark [class~="bg-[#f8fafc]"], .dark [class~="bg-[#f7f9fb]"], .dark [class~="bg-[#fbfcfe]"] { background-color: hsl(var(--background)); }
+  .dark .bg-orange-50, .dark [class~="bg-orange-50/70"], .dark [class~="bg-orange-50/50"] { background-color: rgb(96 43 12 / 0.78); }
+  .dark .bg-red-50, .dark [class~="bg-red-50/50"] { background-color: rgb(91 26 40 / 0.72); }
+  .dark .bg-green-100 { background-color: rgb(13 67 47 / 0.82); }
+  .dark .bg-red-100 { background-color: rgb(100 28 43 / 0.82); }
+  .dark .bg-orange-100 { background-color: rgb(104 48 13 / 0.85); }
+  .dark .bg-amber-100 { background-color: rgb(92 63 10 / 0.82); }
+  .dark .bg-sky-100 { background-color: rgb(25 52 75); }
+  .dark .border-gray-100, .dark .border-gray-200, .dark .border-gray-300, .dark .border-slate-100, .dark .border-slate-200 { border-color: hsl(var(--border)); }
+  .dark .border-red-100, .dark .border-green-100, .dark .border-orange-100, .dark .border-orange-200 { border-color: hsl(231 26% 29%); }
+  .dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]), .dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: hsl(var(--border)); }
+  .dark .text-gray-900, .dark .text-gray-800, .dark .text-slate-900, .dark .text-slate-800 { color: hsl(var(--foreground)); }
+  .dark .text-gray-700, .dark .text-gray-600, .dark .text-slate-700, .dark .text-slate-600 { color: hsl(220 20% 82%); }
+  .dark .text-gray-500, .dark .text-gray-400, .dark .text-slate-500, .dark .text-slate-400 { color: hsl(220 16% 68%); }
+  .dark .text-red-700, .dark .text-red-600 { color: hsl(350 96% 78%); }
+  .dark .text-green-700, .dark .text-green-600 { color: hsl(145 65% 72%); }
+  .dark .text-orange-700, .dark .text-amber-700 { color: hsl(42 100% 78%); }
+  .dark [class~="text-[#071046]"] { color: hsl(var(--foreground)); }
+  .dark [class~="text-[#ee5b00]"] { color: hsl(24 100% 65%); }
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 { color: hsl(var(--foreground)); }
+  .dark .hover\\:bg-gray-50:hover, .dark .hover\\:bg-gray-100:hover, .dark .hover\\:bg-slate-50:hover { background-color: hsl(var(--muted)); }
+  .dark [class*="hover:bg-orange-50"]:hover { background-color: hsl(231 34% 19%); }
+  .dark .hover\\:text-gray-900:hover, .dark .hover\\:text-slate-900:hover, .dark [class*="hover:text-[#071046]"]:hover { color: hsl(var(--foreground)); }
+  .dark .overflow-x-auto > table thead th { border-color: hsl(var(--border)); color: hsl(var(--foreground)); background: hsl(var(--card)); }
+  .dark .overflow-x-auto > table tbody tr:nth-child(even) { background: hsl(231 34% 10%); }
+  .dark .overflow-x-auto > table tbody tr:hover { background: hsl(231 34% 15%) !important; }
+  .dark .overflow-x-auto > table td { border-color: hsl(var(--border)); }
+
+  .dark input, .dark textarea, .dark select {
+    color: hsl(var(--foreground));
+    caret-color: hsl(var(--primary));
+  }
+
+  .dark input::placeholder, .dark textarea::placeholder { color: hsl(220 14% 61%); }
+
+  @media (max-width: 768px) {
+    .dark .overflow-x-auto > table thead th:last-child { background: hsl(var(--card)); }
+    .dark .overflow-x-auto > table tbody td:last-child { background: hsl(var(--card)); }
+    .dark .overflow-x-auto > table tbody tr:hover td:last-child { background: hsl(231 34% 15%); }
   }
 }
