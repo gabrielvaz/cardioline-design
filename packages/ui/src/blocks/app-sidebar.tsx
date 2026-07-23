@@ -173,7 +173,7 @@ function SidebarPanel({
         )}
       </div>
       <nav
-        className={cn('flex-1 space-y-1 py-5', expanded ? 'px-4' : 'px-2')}
+        className={cn('flex flex-col flex-1 gap-1 py-5', expanded ? 'px-4' : 'px-2')}
         aria-label="Main navigation"
       >
         {items.map((item) => {
