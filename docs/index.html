@@ -119,6 +119,51 @@
       text-decoration: none;
     }
 
+    .sidebar-search {
+      position: relative;
+      margin-top: 32px;
+    }
+
+    .sidebar-search svg {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      width: 14px;
+      height: 14px;
+      color: var(--color-gray-400);
+      pointer-events: none;
+      transform: translateY(-50%);
+    }
+
+    .sidebar-search input {
+      width: 100%;
+      height: 34px;
+      padding: 0 10px 0 32px;
+      color: var(--color-gray-800);
+      font-family: var(--font-body);
+      font-size: 12px;
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-md);
+      outline: none;
+      background: var(--color-white);
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .sidebar-search input::placeholder { color: var(--color-gray-400); }
+    .sidebar-search input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(238,91,0,0.12);
+    }
+
+    .sidebar-search-empty {
+      display: none;
+      padding: 18px 20px;
+      color: var(--color-gray-500);
+      font-size: 12px;
+    }
+
+    .sidebar-search-empty.visible { display: block; }
+
     .sidebar-logo-icon {
       width: 36px; height: 36px;
       background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
@@ -958,11 +1003,6 @@
     .toast-close { margin-left: auto; color: var(--color-gray-400); cursor: pointer; }
     .toast-close svg { width: 14px; height: 14px; }
 
-    .toast-success { border-left: 3px solid var(--color-success); }
-    .toast-warning { border-left: 3px solid var(--color-warning); }
-    .toast-error   { border-left: 3px solid var(--color-error); }
-    .toast-info    { border-left: 3px solid var(--color-primary); }
-
     /* ─── Slider ─────────────────────────────────────────────────── */
     .slider {
       appearance: none;
@@ -1277,6 +1317,12 @@
       border-color: var(--border-main);
     }
 
+    body.dark .sidebar-search input {
+      background: var(--bg-elevated);
+      border-color: var(--border-main);
+      color: var(--text-main);
+    }
+
     body.dark .header {
       background: var(--bg-header);
       border-color: var(--border-main);
@@ -1479,8 +1525,12 @@
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <a href="#hero" class="sidebar-logo" style="text-decoration: none;">
-      <span style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: var(--color-primary); letter-spacing: -0.02em;">Beat DS</span>
+      <span style="font-family: var(--font-heading); font-size: 28px; font-weight: 800; color: var(--color-primary); letter-spacing: -0.02em;">Beat DS</span>
     </a>
+    <label class="sidebar-search">
+      <i data-lucide="search"></i>
+      <input id="sidebar-search" type="search" placeholder="Search components..." autocomplete="off" aria-label="Search Beat components" />
+    </label>
   </div>
 
   <nav class="sidebar-nav" id="sidebar-nav">
@@ -1603,6 +1653,7 @@
       </a>
     </div>
   </nav>
+  <p id="sidebar-search-empty" class="sidebar-search-empty">No components found.</p>
 </aside>
 
 <!-- Main Content -->
@@ -1937,32 +1988,32 @@
       <div class="component-card">
         <div class="component-preview">
           <button class="btn btn-primary"><i data-lucide="activity"></i> Primary</button>
-          <button class="btn btn-navy">Navy</button>
-          <button class="btn btn-outline">Outline</button>
-          <button class="btn btn-secondary">Secondary</button>
-          <button class="btn btn-ghost">Ghost</button>
+          <button class="btn btn-navy"><i data-lucide="shield-check"></i> Navy</button>
+          <button class="btn btn-outline"><i data-lucide="arrow-up-right"></i> Outline</button>
+          <button class="btn btn-secondary"><i data-lucide="layers-2"></i> Secondary</button>
+          <button class="btn btn-ghost"><i data-lucide="more-horizontal"></i> Ghost</button>
           <button class="btn btn-destructive"><i data-lucide="trash-2"></i> Destructive</button>
         </div>
         <div class="component-code">
           <pre><code class="language-tsx">import { Button } from '@cardioline/ui';
 
-&lt;Button variant="default"&gt;Primary&lt;/Button&gt;
-&lt;Button variant="outline"&gt;Outline&lt;/Button&gt;
-&lt;Button variant="ghost"&gt;Ghost&lt;/Button&gt;
-&lt;Button variant="secondary"&gt;Secondary&lt;/Button&gt;
-&lt;Button variant="destructive"&gt;Destructive&lt;/Button&gt;</code></pre>
+&lt;Button variant="default"&gt;&lt;Activity /&gt; Primary&lt;/Button&gt;
+&lt;Button variant="outline"&gt;&lt;ArrowUpRight /&gt; Outline&lt;/Button&gt;
+&lt;Button variant="ghost"&gt;&lt;MoreHorizontal /&gt; Ghost&lt;/Button&gt;
+&lt;Button variant="secondary"&gt;&lt;Layers2 /&gt; Secondary&lt;/Button&gt;
+&lt;Button variant="destructive"&gt;&lt;Trash2 /&gt; Destructive&lt;/Button&gt;</code></pre>
         </div>
       </div>
 
       <div style="margin-bottom: 12px; font-size: 13px; font-weight: 600; color: var(--color-gray-700);">Sizes</div>
       <div class="component-card">
         <div class="component-preview" style="align-items: center;">
-          <button class="btn btn-primary btn-sm">Small</button>
-          <button class="btn btn-primary">Default</button>
-          <button class="btn btn-primary btn-lg">Large</button>
-          <button class="btn btn-primary btn-xl">Extra Large</button>
+          <button class="btn btn-primary btn-sm"><i data-lucide="plus"></i> Small</button>
+          <button class="btn btn-primary"><i data-lucide="check"></i> Default</button>
+          <button class="btn btn-primary btn-lg"><i data-lucide="send"></i> Large</button>
+          <button class="btn btn-primary btn-xl"><i data-lucide="sparkles"></i> Extra Large</button>
           <button class="btn btn-outline btn-icon"><i data-lucide="settings"></i></button>
-          <button class="btn btn-primary" disabled>Disabled</button>
+          <button class="btn btn-primary" disabled><i data-lucide="ban"></i> Disabled</button>
         </div>
       </div>
     </section>
@@ -2184,7 +2235,7 @@
             <p style="font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5;">Advanced 12-lead analysis with AI interpretation.</p>
           </div>
           <div class="card-footer">
-            <button class="btn btn-primary btn-sm">Open App</button>
+            <button class="btn btn-primary btn-sm"><i data-lucide="external-link"></i> Open App</button>
           </div>
         </div>
       </div>
@@ -2551,11 +2602,11 @@
       <div class="component-card">
         <div class="component-preview center" style="gap: 24px; padding: 60px 40px;">
           <div class="tooltip-wrapper">
-            <button class="btn btn-primary">Heart Rate <i data-lucide="info"></i></button>
+            <button class="btn btn-primary"><i data-lucide="info"></i> Heart Rate</button>
             <div class="tooltip">72 bpm — Normal Sinus Rhythm</div>
           </div>
           <div class="tooltip-wrapper">
-            <button class="btn btn-outline">QRS Duration</button>
+            <button class="btn btn-outline"><i data-lucide="activity"></i> QRS Duration</button>
             <div class="tooltip">94ms — Within normal range (80–100ms)</div>
           </div>
           <div class="tooltip-wrapper">
@@ -2671,7 +2722,7 @@
             </div>
             <div class="flex gap-3">
               <button type="submit" class="btn btn-primary"><i data-lucide="save"></i> Save Patient</button>
-              <button type="reset" class="btn btn-ghost">Cancel</button>
+              <button type="reset" class="btn btn-ghost"><i data-lucide="x"></i> Cancel</button>
             </div>
           </form>
         </div>
@@ -2963,6 +3014,27 @@
     event.currentTarget.classList.add('active');
     document.getElementById('current-section').textContent = event.currentTarget.textContent.trim();
   }
+
+  // Sidebar component search
+  const sidebarSearch = document.getElementById('sidebar-search');
+  const sidebarSearchEmpty = document.getElementById('sidebar-search-empty');
+  sidebarSearch.addEventListener('input', ({ target }) => {
+    const query = target.value.trim().toLowerCase();
+    let matches = 0;
+
+    document.querySelectorAll('.nav-section').forEach(section => {
+      let sectionMatches = 0;
+      section.querySelectorAll('.nav-link').forEach(link => {
+        const visible = !query || link.textContent.toLowerCase().includes(query);
+        link.style.display = visible ? '' : 'none';
+        if (visible) sectionMatches += 1;
+      });
+      section.style.display = sectionMatches ? '' : 'none';
+      matches += sectionMatches;
+    });
+
+    sidebarSearchEmpty.classList.toggle('visible', Boolean(query) && matches === 0);
+  });
 
   // Back to top
   window.addEventListener('scroll', () => {

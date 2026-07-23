@@ -11,6 +11,7 @@ All notable prototype UI changes are documented here.
 
 ### Added
 
+- Added active component search to the Beat Design System documentation sidebar.
 - Added the Exam Inbox as a clinical worklist with urgency rules, Cards/Table settings, and mock reassignment of examinations to reporting professionals.
 - Added configurable pagination sizes (10, 20, 50 and 100) to paginated clinical lists.
 - Complete mock flows for exam filtering, advanced search, reports, ECG and PDF report viewers.
@@ -21,6 +22,8 @@ All notable prototype UI changes are documented here.
 
 ### Changed
 
+- Standardized Vireo Arc modal and confirmation-dialog transitions with an eased fade for opening and closing.
+- Updated Beat documentation buttons to demonstrate leading Lucide icons and removed decorative toast side rails.
 - Reorganized clinical list controls so search, ordering, advanced search and filters follow a consistent workflow hierarchy.
 - Improved Exam Inbox featured-card hierarchy and dark-mode surface contrast.
 - Unified the Dashboard, Inbox, Patients, Exams, Reports, Settings and ECG workspace page headers through a shared title and subtitle treatment.
