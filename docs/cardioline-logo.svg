@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="400" height="100">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0052cc" />
+      <stop offset="100%" stop-color="#002b80" />
+    </linearGradient>
+  </defs>
+  <path d="M 50 20 A 30 30 0 1 0 50 80" fill="none" stroke="url(#blueGrad)" stroke-width="12" stroke-linecap="round" />
+  <polyline points="20,50 35,50 45,30 55,70 65,50 80,50" fill="none" stroke="#e63946" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" />
+  <text x="100" y="65" font-family="sans-serif" font-weight="bold" font-size="48" fill="#071046">Cardioline</text>
+</svg>

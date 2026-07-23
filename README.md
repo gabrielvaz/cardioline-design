@@ -18,7 +18,7 @@ cardioline-design/
 
 ### `@cardioline/ui` — Beat Design System
 Official Cardioline design system built on top of shadcn/ui.
-Colors and typography extracted directly from [cardioline.com](https://www.cardioline.com):
+Colors and typography:
 - **Primary**: Orange `#ee5b00`
 - **Accent / Dark**: Navy `#071046`
 - **Fonts**: Plus Jakarta Sans (headings) + Inter (body)

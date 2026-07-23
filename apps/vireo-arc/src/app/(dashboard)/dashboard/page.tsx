@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Link from 'next/link';
 import { Activity, Users, Clock, AlertTriangle, FileText } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@cardioline/ui';
 
@@ -61,12 +62,12 @@ export default function DashboardPage() {
           <CardContent>
             <div className="space-y-4">
               {[
-                { name: 'John Doe', type: 'Resting ECG', time: '10 mins ago', status: 'Normal' },
-                { name: 'Jane Smith', type: 'Holter 24h', time: '25 mins ago', status: 'Pending Review' },
-                { name: 'Robert Johnson', type: 'Stress Test', time: '1 hour ago', status: 'Critical', alert: true },
-                { name: 'Emily Davis', type: 'Resting ECG', time: '2 hours ago', status: 'Normal' },
+                { id: 'ECG-2401', name: 'John Doe', type: 'Resting ECG', time: '10 mins ago', status: 'Normal' },
+                { id: 'ECG-2402', name: 'Jane Smith', type: 'Holter 24h', time: '25 mins ago', status: 'Pending Review' },
+                { id: 'ECG-2403', name: 'Robert Johnson', type: 'Stress Test', time: '1 hour ago', status: 'Critical', alert: true },
+                { id: 'ECG-2404', name: 'Emily Davis', type: 'Resting ECG', time: '2 hours ago', status: 'Normal' },
               ].map((exam, i) => (
-                <div key={i} className="flex items-center justify-between border-b border-gray-100 pb-4 last:border-0 last:pb-0">
+                <Link key={exam.id} href={`/exams/${exam.id}`} className="-mx-2 flex items-center justify-between rounded-md border-b border-gray-100 px-2 py-2 transition-colors last:border-0 hover:bg-orange-50/70 focus-visible:bg-orange-50 focus-visible:outline-none">
                   <div className="flex items-center gap-4">
                     <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-sm font-medium text-gray-600">
                       {exam.name.split(' ').map(n => n[0]).join('')}
@@ -86,7 +87,7 @@ export default function DashboardPage() {
                   }`}>
                     {exam.status}
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </CardContent>

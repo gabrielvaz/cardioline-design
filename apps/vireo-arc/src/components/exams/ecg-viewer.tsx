@@ -1,0 +1,48 @@
+'use client';
+
+import * as React from 'react';
+import Link from 'next/link';
+import { ArrowLeft, Download, Edit3, Menu, Printer } from 'lucide-react';
+import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@cardioline/ui';
+import { PrototypeToast } from '@/components/ui/prototype-toast';
+
+type Exam = { id: string; name: string; type: string; date: string; result: string };
+const leads = ['I', 'II', 'III', 'aVR', 'aVL', 'aVF', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6'];
+const measurements = ['R (ms)', 'S (ms)', 'Q Amp (mV)', 'R Amp (mV)', 'ST (ms)', 'QT (ms)'];
+const globals = [['Cardiac frequency (BPM)', '72'], ['P duration (ms)', '120'], ['PR interval (ms)', '160'], ['QRS duration (ms)', '100'], ['QT interval (ms)', '360'], ['QTc Bazett (ms)', '311'], ['QTc Fridericia (ms)', '344']];
+const clinicalRows = ['Study reason', 'Notes', 'Medical history', 'Medications', 'Technician', 'Number of rest...'];
+
+export function EcgViewer({ exam }: { exam: Exam }) {
+  const [showMeasurements, setShowMeasurements] = React.useState(true);
+  const [summary, setSummary] = React.useState(exam.result === 'Abnormal' ? 'Abnormal' : 'Normal');
+  const [conclusion, setConclusion] = React.useState('');
+  const [toast, setToast] = React.useState<string | null>(null);
+  return <div className="-m-6 min-h-[calc(100vh-4rem)] bg-[#f8fafc] text-slate-700">
+    <header className="flex items-center justify-between border-b border-slate-100 bg-white px-5 py-3">
+      <div className="flex min-w-0 items-center gap-2"><Button type="button" size="icon" variant="ghost" aria-label="Open navigation" onClick={() => window.dispatchEvent(new Event('cardioline:open-sidebar'))}><Menu className="h-5 w-5" /></Button><Button asChild variant="ghost" size="sm" className="text-slate-600"><Link href="/exams"><ArrowLeft className="mr-1" />Back</Link></Button><div className="ml-4 min-w-0"><h1 className="truncate text-xl font-bold text-[#071046]">{exam.name}</h1><p className="text-xs text-slate-500">Captured: {exam.date} · Reviewed: Oct 25, 2026 09:32</p></div></div>
+      <div className="hidden items-center gap-6 text-center lg:flex">{[['31235674','Patient ID'],['46','Age'],['Male','Gender'],['80 kg','Weight'],['180 cm','Height'],['98','Pressure']].map(([value,label]) => <div key={label}><p className="text-sm font-bold text-slate-800">{value}</p><p className="text-[11px] text-slate-400">{label}</p></div>)}<Button size="icon" variant="ghost" aria-label="Print ECG" onClick={() => window.print()}><Printer /></Button><Button size="icon" variant="ghost" aria-label="Download ECG" onClick={() => setToast(`${exam.id} ECG export downloaded.`)}><Download /></Button></div>
+    </header>
+    <div className="grid min-h-[calc(100vh-8.75rem)] grid-cols-1 xl:grid-cols-[minmax(0,1fr)_400px]">
+      <main className="min-w-0"><div className="flex flex-wrap items-center gap-2 border-b border-slate-100 bg-white px-3 py-2"><Control label="Compare" /><Control label="Format: 12×1" /><Control label="mm/mV: 10" /><Control label="mm/s: 25" /><Control label="Muscular filter: on" /><button onClick={() => setShowMeasurements(!showMeasurements)} className="ml-2 text-sm font-medium text-slate-600 underline underline-offset-2">{showMeasurements ? '⌃ Hide measurements' : '⌄ Show measurements'}</button></div>
+        {showMeasurements && <MeasurementTable />}
+        <div className="border-y border-slate-200 bg-white px-5 py-2 text-sm text-slate-600">Acquired at 25/06/2024 at 12:10:03 · Not confirmed · Trial test</div>
+        <Waveform />
+      </main>
+      <aside className="border-l border-slate-100 bg-[#fbfcfe] p-4"><ClinicalData /><section className="mt-6"><h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-slate-600">Global measurements</h2><dl className="text-sm">{globals.map(([label,value], index) => <div key={label} className={`flex cursor-default justify-between px-2 py-2 transition-colors hover:bg-[#d8effc] ${index % 2 === 0 ? 'bg-slate-100' : ''}`}><dt>{label}</dt><dd className="font-medium">{value}</dd></div>)}</dl></section><section className="mt-6"><div className="flex items-center justify-between"><h2 className="text-xs font-bold uppercase tracking-wide text-slate-600">Conclusions</h2><button onClick={() => setConclusion('Sinus rhythm. No acute ST-T changes.')} className="text-xs text-[#ee5b00] hover:underline">Pick a template</button></div><textarea value={conclusion} onChange={(event) => setConclusion(event.target.value)} placeholder="Type here" className="mt-2 min-h-28 w-full rounded-md border border-slate-200 bg-white p-3 text-sm outline-none focus:border-[#ee5b00]" /><div className="mt-4 space-y-2"><Label htmlFor="summary">Summary</Label><select id="summary" value={summary} onChange={(event) => setSummary(event.target.value)} className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm"><option>Normal</option><option>Borderline</option><option>Abnormal</option><option>Pending Review</option></select></div><Button onClick={() => setToast('ECG interpretation saved.')} className="mt-5 w-full bg-[#ee5b00] text-white hover:bg-[#d44e00]">Save</Button></section></aside>
+    </div><PrototypeToast message={toast} onClose={() => setToast(null)} />
+  </div>;
+}
+function Control({ label }: { label: string }) {
+  const choices = label.startsWith('Compare') ? ['Compare', 'None', 'Previous exam'] : label.startsWith('Format') ? ['Format: 12×1', 'Format: 6×2', 'Format: 3×4'] : label.startsWith('mm/mV') ? ['mm/mV: 10', 'mm/mV: 5', 'mm/mV: 20'] : label.startsWith('mm/s') ? ['mm/s: 25', 'mm/s: 50'] : ['Muscular filter: on', 'Muscular filter: off'];
+  const [value, setValue] = React.useState(label);
+  return <Select value={value} onValueChange={setValue}><SelectTrigger aria-label={label.split(':')[0]} className="min-w-[104px]"><SelectValue /></SelectTrigger><SelectContent>{choices.map((choice) => <SelectItem key={choice} value={choice}>{choice}</SelectItem>)}</SelectContent></Select>;
+}
+function MeasurementTable() {
+  const [hovered, setHovered] = React.useState<{ row: number; col: number } | null>(null);
+  const rowHighlight = 'bg-[#fff4e8]';
+  const columnHighlight = 'bg-[#ffe4c7]';
+  const intersectionHighlight = 'bg-[#ffd1a0]';
+  return <div className="max-h-80 overflow-auto bg-white px-3 py-5"><table className="min-w-[920px] w-full border-separate border-spacing-0 text-center text-sm"><thead className="text-xs font-bold text-slate-500"><tr><th className={`w-24 text-left ${hovered?.row !== undefined && hovered.row >= 0 ? rowHighlight : ''}`}></th>{leads.map((lead, col) => <th key={lead} onMouseEnter={() => setHovered({ row: -1, col })} onMouseLeave={() => setHovered(null)} className={`cursor-default pb-2 transition-colors ${hovered?.col === col ? columnHighlight : ''}`}>{lead}</th>)}</tr></thead><tbody>{measurements.map((metric, row) => <tr key={metric} className="border-t border-slate-200">{/* The leading cell participates in the row highlight just like a list row. */}<th onMouseEnter={() => setHovered({ row, col: -1 })} onMouseLeave={() => setHovered(null)} className={`cursor-default border-t border-slate-200 px-3 py-2 text-left font-medium text-slate-600 transition-colors ${hovered?.row === row ? rowHighlight : ''}`}>{metric}</th>{leads.map((lead, col) => <td key={lead} onMouseEnter={() => setHovered({ row, col })} onMouseLeave={() => setHovered(null)} className={`cursor-default border-t border-slate-200 py-2 text-slate-600 transition-colors ${hovered?.row === row && hovered?.col === col ? intersectionHighlight : hovered?.col === col ? columnHighlight : hovered?.row === row ? rowHighlight : ''}`}>{row === 2 ? (col % 2 ? '0.57' : '0.42') : 57}</td>)}</tr>)}</tbody></table></div>;
+}
+function Waveform() { const pattern = '0,56 30,56 38,51 45,62 52,56 58,17 64,92 70,56 100,56 110,48 120,56 140,56'; return <div className="relative min-h-[520px] overflow-auto bg-[#fffdfb] p-5" style={{ backgroundImage: 'linear-gradient(rgba(238,91,0,.11) 1px, transparent 1px), linear-gradient(90deg, rgba(238,91,0,.11) 1px, transparent 1px), linear-gradient(rgba(238,91,0,.22) 1px, transparent 1px), linear-gradient(90deg, rgba(238,91,0,.22) 1px, transparent 1px)', backgroundSize: '5px 5px, 5px 5px, 25px 25px, 25px 25px' }}>{['aVF','V1','V2','V3','V4','V5'].map((lead,index) => <div key={lead} className="relative h-20 min-w-[1160px]"><span className="absolute left-0 top-1 text-xs font-bold text-slate-700">{lead}</span><svg className="h-full w-full" viewBox="0 0 1200 112" preserveAspectRatio="none"><polyline points={Array.from({ length: 9 }, (_, i) => pattern.split(' ').map((point) => { const [x,y] = point.split(',').map(Number); return `${x + i * 140},${y + index * (index % 2 ? 0 : 1)}`; }).join(' ')).join(' ')} fill="none" stroke="#4b5563" strokeWidth="1.4" /></svg></div>)}</div>; }
+function ClinicalData() { const [editing, setEditing] = React.useState<string | null>(null); const [values, setValues] = React.useState<Record<string,string>>({}); return <section className="text-sm">{clinicalRows.map((label,index) => <div key={label} className={`flex min-h-9 cursor-default items-center justify-between px-2 py-2 transition-colors hover:bg-[#d8effc] ${index % 2 === 0 ? 'bg-slate-100' : ''}`}><span>{label}</span>{editing === label ? <Input autoFocus value={values[label] ?? 'Lorem ipsum'} onChange={(event) => setValues({ ...values, [label]: event.target.value })} onBlur={() => setEditing(null)} className="h-7 w-40 bg-white text-xs" /> : <span className="flex items-center gap-3 text-slate-600">{values[label] ?? 'Lorem ipsum'}<button onClick={() => setEditing(label)} aria-label={`Edit ${label}`} className="hover:text-[#ee5b00]"><Edit3 className="h-4 w-4" /></button></span>}</div>)}</section>; }

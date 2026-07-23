@@ -1,56 +1,17 @@
+'use client';
+
 import * as React from 'react';
-import { Download, FileText, CheckCircle, Clock } from 'lucide-react';
-import { Card, CardContent, Button } from '@cardioline/ui';
+import Link from 'next/link';
+import { Download, FileText, Search } from 'lucide-react';
+import { Button, Card, CardContent, Input } from '@cardioline/ui';
+import { reports } from '@/lib/mock-data';
+import { SortableHeader, type SortDirection } from '@/components/ui/sortable-header';
 
+type SortKey = 'id' | 'patient' | 'date' | 'status';
 export default function ReportsPage() {
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#071046]">Reports</h1>
-          <p className="text-sm text-gray-500 mt-1">Generated medical reports and findings.</p>
-        </div>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {[
-          { patient: 'John Doe', type: 'Resting ECG Report', date: 'Oct 24, 2026', status: 'Finalized', color: 'green' },
-          { patient: 'Jane Smith', type: 'Holter 24h Summary', date: 'Oct 24, 2026', status: 'Pending Review', color: 'orange' },
-          { patient: 'Robert Johnson', type: 'Stress Test Findings', date: 'Oct 23, 2026', status: 'Finalized', color: 'green' },
-          { patient: 'Emily Davis', type: 'Resting ECG Report', date: 'Oct 22, 2026', status: 'Finalized', color: 'green' },
-          { patient: 'Michael Brown', type: 'Echocardiogram', date: 'Oct 20, 2026', status: 'Finalized', color: 'green' },
-          { patient: 'Sarah Wilson', type: 'Holter 48h Summary', date: 'Oct 19, 2026', status: 'Draft', color: 'gray' },
-        ].map((report, i) => (
-          <Card key={i} className="border-gray-200 shadow-sm bg-white hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                <div className="h-10 w-10 rounded-lg bg-[#071046]/5 flex items-center justify-center text-[#071046]">
-                  <FileText className="h-5 w-5" />
-                </div>
-                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-${report.color}-100 text-${report.color}-700`}>
-                  {report.status === 'Finalized' && <CheckCircle className="w-3 h-3 mr-1" />}
-                  {report.status === 'Pending Review' && <Clock className="w-3 h-3 mr-1" />}
-                  {report.status}
-                </span>
-              </div>
-              <div className="mt-4">
-                <h3 className="font-semibold text-gray-900 truncate">{report.patient}</h3>
-                <p className="text-sm text-gray-600 mt-1 font-medium">{report.type}</p>
-                <p className="text-xs text-gray-400 mt-2">Generated on {report.date}</p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-gray-100 flex gap-3">
-                <Button variant="outline" className="flex-1 text-gray-700 bg-white hover:bg-gray-50 border-gray-200">
-                  View
-                </Button>
-                <Button variant="outline" className="flex-1 text-[#ee5b00] border-[#ee5b00]/20 hover:bg-orange-50 bg-white">
-                  <Download className="w-4 h-4 mr-2" />
-                  PDF
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
+  const [query, setQuery] = React.useState(''); const [sort, setSort] = React.useState<{ key: SortKey; direction: SortDirection }>({ key: 'date', direction: 'desc' });
+  const list = reports.filter((report) => `${report.patient} ${report.type} ${report.id}`.toLowerCase().includes(query.toLowerCase())).sort((a, b) => { const result = String(a[sort.key]).localeCompare(String(b[sort.key]), undefined, { numeric: true }); return sort.direction === 'asc' ? result : -result; });
+  const toggleSort = (key: SortKey) => setSort((current) => current.key === key ? { key, direction: current.direction === 'asc' ? 'desc' : 'asc' } : { key, direction: 'asc' });
+  return <div className="space-y-6"><div><h1 className="text-2xl font-bold tracking-tight text-[#071046]">Reports</h1><p className="mt-1 text-sm text-gray-500">Generated medical reports and findings.</p></div><Card className="border-gray-200 bg-white shadow-sm"><div className="border-b border-gray-100 p-4"><div className="relative max-w-sm"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" /><Input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search reports..." className="border-gray-200 bg-gray-50 pl-9" /></div></div><CardContent className="p-0"><div className="overflow-x-auto"><table className="min-w-[720px] w-full text-left text-sm"><thead className="bg-gray-50 text-xs text-gray-500"><tr><th className="px-6 py-4"><SortableHeader label="Report" active={sort.key === 'id'} direction={sort.direction} onClick={() => toggleSort('id')} /></th><th className="px-6 py-4"><SortableHeader label="Patient" active={sort.key === 'patient'} direction={sort.direction} onClick={() => toggleSort('patient')} /></th><th className="px-6 py-4"><SortableHeader label="Generated" active={sort.key === 'date'} direction={sort.direction} onClick={() => toggleSort('date')} /></th><th className="px-6 py-4"><SortableHeader label="Status" active={sort.key === 'status'} direction={sort.direction} onClick={() => toggleSort('status')} /></th><th className="px-6 py-4 text-right">Actions</th></tr></thead><tbody className="divide-y divide-gray-100">{list.map((report) => <tr key={report.id} className="cursor-pointer transition-colors hover:bg-orange-50/70"><td className="px-6 py-4"><Link href={`/reports/${report.id}`} className="flex items-center gap-3 font-medium text-gray-900"><FileText className="h-4 w-4 text-[#ee5b00]" />{report.type}<span className="text-xs font-normal text-gray-400">{report.id}</span></Link></td><td className="px-6 py-4 text-gray-700"><Link href={`/reports/${report.id}`} className="block">{report.patient}</Link></td><td className="px-6 py-4 text-gray-500"><Link href={`/reports/${report.id}`} className="block">{report.date}</Link></td><td className="px-6 py-4"><Status status={report.status} /></td><td className="px-6 py-4"><div className="flex justify-end gap-2"><Button asChild size="sm" variant="outline"><Link href={`/reports/${report.id}`}>View</Link></Button><Button asChild size="icon" variant="ghost" aria-label={`Download ${report.id}`} className="text-[#ee5b00]"><a href={`/api/reports/${report.id}`} download><Download /></a></Button></div></td></tr>)}</tbody></table>{!list.length && <p className="p-10 text-center text-sm text-gray-500">No reports match this search.</p>}</div></CardContent></Card></div>;
 }
+function Status({ status }: { status: string }) { const cls = status === 'Finalized' ? 'bg-green-100 text-green-700' : status === 'Pending Review' ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-700'; return <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${cls}`}>{status}</span>; }

@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { Eye, EyeOff, Loader2, ArrowRight } from 'lucide-react';
 import { cn } from '@cardioline/ui';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 /* ─── Clean Light-themed Input ──────────────────────────────── */
@@ -38,36 +37,8 @@ function CardiolineLogo() {
       <img 
         src="https://cardioline.com/wp-content/uploads/2022/08/logo.png" 
         alt="Cardioline Logo" 
-        className="h-8 w-auto object-contain"
+        className="h-5 w-auto object-contain"
       />
-    </div>
-  );
-}
-
-/* ─── Light ECG SVG Divider ──────────────────────────────────── */
-function EcgDivider() {
-  return (
-    <div className="flex items-center gap-3 my-6">
-      <div className="flex-1 h-px bg-gray-100" />
-      <svg
-        width="80"
-        height="20"
-        viewBox="0 0 80 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-      >
-        <polyline
-          points="0,10 15,10 20,4 23,16 26,2 29,18 32,10 47,10 52,4 55,16 58,2 61,18 64,10 80,10"
-          stroke="#ee5b00"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-          opacity="0.8"
-        />
-      </svg>
-      <div className="flex-1 h-px bg-gray-100" />
     </div>
   );
 }
@@ -128,18 +99,6 @@ export function LoginForm() {
           </p>
         </div>
 
-        <EcgDivider />
-
-        {/* Heading */}
-        <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold text-[#071046] font-heading leading-tight">
-            Welcome back
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Sign in to your account to access cardiac diagnostics.
-          </p>
-        </div>
-
         {/* Form */}
         <form
           id="login-form"
@@ -172,7 +131,7 @@ export function LoginForm() {
                 type="button"
                 id="forgot-password-link"
                 className="text-xs font-medium text-[#ee5b00] hover:text-[#d44e00] transition-colors focus-visible:outline-none focus-visible:underline"
-                onClick={() => { /* TODO: navigate to forgot password */ }}
+                onClick={() => router.push('/forgot-password')}
               >
                 Forgot password?
               </button>

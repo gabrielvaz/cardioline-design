@@ -1,82 +1,33 @@
+'use client';
+
 import * as React from 'react';
-import { Search, Plus, Filter, MoreVertical } from 'lucide-react';
-import { Card, CardContent, Button, Input } from '@cardioline/ui';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Edit, Eye, Filter, Plus, Search } from 'lucide-react';
+import { Button, Card, CardContent, Input, Label } from '@cardioline/ui';
+import { patients } from '@/lib/mock-data';
+import { TablePagination } from '@/components/ui/table-pagination';
+import { SortableHeader, type SortDirection } from '@/components/ui/sortable-header';
+import { SelectionCheckbox } from '@/components/ui/selection-checkbox';
+
+type SortKey = 'name' | 'id' | 'dob' | 'lastExam' | 'status';
+type PatientFilters = { status: string[]; bornFrom: string; bornTo: string; examPeriod: string };
+const emptyFilters: PatientFilters = { status: [], bornFrom: '', bornTo: '', examPeriod: '' };
 
 export default function PatientsPage() {
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#071046]">Patients</h1>
-          <p className="text-sm text-gray-500 mt-1">Manage and view patient records.</p>
-        </div>
-        <Button className="bg-[#ee5b00] hover:bg-[#d05000] text-white">
-          <Plus className="mr-2 h-4 w-4" />
-          Add Patient
-        </Button>
-      </div>
-
-      <Card className="border-gray-200 shadow-sm bg-white">
-        <div className="border-b border-gray-100 p-4 flex items-center justify-between gap-4">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input 
-              type="search" 
-              placeholder="Search patients..." 
-              className="pl-9 bg-gray-50 border-gray-200"
-            />
-          </div>
-          <Button variant="outline" className="text-gray-600 border-gray-200">
-            <Filter className="mr-2 h-4 w-4" />
-            Filter
-          </Button>
-        </div>
-        <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
-              <thead className="bg-gray-50 text-gray-500 font-medium">
-                <tr>
-                  <th className="px-6 py-4">Patient Name</th>
-                  <th className="px-6 py-4">ID / SSN</th>
-                  <th className="px-6 py-4">Date of Birth</th>
-                  <th className="px-6 py-4">Last Exam</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {[
-                  { name: 'John Doe', id: 'P-10023', dob: '15 May 1965', lastExam: '10 mins ago', status: 'Active' },
-                  { name: 'Jane Smith', id: 'P-10024', dob: '22 Aug 1982', lastExam: '25 mins ago', status: 'Active' },
-                  { name: 'Robert Johnson', id: 'P-10025', dob: '03 Nov 1950', lastExam: '1 hour ago', status: 'Critical' },
-                  { name: 'Emily Davis', id: 'P-10026', dob: '14 Feb 1990', lastExam: '2 hours ago', status: 'Active' },
-                  { name: 'Michael Brown', id: 'P-10027', dob: '30 Sep 1978', lastExam: 'Yesterday', status: 'Inactive' },
-                ].map((patient, i) => (
-                  <tr key={i} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-4 font-medium text-gray-900">{patient.name}</td>
-                    <td className="px-6 py-4 text-gray-500">{patient.id}</td>
-                    <td className="px-6 py-4 text-gray-500">{patient.dob}</td>
-                    <td className="px-6 py-4 text-gray-500">{patient.lastExam}</td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                        patient.status === 'Active' ? 'bg-green-100 text-green-700' :
-                        patient.status === 'Critical' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-700'
-                      }`}>
-                        {patient.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right text-gray-400">
-                      <button className="p-1 hover:text-gray-600 rounded-md hover:bg-gray-100">
-                        <MoreVertical className="h-4 w-4" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
+  const router = useRouter();
+  const [query, setQuery] = React.useState(''); const [page, setPage] = React.useState(1); const [filtersOpen, setFiltersOpen] = React.useState(false); const [filters, setFilters] = React.useState<PatientFilters>(emptyFilters); const [sort, setSort] = React.useState<{ key: SortKey; direction: SortDirection }>({ key: 'name', direction: 'asc' });
+  const pageSize = 10;
+  React.useEffect(() => setQuery(new URLSearchParams(window.location.search).get('q') ?? ''), []);
+  const list = patients.filter((patient) => matchesFilters(patient, query, filters)).sort((a, b) => compare(a[sort.key], b[sort.key], sort.direction));
+  const pageCount = Math.max(1, Math.ceil(list.length / pageSize)); const visible = list.slice((page - 1) * pageSize, page * pageSize);
+  const toggleSort = (key: SortKey) => { setSort((current) => current.key === key ? { key, direction: current.direction === 'asc' ? 'desc' : 'asc' } : { key, direction: 'asc' }); setPage(1); };
+  const applyFilters = (next: PatientFilters) => { setFilters(next); setPage(1); setFiltersOpen(false); };
+  return <div className="space-y-6"><div className="flex items-center justify-between"><div><h1 className="text-2xl font-bold text-[#071046]">Patients</h1><p className="mt-1 text-sm text-gray-500">Manage and view patient records.</p></div><Button asChild className="bg-[#ee5b00] text-white"><Link href="/patients/new"><Plus className="mr-2" />Add Patient</Link></Button></div><Card className="border-gray-200 bg-white shadow-sm"><div className="flex items-center justify-between gap-4 border-b border-gray-100 p-4"><div className="relative max-w-sm flex-1"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" /><Input value={query} onChange={(event) => { setQuery(event.target.value); setPage(1); }} placeholder="Search patients..." className="border-gray-200 bg-gray-50 pl-9" /></div><Button variant="outline" onClick={() => setFiltersOpen(true)} className={hasFilters(filters) ? 'border-orange-200 bg-orange-50 text-[#ee5b00]' : 'border-gray-200 text-gray-600'}><Filter className="mr-2" />Filter{hasFilters(filters) ? ' · active' : ''}</Button></div><CardContent className="p-0"><div className="overflow-x-auto"><table className="min-w-[760px] w-full text-left text-sm"><thead className="bg-gray-50 text-xs text-gray-500"><tr><th className="px-6 py-4"><SortableHeader label="Patient name" active={sort.key === 'name'} direction={sort.direction} onClick={() => toggleSort('name')} /></th><th className="px-6 py-4"><SortableHeader label="ID / SSN" active={sort.key === 'id'} direction={sort.direction} onClick={() => toggleSort('id')} /></th><th className="px-6 py-4"><SortableHeader label="Date of birth" active={sort.key === 'dob'} direction={sort.direction} onClick={() => toggleSort('dob')} /></th><th className="px-6 py-4"><SortableHeader label="Last exam" active={sort.key === 'lastExam'} direction={sort.direction} onClick={() => toggleSort('lastExam')} /></th><th className="px-6 py-4"><SortableHeader label="Status" active={sort.key === 'status'} direction={sort.direction} onClick={() => toggleSort('status')} /></th><th className="px-6 py-4 text-right">Actions</th></tr></thead><tbody className="divide-y divide-gray-100">{visible.map((patient) => <tr key={patient.id} onClick={() => router.push(`/patients/${patient.id}`)} className="cursor-pointer transition-colors hover:bg-orange-50/70"><td className="px-6 py-4 font-medium text-gray-900">{patient.name}</td><td className="px-6 py-4 text-gray-500">{patient.id}</td><td className="px-6 py-4 text-gray-500">{patient.dob}</td><td className="px-6 py-4 text-gray-500">{patient.lastExam}</td><td className="px-6 py-4"><Status value={patient.status} /></td><td className="px-6 py-4"><div className="flex justify-end gap-1"><Button asChild size="icon" variant="ghost" onClick={(event) => event.stopPropagation()} aria-label={`View ${patient.name}`}><Link href={`/patients/${patient.id}`}><Eye /></Link></Button><Button asChild size="icon" variant="ghost" onClick={(event) => event.stopPropagation()} aria-label={`Edit ${patient.name}`}><Link href={`/patients/${patient.id}/edit`}><Edit /></Link></Button></div></td></tr>)}</tbody></table>{!visible.length && <p className="p-10 text-center text-sm text-gray-500">No patients match this search.</p>}</div><TablePagination page={page} pageCount={pageCount} total={list.length} pageSize={pageSize} onPageChange={setPage} /></CardContent></Card><PatientFilterModal open={filtersOpen} values={filters} onCancel={() => setFiltersOpen(false)} onApply={applyFilters} /></div>;
 }
+
+function PatientFilterModal({ open, values, onCancel, onApply }: { open: boolean; values: PatientFilters; onCancel: () => void; onApply: (filters: PatientFilters) => void }) { const [draft, setDraft] = React.useState(values); React.useEffect(() => { if (open) setDraft(values); }, [open, values]); if (!open) return null; const toggleStatus = (value: string) => setDraft((current) => ({ ...current, status: current.status.includes(value) ? current.status.filter((item) => item !== value) : [...current.status, value] })); return <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/35 p-4" role="dialog" aria-modal="true" aria-labelledby="patient-filters-title"><section className="w-full max-w-xl rounded-xl border border-gray-200 bg-white p-6 shadow-2xl"><div className="flex items-center justify-between"><h2 id="patient-filters-title" className="text-xl font-bold text-[#071046]">Filter patients</h2><button type="button" onClick={onCancel} className="text-sm text-gray-500 hover:text-gray-900">Close</button></div><div className="mt-6 grid gap-6 sm:grid-cols-2"><div className="space-y-3"><Label>Date of birth</Label><Input type="date" value={draft.bornFrom} onChange={(event) => setDraft({ ...draft, bornFrom: event.target.value })} /><Input type="date" value={draft.bornTo} onChange={(event) => setDraft({ ...draft, bornTo: event.target.value })} /></div><div className="space-y-3"><Label htmlFor="last-exam-period">Last exam date</Label><select id="last-exam-period" value={draft.examPeriod} onChange={(event) => setDraft({ ...draft, examPeriod: event.target.value })} className="h-10 w-full rounded-md border border-gray-200 bg-white px-3 text-sm"><option value="">Any period</option><option value="today">Today</option><option value="week">Last 7 days</option><option value="month">Last 30 days</option></select></div><div className="space-y-2 sm:col-span-2"><Label>Status</Label><div className="grid gap-1 sm:grid-cols-3">{['Active', 'Critical', 'Inactive'].map((status) => <SelectionCheckbox key={status} label={status} checked={draft.status.includes(status)} onChange={() => toggleStatus(status)} />)}</div></div></div><div className="mt-7 flex justify-end gap-3"><Button type="button" variant="outline" onClick={() => setDraft(emptyFilters)}>Clear</Button><Button type="button" variant="secondary" onClick={onCancel}>Cancel</Button><Button type="button" onClick={() => onApply(draft)} className="bg-[#ee5b00] text-white hover:bg-[#d44e00]">Apply filters</Button></div></section></div>; }
+function matchesFilters(patient: typeof patients[number], query: string, filters: PatientFilters) { if (!`${patient.name} ${patient.id}`.toLowerCase().includes(query.toLowerCase())) return false; if (filters.status.length && !filters.status.includes(patient.status)) return false; const birthday = new Date(patient.dob); if (filters.bornFrom && birthday < new Date(filters.bornFrom)) return false; if (filters.bornTo && birthday > new Date(`${filters.bornTo}T23:59:59`)) return false; const time = patient.lastExam.toLowerCase(); if (filters.examPeriod === 'today' && !/(mins|hour)/.test(time)) return false; if (filters.examPeriod === 'week' && /week|2 weeks|3 weeks/.test(time)) return false; if (filters.examPeriod === 'month' && false) return false; return true; }
+function hasFilters(filters: PatientFilters) { return filters.status.length > 0 || Boolean(filters.bornFrom || filters.bornTo || filters.examPeriod); }
+function compare(a: string, b: string, direction: SortDirection) { const result = a.localeCompare(b, undefined, { numeric: true }); return direction === 'asc' ? result : -result; }
+function Status({ value }: { value: string }) { const cls = value === 'Active' ? 'bg-green-100 text-green-700' : value === 'Critical' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-700'; return <span className={`rounded-full px-2 py-1 text-xs font-medium ${cls}`}>{value}</span>; }

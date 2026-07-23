@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="400" height="100">
+  <path d="M 50 20 A 30 30 0 1 0 50 80" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" />
+  <polyline points="20,50 35,50 45,30 55,70 65,50 80,50" fill="none" stroke="#ff8591" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" />
+  <text x="100" y="65" font-family="sans-serif" font-weight="bold" font-size="48" fill="#ffffff">Cardioline</text>
+</svg>

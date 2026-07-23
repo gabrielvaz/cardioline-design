@@ -1,6 +1,6 @@
 # Beat Design System
 
-**Beat Design System** by Cardioline — shadcn/ui components customized with the official Cardioline brand identity, extracted directly from [cardioline.com](https://www.cardioline.com).
+**Beat Design System** by Cardioline — shadcn/ui components customized with the official Cardioline brand identity.
 
 ## Brand Colors (from cardioline.com CSS)
 

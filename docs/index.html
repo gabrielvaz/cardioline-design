@@ -21,7 +21,7 @@
   <style>
     /* ─── CSS Custom Properties — Beat Design System ─────────────── */
     :root {
-      /* Brand colors from cardioline.com CSS */
+      /* Brand colors */
       --color-primary:       #ee5b00; /* awb-color5 — primary orange */
       --color-primary-light: #ff7d38;
       --color-primary-pale:  #fff5ee;
@@ -48,7 +48,7 @@
       --color-gray-900:      #333333;
 
       /* Typography */
-      --font-heading:        'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-heading:        'Inter', system-ui, sans-serif;
       --font-body:           'Inter', system-ui, sans-serif;
       --font-mono:           'JetBrains Mono', ui-monospace, monospace;
 
@@ -92,23 +92,23 @@
       position: fixed;
       top: 0; left: 0; bottom: 0;
       width: var(--sidebar-width);
-      background: var(--color-navy);
+      background: var(--color-gray-50);
       overflow-y: auto;
       z-index: 100;
       display: flex;
       flex-direction: column;
-      border-right: 1px solid rgba(255,255,255,0.06);
+      border-right: 1px solid var(--color-gray-200);
     }
 
     .sidebar::-webkit-scrollbar { width: 4px; }
-    .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--color-gray-300); border-radius: 4px; }
 
     .sidebar-header {
       padding: 20px 20px 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid var(--color-gray-200);
       position: sticky;
       top: 0;
-      background: var(--color-navy);
+      background: var(--color-gray-50);
       z-index: 1;
     }
 
@@ -140,29 +140,15 @@
       font-weight: 500;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
+      color: var(--color-gray-500);
     }
 
     .sidebar-brand-name {
       font-family: var(--font-heading);
       font-size: 15px;
       font-weight: 700;
-      color: #fff;
+      color: var(--color-navy);
       line-height: 1.1;
-    }
-
-    .sidebar-version {
-      display: inline-flex;
-      align-items: center;
-      padding: 2px 8px;
-      background: rgba(238,91,0,0.15);
-      border: 1px solid rgba(238,91,0,0.3);
-      border-radius: var(--radius-full);
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--color-primary-light);
-      margin-top: 4px;
-      letter-spacing: 0.04em;
     }
 
     .sidebar-nav { padding: 12px 0 20px; flex: 1; }
@@ -175,7 +161,7 @@
       font-weight: 600;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
+      color: var(--color-gray-500);
     }
 
     .nav-link {
@@ -185,7 +171,7 @@
       padding: 7px 20px;
       font-size: 13px;
       font-weight: 500;
-      color: rgba(255,255,255,0.55);
+      color: var(--color-gray-600);
       text-decoration: none;
       transition: all var(--transition);
       border-left: 2px solid transparent;
@@ -195,14 +181,14 @@
     .nav-link svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.7; }
 
     .nav-link:hover {
-      color: rgba(255,255,255,0.9);
-      background: rgba(255,255,255,0.04);
+      color: var(--color-navy);
+      background: var(--color-gray-200);
       border-left-color: rgba(238,91,0,0.4);
     }
 
     .nav-link.active {
-      color: #fff;
-      background: rgba(238,91,0,0.12);
+      color: var(--color-primary);
+      background: rgba(238,91,0,0.08);
       border-left-color: var(--color-primary);
     }
 
@@ -465,6 +451,8 @@
       width: 100%;
       transition: border-color var(--transition), box-shadow var(--transition);
       outline: none;
+      appearance: none;
+      -webkit-appearance: none;
     }
 
     .input::placeholder { color: var(--color-gray-400); }
@@ -567,7 +555,7 @@
     .avatar-xl  { width: 72px; height: 72px; font-size: 26px; }
 
     .avatar-primary  { background: var(--color-primary); color: white; font-weight: 600; font-family: var(--font-heading); }
-    .avatar-navy     { background: var(--color-navy); color: white; font-weight: 600; font-family: var(--font-heading); }
+    .avatar-navy     { background: #071046; color: white; font-weight: 600; font-family: var(--font-heading); }
     .avatar-lavender { background: var(--color-lavender); color: white; font-weight: 600; font-family: var(--font-heading); }
     .avatar-success  { background: var(--color-success); color: white; font-weight: 600; font-family: var(--font-heading); }
 
@@ -1225,6 +1213,236 @@
     .w-full { width: 100%; }
     .w-280 { width: 280px; }
     .relative { position: relative; }
+    /* ─── Dark Mode Global CSS Variables & Overrides ────────────────── */
+    body.dark {
+      --bg-page:             #02040a;
+      --bg-surface:          #070d1e;
+      --bg-elevated:         #0b142c;
+      --bg-subtle:           #0f1729;
+      --bg-sidebar:          #040914;
+      --bg-header:           rgba(2, 4, 10, 0.95);
+
+      --border-main:         #1a2540;
+      --border-subtle:       #1f2d4d;
+
+      --text-main:           #f0f4ff;
+      --text-heading:        #ffffff;
+      --text-muted:          #94a3b8;
+      --text-subtle:         #64748b;
+
+      --color-navy:          #ffffff;
+      --color-navy-light:    #60a5fa;
+      --color-navy-pale:     rgba(255, 255, 255, 0.08);
+      --color-foreground:    #ffffff;
+
+      --color-gray-50:       #0f1729;
+      --color-gray-100:      #1a2540;
+      --color-gray-200:      #243050;
+      --color-gray-300:      #334155;
+      --color-gray-400:      #64748b;
+      --color-gray-500:      #94a3b8;
+      --color-gray-600:      #cbd5e1;
+      --color-gray-700:      #e2e8f0;
+      --color-gray-800:      #f1f5f9;
+      --color-gray-900:      #ffffff;
+
+      --alert-default-bg:     rgba(255, 255, 255, 0.05);
+      --alert-default-border: rgba(255, 255, 255, 0.1);
+      --alert-default-color:  #c8d4e8;
+
+      --alert-warning-bg:     rgba(217, 119, 6, 0.15);
+      --alert-warning-border: rgba(217, 119, 6, 0.35);
+      --alert-warning-color:  #fde047;
+
+      --alert-success-bg:     rgba(22, 163, 74, 0.15);
+      --alert-success-border: rgba(22, 163, 74, 0.35);
+      --alert-success-color:  #86efac;
+
+      --alert-destructive-bg: rgba(224, 40, 79, 0.15);
+      --alert-destructive-border: rgba(224, 40, 79, 0.35);
+      --alert-destructive-color: #ff8591;
+
+      --alert-info-bg:        rgba(2, 132, 199, 0.15);
+      --alert-info-border:    rgba(2, 132, 199, 0.35);
+      --alert-info-color:     #7dd3fc;
+
+      background-color: var(--bg-page);
+      color: var(--text-main);
+    }
+
+    /* Component Dark Mode Mappings */
+    body.dark .sidebar,
+    body.dark .sidebar-header {
+      background: var(--bg-sidebar);
+      border-color: var(--border-main);
+    }
+
+    body.dark .header {
+      background: var(--bg-header);
+      border-color: var(--border-main);
+    }
+
+    body.dark .github-link {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      color: #ffffff;
+    }
+    body.dark .github-link:hover {
+      background: var(--border-main);
+      color: #ffffff;
+    }
+
+    body.dark .card,
+    body.dark .component-card,
+    body.dark .component-preview:not(.dark-bg) {
+      background: var(--bg-surface);
+      border-color: var(--border-main);
+      color: var(--text-main);
+    }
+
+    body.dark .accordion,
+    body.dark .accordion-item,
+    body.dark .accordion-trigger,
+    body.dark .accordion-content,
+    body.dark .command-palette,
+    body.dark .command-input,
+    body.dark .command-item,
+    body.dark .calendar,
+    body.dark .calendar-header,
+    body.dark .calendar-day,
+    body.dark .modal,
+    body.dark .modal-content,
+    body.dark .dialog,
+    body.dark .dialog-content {
+      background: var(--bg-surface);
+      border-color: var(--border-main);
+      color: var(--text-main);
+    }
+
+    body.dark .accordion-trigger:hover,
+    body.dark .command-item:hover,
+    body.dark .calendar-day:hover {
+      background: var(--bg-elevated);
+    }
+
+    body.dark .tabs-list { background: var(--bg-elevated); }
+    body.dark .tab-trigger { color: var(--text-muted); }
+    body.dark .tab-trigger:hover { color: var(--text-heading); }
+    body.dark .tab-trigger.active { background: var(--border-main); color: var(--text-heading); }
+
+    body.dark .table-wrapper { border-color: var(--border-main); }
+    body.dark table { color: var(--text-main); }
+    body.dark table thead { background: var(--bg-sidebar); }
+    body.dark table thead th { color: var(--text-muted); border-bottom-color: var(--border-main); }
+    body.dark table tbody tr { border-bottom-color: var(--border-main); }
+    body.dark table tbody tr:hover { background: rgba(255, 255, 255, 0.04); }
+    body.dark table tbody td { color: var(--text-main); }
+
+    body.dark .alert-default { background: var(--alert-default-bg); border-color: var(--alert-default-border); color: var(--alert-default-color); }
+    body.dark .alert-default .alert-title { color: var(--text-heading); }
+    body.dark .alert-destructive { background: var(--alert-destructive-bg); border-color: var(--alert-destructive-border); color: var(--alert-destructive-color); }
+    body.dark .alert-destructive .alert-title { color: var(--alert-destructive-color); }
+    body.dark .alert-info { background: var(--alert-info-bg); border-color: var(--alert-info-border); color: var(--alert-info-color); }
+    body.dark .alert-info .alert-title { color: var(--alert-info-color); }
+    body.dark .alert-success { background: var(--alert-success-bg); border-color: var(--alert-success-border); color: var(--alert-success-color); }
+    body.dark .alert-success .alert-title { color: var(--alert-success-color); }
+    body.dark .alert-warning { background: var(--alert-warning-bg); border-color: var(--alert-warning-border); color: var(--alert-warning-color); }
+    body.dark .alert-warning .alert-title { color: var(--alert-warning-color); }
+    body.dark .alert-warning .alert-desc { color: #fef08a; }
+
+    body.dark .toast,
+    body.dark .popover,
+    body.dark .dropdown-menu { background: var(--bg-elevated); border-color: var(--border-main); color: var(--text-main); }
+    body.dark .toast-title { color: var(--text-heading); }
+    body.dark .toast-desc { color: var(--text-muted); }
+    body.dark .toast-close { color: var(--text-muted); }
+
+    body.dark .page-btn { background: var(--bg-elevated); border-color: var(--border-subtle); color: var(--text-muted); }
+    body.dark .page-btn:hover { border-color: var(--text-main); color: var(--text-main); }
+    body.dark .page-btn.active { background: var(--color-primary); border-color: var(--color-primary); color: #ffffff; }
+    body.dark .pagination span { color: var(--text-muted); }
+
+    body.dark .nav-bar { background: var(--bg-elevated); border-color: var(--border-main); }
+    body.dark .nav-logo { color: var(--text-heading); }
+    body.dark .nav-item { color: var(--text-muted); }
+    body.dark .nav-item:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.05); }
+    body.dark .nav-item.active { color: #ff9d6a; background: rgba(238, 91, 0, 0.18); }
+
+    body.dark input,
+    body.dark select,
+    body.dark textarea,
+    body.dark .input,
+    body.dark .select,
+    body.dark .textarea,
+    body.dark .checkbox,
+    body.dark .radio {
+      background: #0b142c;
+      background-color: #0b142c;
+      background-image: none;
+      border-color: var(--border-subtle);
+      color: var(--text-main);
+      -webkit-text-fill-color: var(--text-main);
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    body.dark input::placeholder,
+    body.dark textarea::placeholder,
+    body.dark .input::placeholder {
+      color: var(--text-subtle);
+      -webkit-text-fill-color: var(--text-subtle);
+    }
+    body.dark input:-webkit-autofill,
+    body.dark input:-webkit-autofill:hover,
+    body.dark input:-webkit-autofill:focus {
+      -webkit-box-shadow: 0 0 0px 1000px #0b142c inset;
+      -webkit-text-fill-color: #f0f4ff;
+    }
+    body.dark input:disabled,
+    body.dark .input:disabled {
+      background-color: rgba(255, 255, 255, 0.04);
+      background-image: none;
+      color: var(--text-subtle);
+      -webkit-text-fill-color: var(--text-subtle);
+      border-color: #1e293b;
+    }
+    body.dark .input.error,
+    body.dark input.error {
+      background-color: rgba(224, 40, 79, 0.12);
+      background-image: none;
+      border-color: rgba(224, 40, 79, 0.4);
+      color: #ff8591;
+      -webkit-text-fill-color: #ff8591;
+    }
+    body.dark .input-label, body.dark .checkbox-label, body.dark .switch-label { color: #cbd5e1; }
+    body.dark .input-hint { color: var(--text-muted); }
+    body.dark .checkbox:checked, body.dark .radio:checked { background: var(--color-primary); border-color: var(--color-primary); }
+
+    body.dark .swatch-info { background: var(--bg-elevated); border-color: var(--border-subtle); }
+    body.dark .swatch-name { color: var(--text-heading); }
+    body.dark .swatch-hex { color: var(--text-muted); }
+
+    body.dark .icon-item { background: var(--bg-elevated); border-color: var(--border-subtle); }
+    body.dark .icon-item svg { color: var(--text-main); }
+    body.dark .icon-item .icon-name { color: var(--text-muted); }
+    body.dark .icon-item:hover { background: rgba(238, 91, 0, 0.15); border-color: var(--color-primary); }
+    body.dark .icon-item:hover svg { color: var(--color-primary-light); }
+
+    body.dark .badge-default { background: rgba(238, 91, 0, 0.18); color: #ff9d6a; border-color: rgba(238, 91, 0, 0.35); }
+    body.dark .badge-navy { background: rgba(255, 255, 255, 0.08); color: #cbd5e1; border-color: rgba(255, 255, 255, 0.15); }
+    body.dark .badge-outline { background: transparent; color: #cbd5e1; border-color: #334155; }
+    body.dark .badge-success { background: rgba(22, 163, 74, 0.18); color: #86efac; border-color: rgba(22, 163, 74, 0.35); }
+    body.dark .badge-warning { background: rgba(217, 119, 6, 0.18); color: #fde047; border-color: rgba(217, 119, 6, 0.35); }
+    body.dark .badge-destructive { background: rgba(224, 40, 79, 0.18); color: #ff8591; border-color: rgba(224, 40, 79, 0.35); }
+    body.dark .badge-lavender { background: rgba(123, 87, 179, 0.18); color: #c4b5fd; border-color: rgba(123, 87, 179, 0.35); }
+
+    body.dark .avatar-navy { background: #1b2576; color: #ffffff; }
+    body.dark .avatar-group .avatar { border-color: #070d1e; }
+
+    body.dark .type-scale-item { border-color: var(--border-main); color: var(--text-heading); }
+    body.dark .type-meta-label { color: var(--text-main); }
+    body.dark .type-meta-size { color: var(--text-muted); }
+    body.dark .spacing-item { border-color: var(--border-subtle); }
+    body.dark .spacing-meta { color: var(--text-muted); }
   </style>
 </head>
 <body>
@@ -1232,128 +1450,128 @@
 <!-- Sidebar -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
-    <a href="#hero" class="sidebar-logo">
-      <div class="sidebar-logo-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-        </svg>
-      </div>
-      <div class="sidebar-brand">
-        <span class="sidebar-brand-sub">Cardioline</span>
-        <span class="sidebar-brand-name">Beat DS</span>
-        <span class="sidebar-version">v1.0.0</span>
-      </div>
+    <a href="#hero" class="sidebar-logo" style="text-decoration: none;">
+      <span style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: var(--color-primary); letter-spacing: -0.02em;">Beat DS</span>
     </a>
   </div>
 
   <nav class="sidebar-nav" id="sidebar-nav">
     <div class="nav-section">
       <div class="nav-section-title">Foundation</div>
-      <a class="nav-link active" onclick="scrollTo('colors')">
+      <a class="nav-link" onclick="scrollToSection('branding')">
+        <i data-lucide="image"></i> Branding
+      </a>
+      <a class="nav-link active" onclick="scrollToSection('colors')">
         <i data-lucide="palette"></i> Colors
       </a>
-      <a class="nav-link" onclick="scrollTo('typography')">
+      <a class="nav-link" onclick="scrollToSection('typography')">
         <i data-lucide="type"></i> Typography
       </a>
-      <a class="nav-link" onclick="scrollTo('spacing')">
+      <a class="nav-link" onclick="scrollToSection('spacing')">
         <i data-lucide="move-horizontal"></i> Spacing
       </a>
-      <a class="nav-link" onclick="scrollTo('icons')">
+      <a class="nav-link" onclick="scrollToSection('icons')">
         <i data-lucide="star"></i> Icons
       </a>
     </div>
 
     <div class="nav-section">
       <div class="nav-section-title">Components</div>
-      <a class="nav-link" onclick="scrollTo('buttons')">
+      <a class="nav-link" onclick="scrollToSection('buttons')">
         <i data-lucide="mouse-pointer-click"></i> Button
       </a>
-      <a class="nav-link" onclick="scrollTo('inputs')">
+      <a class="nav-link" onclick="scrollToSection('inputs')">
         <i data-lucide="text-cursor-input"></i> Input
       </a>
-      <a class="nav-link" onclick="scrollTo('textarea')">
+      <a class="nav-link" onclick="scrollToSection('textarea')">
         <i data-lucide="align-left"></i> Textarea
       </a>
-      <a class="nav-link" onclick="scrollTo('select')">
+      <a class="nav-link" onclick="scrollToSection('select')">
         <i data-lucide="chevrons-up-down"></i> Select
       </a>
-      <a class="nav-link" onclick="scrollTo('checkbox')">
+      <a class="nav-link" onclick="scrollToSection('checkbox')">
         <i data-lucide="square-check"></i> Checkbox
       </a>
-      <a class="nav-link" onclick="scrollTo('radio')">
+      <a class="nav-link" onclick="scrollToSection('radio')">
         <i data-lucide="circle-dot"></i> Radio
       </a>
-      <a class="nav-link" onclick="scrollTo('switch')">
+      <a class="nav-link" onclick="scrollToSection('switch')">
         <i data-lucide="toggle-right"></i> Switch
       </a>
-      <a class="nav-link" onclick="scrollTo('slider')">
+      <a class="nav-link" onclick="scrollToSection('slider')">
         <i data-lucide="sliders-horizontal"></i> Slider
       </a>
     </div>
 
     <div class="nav-section">
       <div class="nav-section-title">Display</div>
-      <a class="nav-link" onclick="scrollTo('cards')">
+      <a class="nav-link" onclick="scrollToSection('cards')">
         <i data-lucide="square"></i> Card
       </a>
-      <a class="nav-link" onclick="scrollTo('badges')">
+      <a class="nav-link" onclick="scrollToSection('badges')">
         <i data-lucide="tag"></i> Badge
       </a>
-      <a class="nav-link" onclick="scrollTo('avatars')">
+      <a class="nav-link" onclick="scrollToSection('avatars')">
         <i data-lucide="user-circle-2"></i> Avatar
       </a>
-      <a class="nav-link" onclick="scrollTo('alerts')">
+      <a class="nav-link" onclick="scrollToSection('alerts')">
         <i data-lucide="alert-circle"></i> Alert
       </a>
-      <a class="nav-link" onclick="scrollTo('toast')">
+      <a class="nav-link" onclick="scrollToSection('toast')">
         <i data-lucide="bell"></i> Toast
       </a>
-      <a class="nav-link" onclick="scrollTo('progress')">
+      <a class="nav-link" onclick="scrollToSection('progress')">
         <i data-lucide="bar-chart-2"></i> Progress
       </a>
-      <a class="nav-link" onclick="scrollTo('skeleton')">
+      <a class="nav-link" onclick="scrollToSection('skeleton')">
         <i data-lucide="loader-2"></i> Skeleton
       </a>
-      <a class="nav-link" onclick="scrollTo('separator')">
+      <a class="nav-link" onclick="scrollToSection('separator')">
         <i data-lucide="minus"></i> Separator
       </a>
     </div>
 
     <div class="nav-section">
       <div class="nav-section-title">Navigation</div>
-      <a class="nav-link" onclick="scrollTo('tabs')">
+      <a class="nav-link" onclick="scrollToSection('tabs')">
         <i data-lucide="layout-panel-top"></i> Tabs
       </a>
-      <a class="nav-link" onclick="scrollTo('accordion')">
+      <a class="nav-link" onclick="scrollToSection('accordion')">
         <i data-lucide="chevrons-down-up"></i> Accordion
       </a>
-      <a class="nav-link" onclick="scrollTo('breadcrumb')">
+      <a class="nav-link" onclick="scrollToSection('breadcrumb')">
         <i data-lucide="git-branch"></i> Breadcrumb
       </a>
-      <a class="nav-link" onclick="scrollTo('pagination')">
+      <a class="nav-link" onclick="scrollToSection('pagination')">
         <i data-lucide="more-horizontal"></i> Pagination
       </a>
-      <a class="nav-link" onclick="scrollTo('navbar')">
+      <a class="nav-link" onclick="scrollToSection('navbar')">
         <i data-lucide="navigation"></i> Navigation Bar
       </a>
-      <a class="nav-link" onclick="scrollTo('tooltip')">
+      <a class="nav-link" onclick="scrollToSection('tooltip')">
         <i data-lucide="message-square"></i> Tooltip
       </a>
     </div>
 
     <div class="nav-section">
       <div class="nav-section-title">Complex</div>
-      <a class="nav-link" onclick="scrollTo('table')">
+      <a class="nav-link" onclick="scrollToSection('table')">
         <i data-lucide="table"></i> Table
       </a>
-      <a class="nav-link" onclick="scrollTo('form')">
+      <a class="nav-link" onclick="scrollToSection('form')">
         <i data-lucide="file-text"></i> Form
       </a>
-      <a class="nav-link" onclick="scrollTo('calendar')">
+      <a class="nav-link" onclick="scrollToSection('calendar')">
         <i data-lucide="calendar"></i> Calendar
       </a>
-      <a class="nav-link" onclick="scrollTo('command')">
+      <a class="nav-link" onclick="scrollToSection('command')">
         <i data-lucide="terminal"></i> Command
+      </a>
+    </div>
+
+    <div class="nav-section" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-main);">
+      <a class="nav-link" href="https://github.com/gabrielvaz/cardioline-design" target="_blank" rel="noopener">
+        <i data-lucide="github"></i> GitHub
       </a>
     </div>
   </nav>
@@ -1373,10 +1591,6 @@
         <i data-lucide="moon" id="dark-icon"></i>
         <span id="dark-label">Dark</span>
       </button>
-      <a class="github-link" href="https://github.com/gabrielvaz/cardioline-design" target="_blank" rel="noopener">
-        <i data-lucide="github"></i>
-        GitHub
-      </a>
     </div>
   </header>
 
@@ -1402,7 +1616,7 @@
       </h1>
 
       <p class="hero-subtitle">
-        Official Cardioline component library built on shadcn/ui. Colors and typography extracted directly from <strong style="color: rgba(255,255,255,0.85);">cardioline.com</strong> to ensure brand consistency across all digital products.
+        Official Cardioline component library built on shadcn/ui to ensure brand consistency across all digital products.
       </p>
 
       <div class="hero-meta">
@@ -1428,12 +1642,48 @@
       </div>
     </section>
 
+    <!-- BRANDING -->
+    <section class="section" id="branding">
+      <div class="section-header">
+        <div class="section-eyebrow">Foundation</div>
+        <h2 class="section-title">Branding</h2>
+        <p class="section-desc">Official Cardioline logo assets and usage guidelines.</p>
+      </div>
+
+      <div class="component-card" style="padding: 32px;">
+        <h3 style="margin-bottom: 12px; font-size: 16px; font-weight: 700;">Main Logo</h3>
+        <p style="margin-bottom: 24px; font-size: 14px;" class="text-muted">Use the standard logo on light backgrounds.</p>
+        <div class="component-preview" style="background: #ffffff; border: 1px solid var(--color-gray-200); padding: 64px 48px; display: flex; justify-content: center; border-radius: 8px; margin-bottom: 20px;">
+          <img src="cardioline-logo.png" alt="Cardioline Logo" style="max-height: 52px; width: auto;" />
+        </div>
+        <a href="cardioline-logo.png" download class="btn btn-outline btn-sm"><i data-lucide="download"></i> Download PNG</a>
+      </div>
+
+      <div class="component-card" style="margin-top: 24px; padding: 32px;">
+        <h3 style="margin-bottom: 12px; font-size: 16px; font-weight: 700;">White Logo</h3>
+        <p style="margin-bottom: 24px; font-size: 14px;" class="text-muted">Use the white logo on dark or vibrant backgrounds (like the primary navy).</p>
+        <div class="component-preview" style="background: var(--color-navy); padding: 64px 48px; display: flex; justify-content: center; border-radius: 8px; margin-bottom: 20px;">
+          <img src="cardioline-logo-white.png" alt="Cardioline Logo White" style="max-height: 52px; width: auto;" />
+        </div>
+        <a href="cardioline-logo-white.png" download class="btn btn-outline btn-sm"><i data-lucide="download"></i> Download PNG</a>
+      </div>
+
+      <div class="component-card" style="margin-top: 24px; padding: 32px;">
+        <h3 style="margin-bottom: 12px; font-size: 16px; font-weight: 700;">Favicon / Icon</h3>
+        <p style="margin-bottom: 24px; font-size: 14px;" class="text-muted">Use the C icon for avatars, favicons, or constrained spaces.</p>
+        <div class="component-preview" style="background: #f9f9fb; border: 1px solid var(--color-gray-200); padding: 64px 48px; display: flex; justify-content: center; border-radius: 8px; margin-bottom: 20px;">
+          <img src="cardioline-favicon.png" alt="Cardioline Favicon" style="max-height: 48px; width: auto;" />
+        </div>
+        <a href="cardioline-favicon.png" download class="btn btn-outline btn-sm"><i data-lucide="download"></i> Download PNG</a>
+      </div>
+    </section>
+
     <!-- COLORS -->
     <section class="section" id="colors">
       <div class="section-header">
         <div class="section-eyebrow">Foundation</div>
         <h2 class="section-title">Colors</h2>
-        <p class="section-desc">Brand color palette extracted directly from cardioline.com CSS variables (<code style="font-family: var(--font-mono); font-size: 12px; background: #f1f4fe; padding: 2px 6px; border-radius: 4px;">--awb-color5</code>, <code style="font-family: var(--font-mono); font-size: 12px; background: #f1f4fe; padding: 2px 6px; border-radius: 4px;">--awb-color6</code>, etc.).</p>
+        <p class="section-desc">Official brand color palette for Cardioline products.</p>
       </div>
 
       <h3 style="font-family: var(--font-heading); font-size: 14px; font-weight: 700; color: var(--color-navy); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px;">Primary Brand Palette</h3>
@@ -1501,7 +1751,7 @@
         </div>
       </div>
 
-      <h3 style="font-family: var(--font-heading); font-size: 11px; font-weight: 700; color: var(--color-navy); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em;">Semantic Colors</h3>
+      <h3 style="font-family: var(--font-heading); font-size: 11px; font-weight: 700; color: var(--color-foreground); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em;">Semantic Colors</h3>
       <div class="color-grid">
         <div class="color-swatch">
           <div class="swatch-color" style="background: #65bc7b;"></div>
@@ -1646,6 +1896,16 @@
         <p class="section-desc">Interactive trigger components for actions. Available in multiple variants and sizes to establish visual hierarchy.</p>
       </div>
 
+      <div class="alert alert-default" style="margin-bottom: 32px; flex-direction: column; align-items: flex-start; gap: 8px;">
+        <h4 class="alert-title" style="font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; width: 100%;"><i data-lucide="book-open" style="width: 18px; height: 18px;"></i> Boas Práticas (CTAs)</h4>
+        <ul style="font-size: 14px; line-height: 1.6; padding-left: 20px; width: 100%;">
+          <li><strong>Seja direto e acionável:</strong> Use verbos no infinitivo ou imperativo que deixem claro o que vai acontecer (ex: "Salvar relatório", "Adicionar paciente").</li>
+          <li><strong>Evite termos vagos:</strong> Em vez de "Ok" ou "Confirmar", prefira "Salvar alterações" ou "Excluir exame".</li>
+          <li><strong>Hierarquia:</strong> Use apenas <strong>um botão Primário</strong> por tela/modal. Ações secundárias devem usar Outline ou Ghost.</li>
+          <li><strong>Ações destrutivas:</strong> Use o variante <code>Destructive</code> apenas para exclusões permanentes ou ações irreversíveis.</li>
+        </ul>
+      </div>
+
       <div class="component-card">
         <div class="component-preview">
           <button class="btn btn-primary"><i data-lucide="activity"></i> Primary</button>
@@ -1685,6 +1945,16 @@
         <div class="section-eyebrow">Components</div>
         <h2 class="section-title">Input</h2>
         <p class="section-desc">Text input fields with consistent styling, states, and validation feedback.</p>
+      </div>
+
+      <div class="alert alert-default" style="margin-bottom: 32px; flex-direction: column; align-items: flex-start; gap: 8px;">
+        <h4 class="alert-title" style="font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; width: 100%;"><i data-lucide="book-open" style="width: 18px; height: 18px;"></i> Boas Práticas (Labels e Placeholders)</h4>
+        <ul style="font-size: 14px; line-height: 1.6; padding-left: 20px; width: 100%;">
+          <li><strong>Labels:</strong> Devem ser curtas e diretas (ex: "CPF", "Nome completo"). Nunca use frases longas.</li>
+          <li><strong>Placeholders:</strong> Use-os para exemplificar o formato esperado (ex: "000.000.000-00", "joao.silva@hospital.com"). Não os use no lugar de uma label.</li>
+          <li><strong>Feedback:</strong> Sempre forneça mensagens de erro claras explicando como corrigir o problema abaixo do input.</li>
+          <li><strong>Acessibilidade:</strong> O atributo <code>for</code> da label deve sempre apontar para o <code>id</code> do input correspondente.</li>
+        </ul>
       </div>
       <div class="component-card">
         <div class="component-preview" style="flex-wrap: wrap; gap: 20px; align-items: flex-start;">
@@ -2502,30 +2772,83 @@
       <div class="component-card">
         <div class="component-preview" style="padding: 24px;">
           <div class="icon-grid" style="width: 100%;">
+            <!-- Healthcare & Clinical -->
             <div class="icon-item"><i data-lucide="activity"></i><span class="icon-name">activity</span></div>
             <div class="icon-item"><i data-lucide="heart"></i><span class="icon-name">heart</span></div>
             <div class="icon-item"><i data-lucide="heart-pulse"></i><span class="icon-name">heart-pulse</span></div>
             <div class="icon-item"><i data-lucide="stethoscope"></i><span class="icon-name">stethoscope</span></div>
+            <div class="icon-item"><i data-lucide="syringe"></i><span class="icon-name">syringe</span></div>
+            <div class="icon-item"><i data-lucide="thermometer"></i><span class="icon-name">thermometer</span></div>
+            <div class="icon-item"><i data-lucide="pill"></i><span class="icon-name">pill</span></div>
+            <div class="icon-item"><i data-lucide="hospital"></i><span class="icon-name">hospital</span></div>
+
+            <!-- Users & Administration -->
             <div class="icon-item"><i data-lucide="user"></i><span class="icon-name">user</span></div>
+            <div class="icon-item"><i data-lucide="user-plus"></i><span class="icon-name">user-plus</span></div>
+            <div class="icon-item"><i data-lucide="user-check"></i><span class="icon-name">user-check</span></div>
+            <div class="icon-item"><i data-lucide="user-cog"></i><span class="icon-name">user-cog</span></div>
             <div class="icon-item"><i data-lucide="users"></i><span class="icon-name">users</span></div>
-            <div class="icon-item"><i data-lucide="file-text"></i><span class="icon-name">file-text</span></div>
-            <div class="icon-item"><i data-lucide="clipboard"></i><span class="icon-name">clipboard</span></div>
-            <div class="icon-item"><i data-lucide="calendar"></i><span class="icon-name">calendar</span></div>
-            <div class="icon-item"><i data-lucide="clock"></i><span class="icon-name">clock</span></div>
-            <div class="icon-item"><i data-lucide="search"></i><span class="icon-name">search</span></div>
+            <div class="icon-item"><i data-lucide="contact"></i><span class="icon-name">contact</span></div>
+            <div class="icon-item"><i data-lucide="briefcase"></i><span class="icon-name">briefcase</span></div>
+            <div class="icon-item"><i data-lucide="shield"></i><span class="icon-name">shield</span></div>
+
+            <!-- Actions & Edit -->
+            <div class="icon-item"><i data-lucide="plus"></i><span class="icon-name">plus</span></div>
+            <div class="icon-item"><i data-lucide="plus-circle"></i><span class="icon-name">plus-circle</span></div>
+            <div class="icon-item"><i data-lucide="edit"></i><span class="icon-name">edit</span></div>
+            <div class="icon-item"><i data-lucide="edit-2"></i><span class="icon-name">edit-2</span></div>
+            <div class="icon-item"><i data-lucide="edit-3"></i><span class="icon-name">edit-3</span></div>
+            <div class="icon-item"><i data-lucide="trash"></i><span class="icon-name">trash</span></div>
+            <div class="icon-item"><i data-lucide="trash-2"></i><span class="icon-name">trash-2</span></div>
+            <div class="icon-item"><i data-lucide="filter"></i><span class="icon-name">filter</span></div>
+
+            <!-- System & Settings -->
             <div class="icon-item"><i data-lucide="settings"></i><span class="icon-name">settings</span></div>
-            <div class="icon-item"><i data-lucide="bell"></i><span class="icon-name">bell</span></div>
-            <div class="icon-item"><i data-lucide="mail"></i><span class="icon-name">mail</span></div>
+            <div class="icon-item"><i data-lucide="sliders"></i><span class="icon-name">sliders</span></div>
+            <div class="icon-item"><i data-lucide="lock"></i><span class="icon-name">lock</span></div>
+            <div class="icon-item"><i data-lucide="unlock"></i><span class="icon-name">unlock</span></div>
+            <div class="icon-item"><i data-lucide="key"></i><span class="icon-name">key</span></div>
+            <div class="icon-item"><i data-lucide="database"></i><span class="icon-name">database</span></div>
+            <div class="icon-item"><i data-lucide="server"></i><span class="icon-name">server</span></div>
+            <div class="icon-item"><i data-lucide="cpu"></i><span class="icon-name">cpu</span></div>
+
+            <!-- Devices & Hardware -->
+            <div class="icon-item"><i data-lucide="hard-drive"></i><span class="icon-name">hard-drive</span></div>
+            <div class="icon-item"><i data-lucide="laptop"></i><span class="icon-name">laptop</span></div>
+            <div class="icon-item"><i data-lucide="smartphone"></i><span class="icon-name">smartphone</span></div>
+            <div class="icon-item"><i data-lucide="monitor"></i><span class="icon-name">monitor</span></div>
+            <div class="icon-item"><i data-lucide="wifi"></i><span class="icon-name">wifi</span></div>
+            <div class="icon-item"><i data-lucide="bluetooth"></i><span class="icon-name">bluetooth</span></div>
+            <div class="icon-item"><i data-lucide="sun"></i><span class="icon-name">sun</span></div>
+            <div class="icon-item"><i data-lucide="moon"></i><span class="icon-name">moon</span></div>
+
+            <!-- Files & Badges -->
+            <div class="icon-item"><i data-lucide="file"></i><span class="icon-name">file</span></div>
+            <div class="icon-item"><i data-lucide="file-text"></i><span class="icon-name">file-text</span></div>
+            <div class="icon-item"><i data-lucide="file-plus"></i><span class="icon-name">file-plus</span></div>
+            <div class="icon-item"><i data-lucide="file-spreadsheet"></i><span class="icon-name">file-spreadsheet</span></div>
+            <div class="icon-item"><i data-lucide="folder"></i><span class="icon-name">folder</span></div>
+            <div class="icon-item"><i data-lucide="folder-plus"></i><span class="icon-name">folder-plus</span></div>
             <div class="icon-item"><i data-lucide="download"></i><span class="icon-name">download</span></div>
             <div class="icon-item"><i data-lucide="upload"></i><span class="icon-name">upload</span></div>
-            <div class="icon-item"><i data-lucide="share-2"></i><span class="icon-name">share-2</span></div>
             <div class="icon-item"><i data-lucide="printer"></i><span class="icon-name">printer</span></div>
+            <div class="icon-item"><i data-lucide="share-2"></i><span class="icon-name">share-2</span></div>
+            <div class="icon-item"><i data-lucide="badge-check"></i><span class="icon-name">badge-check</span></div>
+            <div class="icon-item"><i data-lucide="tag"></i><span class="icon-name">tag</span></div>
+
+            <!-- Status & Search -->
+            <div class="icon-item"><i data-lucide="search"></i><span class="icon-name">search</span></div>
+            <div class="icon-item"><i data-lucide="bell"></i><span class="icon-name">bell</span></div>
+            <div class="icon-item"><i data-lucide="bell-off"></i><span class="icon-name">bell-off</span></div>
+            <div class="icon-item"><i data-lucide="eye"></i><span class="icon-name">eye</span></div>
+            <div class="icon-item"><i data-lucide="eye-off"></i><span class="icon-name">eye-off</span></div>
             <div class="icon-item"><i data-lucide="zap"></i><span class="icon-name">zap</span></div>
+            <div class="icon-item"><i data-lucide="clock"></i><span class="icon-name">clock</span></div>
+            <div class="icon-item"><i data-lucide="calendar"></i><span class="icon-name">calendar</span></div>
+            <div class="icon-item"><i data-lucide="refresh-cw"></i><span class="icon-name">refresh-cw</span></div>
             <div class="icon-item"><i data-lucide="alert-triangle"></i><span class="icon-name">alert-triangle</span></div>
             <div class="icon-item"><i data-lucide="check-circle"></i><span class="icon-name">check-circle</span></div>
             <div class="icon-item"><i data-lucide="x-circle"></i><span class="icon-name">x-circle</span></div>
-            <div class="icon-item"><i data-lucide="wifi"></i><span class="icon-name">wifi</span></div>
-            <div class="icon-item"><i data-lucide="bluetooth"></i><span class="icon-name">bluetooth</span></div>
           </div>
         </div>
       </div>
@@ -2544,7 +2867,7 @@
   lucide.createIcons();
 
   // Sidebar navigation active state
-  function scrollTo(sectionId) {
+  function scrollToSection(sectionId) {
     const el = document.getElementById(sectionId);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2580,22 +2903,19 @@
   let isDark = false;
   function toggleDark() {
     isDark = !isDark;
+    document.body.classList.toggle('dark', isDark);
+    document.documentElement.style.setProperty('--color-navy', isDark ? '#ffffff' : '#071046');
+    document.documentElement.style.setProperty('--color-navy-pale', isDark ? 'rgba(255,255,255,0.08)' : '#eff2ff');
+    document.documentElement.style.setProperty('--color-foreground', isDark ? '#ffffff' : '#071046');
     document.documentElement.style.setProperty('--color-gray-50', isDark ? '#0f1729' : '#f9f9fb');
     document.documentElement.style.setProperty('--color-gray-100', isDark ? '#1a2540' : '#f1f4fe');
     document.documentElement.style.setProperty('--color-gray-200', isDark ? '#243050' : '#e9eaee');
-    document.documentElement.style.setProperty('--color-gray-900', isDark ? '#f0f4ff' : '#333333');
-    document.documentElement.style.setProperty('--color-gray-700', isDark ? '#c8d4e8' : '#393939');
-    document.documentElement.style.setProperty('--color-gray-500', isDark ? '#8a9ab8' : '#747474');
-    document.body.style.background = isDark ? '#0b1529' : '';
-    document.querySelectorAll('.card, .component-card, .component-preview:not(.dark-bg), .accordion, .command-palette, .calendar, .accordion-trigger, .accordion-content, .table-wrapper, table thead').forEach(el => {
-      el.style.background = isDark ? '#111f40' : '';
-      el.style.color = isDark ? '#f0f4ff' : '';
-    });
-    document.querySelectorAll('input.input, textarea.input, select.select').forEach(el => {
-      el.style.background = isDark ? '#1a2540' : '';
-      el.style.borderColor = isDark ? '#2d3d60' : '';
-      el.style.color = isDark ? '#f0f4ff' : '';
-    });
+    document.documentElement.style.setProperty('--color-gray-800', isDark ? '#f1f5f9' : '#212934');
+    document.documentElement.style.setProperty('--color-gray-900', isDark ? '#ffffff' : '#333333');
+    document.documentElement.style.setProperty('--color-gray-700', isDark ? '#e2e8f0' : '#393939');
+    document.documentElement.style.setProperty('--color-gray-500', isDark ? '#94a3b8' : '#747474');
+    document.documentElement.style.setProperty('--color-gray-400', isDark ? '#64748b' : '#9ca3af');
+
     document.getElementById('dark-icon').setAttribute('data-lucide', isDark ? 'sun' : 'moon');
     document.getElementById('dark-label').textContent = isDark ? 'Light' : 'Dark';
     lucide.createIcons();

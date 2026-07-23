@@ -20,6 +20,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes exam-load {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes toast-rise {
+  from { opacity: 0; transform: translate(-50%, 1rem); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
 @layer base {
   :root {
     /* ─── Beat Design System — Light Theme ──────────────────────── */
@@ -133,6 +143,31 @@
 }
 
 @layer components {
+  @media (max-width: 768px) {
+    .overflow-x-auto > table {
+      min-width: 760px;
+    }
+
+    .overflow-x-auto > table th:last-child,
+    .overflow-x-auto > table td:last-child {
+      position: sticky;
+      right: 0;
+      z-index: 10;
+      box-shadow: -10px 0 14px -14px rgba(7, 16, 70, 0.65);
+    }
+
+    .overflow-x-auto > table thead th:last-child {
+      background: #f9fafb;
+    }
+
+    .overflow-x-auto > table tbody td:last-child {
+      background: #ffffff;
+    }
+
+    .overflow-x-auto > table tbody tr:hover td:last-child {
+      background: #fff7ed;
+    }
+  }
   /* ─── ECG Grid Pattern ───────────────────────────────────────── */
   .ecg-grid {
     background-image:
@@ -185,5 +220,81 @@
     background: linear-gradient(90deg, transparent 0%, rgba(238,91,0,0.08) 50%, transparent 100%);
     background-size: 200% 100%;
     animation: shimmer 2s linear infinite;
+  }
+
+  /* Clinical list treatment: compact, readable, and never wraps row content. */
+  .overflow-x-auto > table {
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .overflow-x-auto > table thead th {
+    border-bottom: 1px solid #cbd5e1;
+    border-right: 1px solid #edf1f5;
+    white-space: nowrap;
+    color: #1f2937;
+    font-weight: 700;
+  }
+
+  .overflow-x-auto > table tbody tr:nth-child(even) {
+    background: #f1f5f9;
+  }
+
+  .overflow-x-auto > table tbody tr:hover {
+    background: #d8effc !important;
+  }
+
+  .overflow-x-auto > table td {
+    overflow: hidden;
+    border-right: 1px solid #edf1f5;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .overflow-x-auto > table th:last-child,
+  .overflow-x-auto > table td:last-child {
+    border-right: 0;
+  }
+
+  .overflow-x-auto > table td:last-child > div {
+    align-items: center;
+  }
+
+  .overflow-x-auto > table td:last-child [class*="h-10"][class*="w-10"] {
+    height: 2rem;
+    width: 2rem;
+    min-width: 2rem;
+    flex: 0 0 2rem;
+    padding: 0;
+  }
+
+  .overflow-x-auto > table thead th:last-child {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+  }
+
+  /* Text-only close affordances are rendered as a consistent icon button. */
+  [role="dialog"] button[class*="text-gray-500"][class*="hover:text-gray-900"] {
+    display: inline-flex;
+    height: 2rem;
+    width: 2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+    font-size: 0;
+  }
+
+  [role="dialog"] button[class*="text-gray-500"][class*="hover:text-gray-900"]::after {
+    content: '×';
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  [role="dialog"][aria-labelledby="patient-filters-title"] .mt-7.flex.justify-end.gap-3 > :first-child {
+    margin-right: auto;
   }
 }

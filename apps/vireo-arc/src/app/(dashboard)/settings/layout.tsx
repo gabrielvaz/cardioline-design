@@ -1,0 +1,2 @@
+import { SettingsNavigation } from '@/components/settings/settings-navigation';
+export default function SettingsLayout({children}:{children:React.ReactNode}){return <div><div className="mb-6"><h1 className="text-2xl font-bold text-[#071046]">Settings</h1><p className="mt-1 text-sm text-gray-500">Account, configuration and administration.</p></div><div className="flex flex-col gap-8 md:flex-row"><SettingsNavigation /><div className="min-w-0 flex-1">{children}</div></div></div>}

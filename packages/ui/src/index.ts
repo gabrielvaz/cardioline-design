@@ -4,6 +4,7 @@ export type { ButtonProps } from './components/button';
 
 export { Input } from './components/input';
 export { Label } from './components/label';
+export { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/select';
 
 export {
   Card,
