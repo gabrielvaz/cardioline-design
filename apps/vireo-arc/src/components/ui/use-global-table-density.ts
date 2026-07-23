@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import type { TableDensity } from './table-settings-menu';
+import type { TableDensity } from '@cardioline/ui';
 
 const STORAGE_KEY = 'cardioline-table-density';
 

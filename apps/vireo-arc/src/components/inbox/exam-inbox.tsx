@@ -37,13 +37,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  TableToolbarMenu,
+  type TableDensity,
   cn,
 } from "@cardioline/ui";
 import { PrototypeToast } from "@/components/ui/prototype-toast";
-import {
-  TableSettingsMenu,
-  type TableDensity,
-} from "@/components/ui/table-settings-menu";
 import { useGlobalTableDensity } from "@/components/ui/use-global-table-density";
 import { PageHeader } from "@/components/ui/page-header";
 import { inboxExams } from "@/lib/mock-data";
@@ -203,7 +201,7 @@ export function ExamInbox() {
           />
         </div>
         <div className="flex flex-wrap items-center justify-end gap-2 self-end sm:self-auto">
-          <TableSettingsMenu
+          <TableToolbarMenu
             columns={inboxTableColumns}
             visibleColumns={visibleColumns}
             onVisibleColumnsChange={setVisibleColumns}

@@ -16,12 +16,11 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { ArrowDown, ArrowUp, ChevronsUpDown, Download, Eye, FileText, PenLine, Repeat2, UserRound } from 'lucide-react';
-import { Button, Card, CardContent } from '@cardioline/ui';
+import { Button, Card, CardContent, type TableDensity } from '@cardioline/ui';
 import { exams, reports } from '@/lib/mock-data';
 import { RowActionsMenu } from '@/components/ui/row-actions-menu';
 import { PrototypeToast } from '@/components/ui/prototype-toast';
 import { TablePagination } from '@/components/ui/table-pagination';
-import type { TableDensity } from '@/components/ui/table-settings-menu';
 
 type ExamRow = (typeof exams)[number] & { key: number; unit: string; modifiedBy: string };
 

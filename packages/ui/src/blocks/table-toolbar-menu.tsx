@@ -1,25 +1,26 @@
-"use client";
+'use client';
 
-import { Grid2X2, LayoutList, Settings2 } from "lucide-react";
-import type { ReactNode } from "react";
+import { Grid2X2, LayoutList, Settings2 } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { Button } from '../components/button';
+import { Checkbox } from '../components/checkbox';
 import {
-  Button,
-  Checkbox,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@cardioline/ui";
+} from '../components/dropdown-menu';
+import { cn } from '../lib/utils';
 
-export type TableDensity = "compact" | "comfortable" | "spacious";
+export type TableDensity = 'compact' | 'comfortable' | 'spacious';
 export type TableColumnSetting = { id: string; label: string; locked?: boolean };
 export type TableViewSetting = {
-  value: "cards" | "table";
-  onValueChange: (view: "cards" | "table") => void;
+  value: 'cards' | 'table';
+  onValueChange: (view: 'cards' | 'table') => void;
 };
 
-export function TableSettingsMenu({
+export function TableToolbarMenu({
   columns,
   visibleColumns,
   onVisibleColumnsChange,
@@ -66,16 +67,16 @@ export function TableSettingsMenu({
               </p>
               <div className="grid grid-cols-2 gap-2">
                 <ViewOption
-                  active={view.value === "cards"}
+                  active={view.value === 'cards'}
                   icon={<Grid2X2 className="h-4 w-4" />}
                   label="Cards"
-                  onClick={() => view.onValueChange("cards")}
+                  onClick={() => view.onValueChange('cards')}
                 />
                 <ViewOption
-                  active={view.value === "table"}
+                  active={view.value === 'table'}
                   icon={<LayoutList className="h-4 w-4" />}
                   label="Table"
-                  onClick={() => view.onValueChange("table")}
+                  onClick={() => view.onValueChange('table')}
                 />
               </div>
             </div>
@@ -87,17 +88,18 @@ export function TableSettingsMenu({
             Row density
           </p>
           <div className="flex flex-wrap gap-2">
-            {(["compact", "comfortable", "spacious"] as const).map(
+            {(['compact', 'comfortable', 'spacious'] as const).map(
               (option) => (
                 <button
                   key={option}
                   type="button"
                   onClick={() => onDensityChange(option)}
-                  className={`rounded-full border px-3.5 py-2 text-xs font-semibold capitalize transition-colors ${
+                  className={cn(
+                    'rounded-full border px-3.5 py-2 text-xs font-semibold capitalize transition-colors',
                     density === option
-                      ? "border-orange-200 bg-orange-50 text-[#ee5b00]"
-                      : "border-border bg-background text-foreground hover:border-orange-200 hover:bg-orange-50"
-                  }`}
+                      ? 'border-primary/40 bg-primary/10 text-primary'
+                      : 'border-border bg-background text-foreground hover:border-primary/40 hover:bg-primary/10',
+                  )}
                 >
                   {option}
                 </button>
@@ -114,11 +116,12 @@ export function TableSettingsMenu({
             {columns.map((column) => (
               <label
                 key={column.id}
-                className={`flex min-h-11 items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors ${
+                className={cn(
+                  'flex min-h-11 items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors',
                   column.locked
-                    ? "cursor-not-allowed border-slate-100 bg-slate-50 text-muted-foreground"
-                    : "cursor-pointer border-slate-200 text-foreground hover:border-orange-200 hover:bg-orange-50/50"
-                }`}
+                    ? 'cursor-not-allowed border-border bg-muted text-muted-foreground'
+                    : 'cursor-pointer border-border text-foreground hover:border-primary/40 hover:bg-primary/10',
+                )}
               >
                 <Checkbox
                   checked={column.locked || visibleColumns.includes(column.id)}
@@ -155,11 +158,12 @@ function ViewOption({
     <button
       type="button"
       onClick={onClick}
-      className={`flex items-center justify-center gap-2 rounded-md border px-3 py-2.5 text-sm font-medium transition-colors ${
+      className={cn(
+        'flex items-center justify-center gap-2 rounded-md border px-3 py-2.5 text-sm font-medium transition-colors',
         active
-          ? "border-orange-200 bg-orange-50 text-[#ee5b00]"
-          : "border-border bg-background text-foreground hover:border-orange-200 hover:bg-orange-50"
-      }`}
+          ? 'border-primary/40 bg-primary/10 text-primary'
+          : 'border-border bg-background text-foreground hover:border-primary/40 hover:bg-primary/10',
+      )}
     >
       {icon}
       {label}

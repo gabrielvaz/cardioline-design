@@ -64,6 +64,9 @@ export {
 export { MultiSelectDropdown } from './blocks/multi-select-dropdown';
 export type { MultiSelectOption } from './blocks/multi-select-dropdown';
 
+export { TableToolbarMenu } from './blocks/table-toolbar-menu';
+export type { TableColumnSetting, TableDensity, TableViewSetting } from './blocks/table-toolbar-menu';
+
 /* ─── Utilities ──────────────────────────────────────────────── */
 export { cn } from './lib/utils';
 

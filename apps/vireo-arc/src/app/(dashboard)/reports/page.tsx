@@ -20,13 +20,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   Input,
+  TableToolbarMenu,
 } from "@cardioline/ui";
 import { reports } from "@/lib/mock-data";
 import {
   SortableHeader,
   type SortDirection,
 } from "@/components/ui/sortable-header";
-import { TableSettingsMenu } from "@/components/ui/table-settings-menu";
 import { useGlobalTableDensity } from "@/components/ui/use-global-table-density";
 import { AdvancedSearchModal } from "@/components/ui/advanced-search-modal";
 import { PageHeader } from "@/components/ui/page-header";
@@ -123,7 +123,7 @@ export default function ReportsPage() {
           />
         </div>
         <div className="flex items-center gap-2 self-end sm:self-auto">
-          <TableSettingsMenu
+          <TableToolbarMenu
             columns={reportTableColumns}
             visibleColumns={visibleColumns}
             onVisibleColumnsChange={setVisibleColumns}

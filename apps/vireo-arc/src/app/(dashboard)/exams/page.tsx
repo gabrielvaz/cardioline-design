@@ -6,12 +6,12 @@ import {
   Button,
   Input,
   MultiSelectDropdown,
+  TableToolbarMenu,
   type MultiSelectOption,
 } from "@cardioline/ui";
 import { AdvancedExamFilters } from "@/components/exams/advanced-filters";
 import { PrototypeToast } from "@/components/ui/prototype-toast";
 import { TanstackExamTable } from "@/components/exams/tanstack-exam-table";
-import { TableSettingsMenu } from "@/components/ui/table-settings-menu";
 import { useGlobalTableDensity } from "@/components/ui/use-global-table-density";
 import { PageHeader } from "@/components/ui/page-header";
 
@@ -141,7 +141,7 @@ export default function ExamsPage() {
             </Button>
           </div>
           <div className="flex items-center gap-3 self-end lg:self-auto">
-            <TableSettingsMenu
+            <TableToolbarMenu
               columns={tableColumns}
               visibleColumns={visibleColumns}
               onVisibleColumnsChange={setVisibleColumns}

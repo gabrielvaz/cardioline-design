@@ -22,6 +22,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  TableToolbarMenu,
 } from "@cardioline/ui";
 import { patients } from "@/lib/mock-data";
 import { TablePagination } from "@/components/ui/table-pagination";
@@ -29,7 +30,6 @@ import {
   SortableHeader,
   type SortDirection,
 } from "@/components/ui/sortable-header";
-import { TableSettingsMenu } from "@/components/ui/table-settings-menu";
 import { useGlobalTableDensity } from "@/components/ui/use-global-table-density";
 import { AdvancedSearchModal } from "@/components/ui/advanced-search-modal";
 import { PageHeader } from "@/components/ui/page-header";
@@ -149,7 +149,7 @@ export default function PatientsPage() {
           </Button>
         </div>
         <div className="flex items-center gap-2 self-end sm:self-auto">
-          <TableSettingsMenu
+          <TableToolbarMenu
             columns={patientTableColumns}
             visibleColumns={visibleColumns}
             onVisibleColumnsChange={setVisibleColumns}
