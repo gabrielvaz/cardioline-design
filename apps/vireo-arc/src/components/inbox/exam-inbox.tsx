@@ -171,7 +171,8 @@ export function ExamInbox() {
       />
 
       <section className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative w-full sm:w-[310px]">
+        <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+          <div className="relative w-full sm:w-[310px]">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <Input
               value={query}
@@ -179,8 +180,7 @@ export function ExamInbox() {
               placeholder="Search patient, ID, exam or unit..."
               className="h-10 border-gray-200 bg-white pl-9"
             />
-        </div>
-        <div className="flex flex-wrap items-center justify-end gap-2 self-end sm:self-auto">
+          </div>
           <Select
             value={sort}
             onValueChange={(value) => setSort(value as SortMode)}
@@ -200,6 +200,8 @@ export function ExamInbox() {
             activeCriteria={activeCriteria}
             onToggle={toggleCriterion}
           />
+        </div>
+        <div className="flex flex-wrap items-center justify-end gap-2 self-end sm:self-auto">
           <TableSettingsMenu
             columns={inboxTableColumns}
             visibleColumns={visibleColumns}

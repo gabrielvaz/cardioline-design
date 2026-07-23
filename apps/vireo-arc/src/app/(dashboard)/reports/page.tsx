@@ -110,47 +110,14 @@ export default function ReportsPage() {
             <SlidersHorizontal className="mr-2" />
             Advanced Search
           </Button>
+          <ReportFilter
+            statusFilter={statusFilter}
+            onToggleStatus={toggleStatus}
+            onClear={() => setStatusFilter([])}
+            statuses={statuses}
+          />
         </div>
         <div className="flex items-center gap-2 self-end sm:self-auto">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className={
-                  statusFilter.length
-                    ? "border-orange-200 bg-orange-50 text-[#ee5b00]"
-                    : ""
-                }
-              >
-                <Filter className="mr-2" />
-                Filter{statusFilter.length ? ` · ${statusFilter.length}` : ""}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-60">
-              <DropdownMenuLabel>Report status</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {statuses.map((status) => (
-                <label
-                  key={status}
-                  className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-foreground"
-                >
-                  <Checkbox
-                    checked={statusFilter.includes(status)}
-                    onCheckedChange={() => toggleStatus(status)}
-                  />
-                  {status}
-                </label>
-              ))}
-              <DropdownMenuSeparator />
-              <button
-                type="button"
-                onClick={() => setStatusFilter([])}
-                className="w-full px-3 py-2 text-left text-xs font-semibold text-muted-foreground hover:text-foreground"
-              >
-                Clear filters
-              </button>
-            </DropdownMenuContent>
-          </DropdownMenu>
           <TableSettingsMenu
             columns={reportTableColumns}
             visibleColumns={visibleColumns}
@@ -308,6 +275,60 @@ export default function ReportsPage() {
         ]}
       />
     </div>
+  );
+}
+
+function ReportFilter({
+  statusFilter,
+  onToggleStatus,
+  onClear,
+  statuses,
+}: {
+  statusFilter: string[];
+  onToggleStatus: (status: string) => void;
+  onClear: () => void;
+  statuses: string[];
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          className={
+            statusFilter.length
+              ? "border-orange-200 bg-orange-50 text-[#ee5b00]"
+              : ""
+          }
+        >
+          <Filter className="mr-2" />
+          Filter{statusFilter.length ? ` · ${statusFilter.length}` : ""}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-60">
+        <DropdownMenuLabel>Report status</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {statuses.map((status) => (
+          <label
+            key={status}
+            className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-foreground"
+          >
+            <Checkbox
+              checked={statusFilter.includes(status)}
+              onCheckedChange={() => onToggleStatus(status)}
+            />
+            {status}
+          </label>
+        ))}
+        <DropdownMenuSeparator />
+        <button
+          type="button"
+          onClick={onClear}
+          className="w-full px-3 py-2 text-left text-xs font-semibold text-muted-foreground hover:text-foreground"
+        >
+          Clear filters
+        </button>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 

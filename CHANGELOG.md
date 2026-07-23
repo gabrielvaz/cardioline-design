@@ -21,6 +21,8 @@ All notable prototype UI changes are documented here.
 
 ### Changed
 
+- Reorganized clinical list controls so search, ordering, advanced search and filters follow a consistent workflow hierarchy.
+- Improved Exam Inbox featured-card hierarchy and dark-mode surface contrast.
 - Unified the Dashboard, Inbox, Patients, Exams, Reports, Settings and ECG workspace page headers through a shared title and subtitle treatment.
 - Updated sidebar branding to present Vireo ARC in the navigation header and Cardioline alongside the signed-in professional.
 - Made Spacious table density allow multi-line values instead of truncating clinical data.

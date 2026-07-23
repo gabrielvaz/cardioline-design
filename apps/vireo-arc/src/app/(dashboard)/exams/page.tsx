@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ListFilter, Search, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, ChevronUp, ListFilter, Search, SlidersHorizontal } from "lucide-react";
 import { Button, Input } from "@cardioline/ui";
 import { AdvancedExamFilters } from "@/components/exams/advanced-filters";
 import {
@@ -75,6 +75,7 @@ export default function ExamsPage() {
   );
   const [density, setDensity] = useGlobalTableDensity();
   const [toast, setToast] = React.useState<string | null>(null);
+  const [filtersShown, setFiltersShown] = React.useState(true);
   const [filterValues, setFilterValues] = React.useState<
     Record<string, string[]>
   >({
@@ -110,37 +111,6 @@ export default function ExamsPage() {
           </Button>}
         />
 
-        <div className="overflow-x-auto pb-1">
-          <div className="flex min-w-full w-max items-center gap-2 pr-1">
-            {Object.entries(filterDefinitions).map(([name, options]) => (
-              <ExamFilterDropdown
-                key={name}
-                label={name}
-                options={options}
-                selected={filterValues[name] ?? []}
-                onChange={(values) => updateFilter(name, values)}
-                accent={name === "Exam type"}
-              />
-            ))}
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={() => setToast("Filters applied to the mock list.")}
-              className="ml-1 h-9 shrink-0"
-            >
-              <ListFilter className="mr-2" />
-              Apply filter
-            </Button>
-            <button
-              type="button"
-              onClick={clearFilters}
-              className="ml-2 shrink-0 text-sm font-medium text-gray-600 underline underline-offset-2 hover:text-[#071046]"
-            >
-              Clear all
-            </button>
-          </div>
-        </div>
-
         <div className="flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
             <div className="relative w-full sm:w-[310px]">
@@ -160,6 +130,14 @@ export default function ExamsPage() {
               <SlidersHorizontal className="mr-2" />
               Advanced Search
             </Button>
+            <Button
+              variant="outline"
+              onClick={() => setFiltersShown((shown) => !shown)}
+              className="h-11 justify-start px-5 sm:justify-center"
+            >
+              {filtersShown ? <ChevronUp className="mr-2" /> : <ChevronDown className="mr-2" />}
+              {filtersShown ? "Hide filters" : "Show filters"}
+            </Button>
           </div>
           <div className="flex items-center gap-3 self-end lg:self-auto">
             <TableSettingsMenu
@@ -171,6 +149,39 @@ export default function ExamsPage() {
             />
           </div>
         </div>
+
+        {filtersShown && (
+          <div className="overflow-x-auto pb-1">
+            <div className="flex min-w-full w-max items-center gap-2 pr-1">
+              {Object.entries(filterDefinitions).map(([name, options]) => (
+                <ExamFilterDropdown
+                  key={name}
+                  label={name}
+                  options={options}
+                  selected={filterValues[name] ?? []}
+                  onChange={(values) => updateFilter(name, values)}
+                  accent={name === "Exam type"}
+                />
+              ))}
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => setToast("Filters applied to the mock list.")}
+                className="ml-1 h-9 shrink-0"
+              >
+                <ListFilter className="mr-2" />
+                Apply filter
+              </Button>
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="ml-2 shrink-0 text-sm font-medium text-gray-600 underline underline-offset-2 hover:text-[#071046]"
+              >
+                Clear all
+              </button>
+            </div>
+          </div>
+        )}
       </section>
 
       {advanced && <AdvancedExamFilters onClose={() => setAdvanced(false)} />}

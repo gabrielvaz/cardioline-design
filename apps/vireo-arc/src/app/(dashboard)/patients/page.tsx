@@ -11,7 +11,24 @@ import {
   Search,
   SlidersHorizontal,
 } from "lucide-react";
-import { Button, Card, CardContent, Input, Label } from "@cardioline/ui";
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Input,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@cardioline/ui";
 import { patients } from "@/lib/mock-data";
 import { TablePagination } from "@/components/ui/table-pagination";
 import {
@@ -121,8 +138,6 @@ export default function PatientsPage() {
             <SlidersHorizontal className="mr-2" />
             Advanced Search
           </Button>
-        </div>
-        <div className="flex items-center gap-2 self-end sm:self-auto">
           <Button
             variant="outline"
             onClick={() => setFiltersOpen(true)}
@@ -135,6 +150,8 @@ export default function PatientsPage() {
             <Filter className="mr-2" />
             Filter{hasFilters(filters) ? " · active" : ""}
           </Button>
+        </div>
+        <div className="flex items-center gap-2 self-end sm:self-auto">
           <TableSettingsMenu
             columns={patientTableColumns}
             visibleColumns={visibleColumns}
@@ -341,7 +358,6 @@ function PatientFilterModal({
   React.useEffect(() => {
     if (open) setDraft(values);
   }, [open, values]);
-  if (!open) return null;
   const toggleStatus = (value: string) =>
     setDraft((current) => ({
       ...current,
@@ -349,30 +365,19 @@ function PatientFilterModal({
         ? current.status.filter((item) => item !== value)
         : [...current.status, value],
     }));
+  const periods = [
+    ["any", "Any period"],
+    ["today", "Today"],
+    ["week", "Last 7 days"],
+    ["month", "Last 30 days"],
+  ] as const;
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/35 p-4"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="patient-filters-title"
-    >
-      <section className="w-full max-w-xl rounded-xl border border-gray-200 bg-white p-6 shadow-2xl">
-        <div className="flex items-center justify-between">
-          <h2
-            id="patient-filters-title"
-            className="text-xl font-bold text-[#071046]"
-          >
-            Filter patients
-          </h2>
-          <button
-            type="button"
-            onClick={onCancel}
-            className="text-sm text-gray-500 hover:text-gray-900"
-          >
-            Close
-          </button>
-        </div>
-        <div className="mt-6 grid gap-6 sm:grid-cols-2">
+    <Dialog open={open} onOpenChange={(next) => { if (!next) onCancel(); }}>
+      <DialogContent className="max-w-xl">
+        <DialogHeader>
+          <DialogTitle>Filter patients</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-6 sm:grid-cols-2">
           <div className="space-y-3">
             <Label>Date of birth</Label>
             <Input
@@ -392,19 +397,21 @@ function PatientFilterModal({
           </div>
           <div className="space-y-3">
             <Label htmlFor="last-exam-period">Last exam date</Label>
-            <select
-              id="last-exam-period"
-              value={draft.examPeriod}
-              onChange={(event) =>
-                setDraft({ ...draft, examPeriod: event.target.value })
+            <Select
+              value={draft.examPeriod || "any"}
+              onValueChange={(value) =>
+                setDraft({ ...draft, examPeriod: value === "any" ? "" : value })
               }
-              className="h-10 w-full rounded-md border border-gray-200 bg-white px-3 text-sm"
             >
-              <option value="">Any period</option>
-              <option value="today">Today</option>
-              <option value="week">Last 7 days</option>
-              <option value="month">Last 30 days</option>
-            </select>
+              <SelectTrigger id="last-exam-period" className="h-10 w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {periods.map(([value, label]) => (
+                  <SelectItem key={value} value={value}>{label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2 sm:col-span-2">
             <Label>Status</Label>
@@ -420,7 +427,7 @@ function PatientFilterModal({
             </div>
           </div>
         </div>
-        <div className="mt-7 flex justify-end gap-3">
+        <DialogFooter className="sm:justify-between">
           <Button
             type="button"
             variant="outline"
@@ -428,19 +435,17 @@ function PatientFilterModal({
           >
             Clear
           </Button>
-          <Button type="button" variant="secondary" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button
-            type="button"
-            onClick={() => onApply(draft)}
-            className="bg-primary text-white"
-          >
-            Apply filters
-          </Button>
-        </div>
-      </section>
-    </div>
+          <div className="flex justify-end gap-3">
+            <Button type="button" variant="secondary" onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button type="button" onClick={() => onApply(draft)}>
+              Apply filters
+            </Button>
+          </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 function matchesFilters(
@@ -462,7 +467,8 @@ function matchesFilters(
   if (filters.examPeriod === "today" && !/(mins|hour)/.test(time)) return false;
   if (filters.examPeriod === "week" && /week|2 weeks|3 weeks/.test(time))
     return false;
-  if (filters.examPeriod === "month" && false) return false;
+  if (filters.examPeriod === "month" && !/(min|hour|day|week)/.test(time))
+    return false;
   return true;
 }
 function hasFilters(filters: PatientFilters) {
@@ -476,15 +482,7 @@ function compare(a: string, b: string, direction: SortDirection) {
   return direction === "asc" ? result : -result;
 }
 function Status({ value }: { value: string }) {
-  const cls =
-    value === "Active"
-      ? "bg-green-100 text-green-700"
-      : value === "Critical"
-        ? "bg-red-100 text-red-700"
-        : "bg-gray-100 text-gray-700";
-  return (
-    <span className={`rounded-full px-2 py-1 text-xs font-medium ${cls}`}>
-      {value}
-    </span>
-  );
+  const variant =
+    value === "Active" ? "success" : value === "Critical" ? "destructive" : "neutral";
+  return <Badge variant={variant}>{value}</Badge>;
 }

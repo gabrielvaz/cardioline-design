@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Download, Hand, Monitor, MousePointer2, Printer, Redo2, RotateCcw, Search, ZoomIn, ZoomOut } from 'lucide-react';
-import { Button, Input, Label } from '@cardioline/ui';
+import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@cardioline/ui';
 import { PrototypeToast } from '@/components/ui/prototype-toast';
 
 type Report = { id: string; patient: string; patientId: string; type: string; date: string; status: string };
@@ -38,7 +38,7 @@ export function ReportPdfViewer({ report }: { report: Report }) {
           <dl className="text-sm">{examInfo.map(([label, value], index) => <div key={label} className={`flex justify-between gap-4 px-2 py-2 ${index % 2 === 0 ? 'bg-slate-200/65' : ''}`}><dt className="text-slate-600">{label}</dt><dd className="text-right font-medium text-slate-700">{value}</dd></div>)}</dl>
           <div className="mt-8 flex items-center justify-between"><Label className="text-xs uppercase tracking-wide text-slate-600">Conclusions</Label><button type="button" onClick={() => setConclusion('Holter monitoring with sinus rhythm. No significant arrhythmias identified.')} className="text-xs font-medium text-[#177bd1] hover:underline">Pick a template</button></div>
           <textarea value={conclusion} onChange={(event) => setConclusion(event.target.value)} placeholder="Type here" className="mt-2 min-h-28 w-full rounded-md border border-slate-200 bg-white p-3 text-sm outline-none focus:border-[#ee5b00]" />
-          <div className="mt-6 space-y-2"><Label htmlFor="report-summary" className="text-xs uppercase tracking-wide text-slate-600">Summary</Label><select id="report-summary" value={summary} onChange={(event) => setSummary(event.target.value)} className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm"><option>Normal</option><option>Borderline</option><option>Abnormal</option><option>Pending review</option></select></div>
+          <div className="mt-6 space-y-2"><Label htmlFor="report-summary" className="text-xs uppercase tracking-wide text-slate-600">Summary</Label><Select value={summary} onValueChange={setSummary}><SelectTrigger id="report-summary" className="h-10 w-full"><SelectValue /></SelectTrigger><SelectContent>{['Normal', 'Borderline', 'Abnormal', 'Pending review'].map((option) => <SelectItem key={option} value={option}>{option}</SelectItem>)}</SelectContent></Select></div>
           <Button onClick={() => setToast(`Report saved as ${summary}.`)} className="mt-auto w-full bg-primary text-white">Save</Button>
         </aside>
       </div>
