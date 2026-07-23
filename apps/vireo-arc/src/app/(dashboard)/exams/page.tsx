@@ -2,19 +2,20 @@
 
 import * as React from "react";
 import { ChevronDown, ChevronUp, ListFilter, Search, SlidersHorizontal } from "lucide-react";
-import { Button, Input } from "@cardioline/ui";
-import { AdvancedExamFilters } from "@/components/exams/advanced-filters";
 import {
-  ExamFilterDropdown,
-  type ExamFilterOption,
-} from "@/components/exams/exam-filter-dropdown";
+  Button,
+  Input,
+  MultiSelectDropdown,
+  type MultiSelectOption,
+} from "@cardioline/ui";
+import { AdvancedExamFilters } from "@/components/exams/advanced-filters";
 import { PrototypeToast } from "@/components/ui/prototype-toast";
 import { TanstackExamTable } from "@/components/exams/tanstack-exam-table";
 import { TableSettingsMenu } from "@/components/ui/table-settings-menu";
 import { useGlobalTableDensity } from "@/components/ui/use-global-table-density";
 import { PageHeader } from "@/components/ui/page-header";
 
-const filterDefinitions: Record<string, ExamFilterOption[]> = {
+const filterDefinitions: Record<string, MultiSelectOption[]> = {
   Period: [
     { label: "Today" },
     { label: "Last 7 days" },
@@ -154,13 +155,18 @@ export default function ExamsPage() {
           <div className="overflow-x-auto pb-1">
             <div className="flex min-w-full w-max items-center gap-2 pr-1">
               {Object.entries(filterDefinitions).map(([name, options]) => (
-                <ExamFilterDropdown
+                <MultiSelectDropdown
                   key={name}
                   label={name}
                   options={options}
-                  selected={filterValues[name] ?? []}
+                  value={filterValues[name] ?? []}
                   onChange={(values) => updateFilter(name, values)}
-                  accent={name === "Exam type"}
+                  align="start"
+                  triggerClassName={
+                    name === "Exam type"
+                      ? "border-primary/40 bg-primary/10 text-foreground"
+                      : undefined
+                  }
                 />
               ))}
               <Button

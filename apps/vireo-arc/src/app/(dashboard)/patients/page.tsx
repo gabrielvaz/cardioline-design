@@ -9,6 +9,7 @@ import {
   Button,
   Card,
   CardContent,
+  Checkbox,
   Dialog,
   DialogContent,
   DialogFooter,
@@ -28,7 +29,6 @@ import {
   SortableHeader,
   type SortDirection,
 } from "@/components/ui/sortable-header";
-import { SelectionCheckbox } from "@/components/ui/selection-checkbox";
 import { TableSettingsMenu } from "@/components/ui/table-settings-menu";
 import { useGlobalTableDensity } from "@/components/ui/use-global-table-density";
 import { AdvancedSearchModal } from "@/components/ui/advanced-search-modal";
@@ -417,12 +417,16 @@ function PatientFilterModal({
             <Label>Status</Label>
             <div className="grid gap-1 sm:grid-cols-3">
               {["Active", "Critical", "Inactive"].map((status) => (
-                <SelectionCheckbox
+                <label
                   key={status}
-                  label={status}
-                  checked={draft.status.includes(status)}
-                  onChange={() => toggleStatus(status)}
-                />
+                  className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm text-foreground transition-colors hover:bg-muted"
+                >
+                  <Checkbox
+                    checked={draft.status.includes(status)}
+                    onCheckedChange={() => toggleStatus(status)}
+                  />
+                  {status}
+                </label>
               ))}
             </div>
           </div>

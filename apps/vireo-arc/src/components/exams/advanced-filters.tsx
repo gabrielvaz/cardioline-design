@@ -2,8 +2,7 @@
 
 import * as React from 'react';
 import { ChevronDown } from 'lucide-react';
-import { Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@cardioline/ui';
-import { SelectionCheckbox } from '@/components/ui/selection-checkbox';
+import { Button, Checkbox, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@cardioline/ui';
 
 const groups = [
   ['Exam type', ['Resting ECG', 'ECG single lead (PDF)', 'Holter ECG', 'Holter ECG (PDF)', 'Stress test', 'Spirometry']],
@@ -32,7 +31,12 @@ export function AdvancedExamFilters({ onClose }: { onClose: () => void }) {
               </button>
               {open === name && (
                 <div className="grid gap-1 border-t border-border px-4 py-3 sm:grid-cols-2">
-                  {options.map((option) => <SelectionCheckbox key={option} checked={checked.includes(option)} onChange={() => toggle(option)} label={option} />)}
+                  {options.map((option) => (
+                    <label key={option} className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm text-foreground transition-colors hover:bg-muted">
+                      <Checkbox checked={checked.includes(option)} onCheckedChange={() => toggle(option)} />
+                      {option}
+                    </label>
+                  ))}
                 </div>
               )}
             </div>
