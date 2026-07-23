@@ -1,0 +1,4 @@
+interface:
+  display_name: "Beat Design System"
+  short_description: "Build consistent Cardioline interfaces."
+  default_prompt: "Use $beat-design-system to implement a reusable Beat UI change in this repository."

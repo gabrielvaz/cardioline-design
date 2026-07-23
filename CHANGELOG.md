@@ -11,6 +11,7 @@ All notable prototype UI changes are documented here.
 
 ### Added
 
+- Added a repository-local Beat Design System skill and Markdown component catalog for agent consumption.
 - Added active component search to the Beat Design System documentation sidebar.
 - Added the Exam Inbox as a clinical worklist with urgency rules, Cards/Table settings, and mock reassignment of examinations to reporting professionals.
 - Added configurable pagination sizes (10, 20, 50 and 100) to paginated clinical lists.

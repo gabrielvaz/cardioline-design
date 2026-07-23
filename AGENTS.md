@@ -52,3 +52,4 @@ After `npm run build`, restart the preview server before visual verification. `n
 
 - [Vireo Arc application guide](apps/vireo-arc/AGENTS.md)
 - [Beat Design System guide](packages/ui/AGENTS.md)
+- [Beat Design System skill](.agents/skills/beat-design-system/SKILL.md)

@@ -2,6 +2,9 @@
 
 `@cardioline/ui` is the shared UI foundation for Cardioline products. It combines a compact Beat visual language with ShadCN-style composition and Radix primitives.
 
+For the complete current component and block catalog, selection criteria, and
+agent workflow, read [the Beat Design System agent reference](../../docs/BEAT-DESIGN-SYSTEM.md).
+
 ## Brand foundation
 
 | Role | Value | Use |
