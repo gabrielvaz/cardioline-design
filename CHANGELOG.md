@@ -11,6 +11,7 @@ All notable prototype UI changes are documented here.
 
 ### Added
 
+- Added a Beat Design System "Blocks" layer (MultiSelectDropdown, TableToolbarMenu, ConfirmDialog, RowActionsMenu, AppSidebar): generic, slot-driven composites now consumed by Vireo Arc, with the local duplicates removed so Beat is the single source of truth.
 - Added a repository-local Beat Design System skill and Markdown component catalog for agent consumption.
 - Added active component search to the Beat Design System documentation sidebar.
 - Added the Exam Inbox as a clinical worklist with urgency rules, Cards/Table settings, and mock reassignment of examinations to reporting professionals.
