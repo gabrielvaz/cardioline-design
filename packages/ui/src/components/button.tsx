@@ -20,11 +20,6 @@ const buttonVariants = cva(
           'hover:bg-accent/10 hover:text-foreground',
         link:
           'text-primary underline-offset-4 hover:underline',
-        /* Cardioline-specific variants */
-        'cardioline':
-          'bg-[#1840a2] text-white shadow-md hover:bg-[#1840a2]/90 active:scale-[0.98] font-semibold tracking-wide',
-        'cardiac':
-          'bg-[#f83b3b] text-white shadow-md hover:bg-[#f83b3b]/90 active:scale-[0.98] font-semibold',
       },
       size: {
         default: 'h-10 px-4 py-2',

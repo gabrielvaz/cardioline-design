@@ -130,7 +130,7 @@ export function LoginForm() {
               <button
                 type="button"
                 id="forgot-password-link"
-                className="text-xs font-medium text-[#ee5b00] hover:text-[#d44e00] transition-colors focus-visible:outline-none focus-visible:underline"
+                className="text-xs font-medium text-primary hover:text-primary/80 transition-colors focus-visible:outline-none focus-visible:underline"
                 onClick={() => router.push('/forgot-password')}
               >
                 Forgot password?
@@ -188,7 +188,7 @@ export function LoginForm() {
               'transition-all duration-200 active:scale-[0.98]',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ee5b00] focus-visible:ring-offset-2',
               'disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100',
-              'bg-[#ee5b00] hover:bg-[#d44e00]',
+              'bg-primary',
               'shadow-sm shadow-[#ee5b00]/20'
             )}
           >

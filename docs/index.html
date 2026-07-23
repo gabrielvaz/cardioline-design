@@ -395,11 +395,11 @@
     .btn-primary:active { transform: translateY(0); }
 
     .btn-navy {
-      background: var(--color-navy);
+      background: #071046;
       color: white;
       box-shadow: 0 2px 8px rgba(7,16,70,0.25);
     }
-    .btn-navy:hover { background: var(--color-navy-light); }
+    .btn-navy:hover { background: #1b2576; }
 
     .btn-outline {
       background: transparent;
@@ -1292,6 +1292,16 @@
       color: #ffffff;
     }
 
+    body.dark .btn-navy {
+      background: #1b2576;
+      border: 1px solid #283593;
+      color: #ffffff;
+    }
+    body.dark .btn-navy:hover {
+      background: #283593;
+      color: #ffffff;
+    }
+
     body.dark .card,
     body.dark .component-card,
     body.dark .component-preview:not(.dark-bg) {
@@ -1443,6 +1453,24 @@
     body.dark .type-meta-size { color: var(--text-muted); }
     body.dark .spacing-item { border-color: var(--border-subtle); }
     body.dark .spacing-meta { color: var(--text-muted); }
+
+    /* ─── Dark-mode contrast fixes ───────────────────────────────── */
+    /* --color-primary-pale was never redefined for dark, so hover/selected
+       states stayed a light cream (#fff5ee). Give it a dark orange tint. */
+    body.dark { --color-primary-pale: rgba(238, 91, 0, 0.15); }
+    /* Tooltip used --color-gray-900, which inverts to #ffffff in dark → white-on-white. */
+    body.dark .tooltip { background: #1a2540; color: #f0f4ff; }
+    body.dark .tooltip::after { border-top-color: #1a2540; }
+    /* Secondary button hover was a hardcoded light blue (#dce4fc) with white text. */
+    body.dark .btn-secondary:hover { background: var(--border-main); color: var(--text-heading); }
+    /* Command-palette selected row: light-orange text for legibility on the tint. */
+    body.dark .command-item.selected { color: #ff9d6a; }
+    /* Select chevron was removed by background-image:none in dark; re-add a light-stroke arrow. */
+    body.dark .select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+    }
   </style>
 </head>
 <body>
@@ -1662,7 +1690,7 @@
       <div class="component-card" style="margin-top: 24px; padding: 32px;">
         <h3 style="margin-bottom: 12px; font-size: 16px; font-weight: 700;">White Logo</h3>
         <p style="margin-bottom: 24px; font-size: 14px;" class="text-muted">Use the white logo on dark or vibrant backgrounds (like the primary navy).</p>
-        <div class="component-preview" style="background: var(--color-navy); padding: 64px 48px; display: flex; justify-content: center; border-radius: 8px; margin-bottom: 20px;">
+        <div class="component-preview" style="background: #071046; padding: 64px 48px; display: flex; justify-content: center; border-radius: 8px; margin-bottom: 20px;">
           <img src="cardioline-logo-white.png" alt="Cardioline Logo White" style="max-height: 52px; width: auto;" />
         </div>
         <a href="cardioline-logo-white.png" download class="btn btn-outline btn-sm"><i data-lucide="download"></i> Download PNG</a>
@@ -2770,86 +2798,145 @@
         <p class="section-desc">Beat DS uses <a href="https://lucide.dev" target="_blank" style="color: var(--color-primary);">Lucide React</a> — a consistent, stroke-based icon set with 1,000+ icons.</p>
       </div>
       <div class="component-card">
-        <div class="component-preview" style="padding: 24px;">
-          <div class="icon-grid" style="width: 100%;">
-            <!-- Healthcare & Clinical -->
-            <div class="icon-item"><i data-lucide="activity"></i><span class="icon-name">activity</span></div>
-            <div class="icon-item"><i data-lucide="heart"></i><span class="icon-name">heart</span></div>
-            <div class="icon-item"><i data-lucide="heart-pulse"></i><span class="icon-name">heart-pulse</span></div>
-            <div class="icon-item"><i data-lucide="stethoscope"></i><span class="icon-name">stethoscope</span></div>
-            <div class="icon-item"><i data-lucide="syringe"></i><span class="icon-name">syringe</span></div>
-            <div class="icon-item"><i data-lucide="thermometer"></i><span class="icon-name">thermometer</span></div>
-            <div class="icon-item"><i data-lucide="pill"></i><span class="icon-name">pill</span></div>
-            <div class="icon-item"><i data-lucide="hospital"></i><span class="icon-name">hospital</span></div>
+        <div class="component-preview column" style="padding: 28px; gap: 24px;">
 
-            <!-- Users & Administration -->
-            <div class="icon-item"><i data-lucide="user"></i><span class="icon-name">user</span></div>
-            <div class="icon-item"><i data-lucide="user-plus"></i><span class="icon-name">user-plus</span></div>
-            <div class="icon-item"><i data-lucide="user-check"></i><span class="icon-name">user-check</span></div>
-            <div class="icon-item"><i data-lucide="user-cog"></i><span class="icon-name">user-cog</span></div>
-            <div class="icon-item"><i data-lucide="users"></i><span class="icon-name">users</span></div>
-            <div class="icon-item"><i data-lucide="contact"></i><span class="icon-name">contact</span></div>
-            <div class="icon-item"><i data-lucide="briefcase"></i><span class="icon-name">briefcase</span></div>
-            <div class="icon-item"><i data-lucide="shield"></i><span class="icon-name">shield</span></div>
-
-            <!-- Actions & Edit -->
-            <div class="icon-item"><i data-lucide="plus"></i><span class="icon-name">plus</span></div>
-            <div class="icon-item"><i data-lucide="plus-circle"></i><span class="icon-name">plus-circle</span></div>
-            <div class="icon-item"><i data-lucide="edit"></i><span class="icon-name">edit</span></div>
-            <div class="icon-item"><i data-lucide="edit-2"></i><span class="icon-name">edit-2</span></div>
-            <div class="icon-item"><i data-lucide="edit-3"></i><span class="icon-name">edit-3</span></div>
-            <div class="icon-item"><i data-lucide="trash"></i><span class="icon-name">trash</span></div>
-            <div class="icon-item"><i data-lucide="trash-2"></i><span class="icon-name">trash-2</span></div>
-            <div class="icon-item"><i data-lucide="filter"></i><span class="icon-name">filter</span></div>
-
-            <!-- System & Settings -->
-            <div class="icon-item"><i data-lucide="settings"></i><span class="icon-name">settings</span></div>
-            <div class="icon-item"><i data-lucide="sliders"></i><span class="icon-name">sliders</span></div>
-            <div class="icon-item"><i data-lucide="lock"></i><span class="icon-name">lock</span></div>
-            <div class="icon-item"><i data-lucide="unlock"></i><span class="icon-name">unlock</span></div>
-            <div class="icon-item"><i data-lucide="key"></i><span class="icon-name">key</span></div>
-            <div class="icon-item"><i data-lucide="database"></i><span class="icon-name">database</span></div>
-            <div class="icon-item"><i data-lucide="server"></i><span class="icon-name">server</span></div>
-            <div class="icon-item"><i data-lucide="cpu"></i><span class="icon-name">cpu</span></div>
-
-            <!-- Devices & Hardware -->
-            <div class="icon-item"><i data-lucide="hard-drive"></i><span class="icon-name">hard-drive</span></div>
-            <div class="icon-item"><i data-lucide="laptop"></i><span class="icon-name">laptop</span></div>
-            <div class="icon-item"><i data-lucide="smartphone"></i><span class="icon-name">smartphone</span></div>
-            <div class="icon-item"><i data-lucide="monitor"></i><span class="icon-name">monitor</span></div>
-            <div class="icon-item"><i data-lucide="wifi"></i><span class="icon-name">wifi</span></div>
-            <div class="icon-item"><i data-lucide="bluetooth"></i><span class="icon-name">bluetooth</span></div>
-            <div class="icon-item"><i data-lucide="sun"></i><span class="icon-name">sun</span></div>
-            <div class="icon-item"><i data-lucide="moon"></i><span class="icon-name">moon</span></div>
-
-            <!-- Files & Badges -->
-            <div class="icon-item"><i data-lucide="file"></i><span class="icon-name">file</span></div>
-            <div class="icon-item"><i data-lucide="file-text"></i><span class="icon-name">file-text</span></div>
-            <div class="icon-item"><i data-lucide="file-plus"></i><span class="icon-name">file-plus</span></div>
-            <div class="icon-item"><i data-lucide="file-spreadsheet"></i><span class="icon-name">file-spreadsheet</span></div>
-            <div class="icon-item"><i data-lucide="folder"></i><span class="icon-name">folder</span></div>
-            <div class="icon-item"><i data-lucide="folder-plus"></i><span class="icon-name">folder-plus</span></div>
-            <div class="icon-item"><i data-lucide="download"></i><span class="icon-name">download</span></div>
-            <div class="icon-item"><i data-lucide="upload"></i><span class="icon-name">upload</span></div>
-            <div class="icon-item"><i data-lucide="printer"></i><span class="icon-name">printer</span></div>
-            <div class="icon-item"><i data-lucide="share-2"></i><span class="icon-name">share-2</span></div>
-            <div class="icon-item"><i data-lucide="badge-check"></i><span class="icon-name">badge-check</span></div>
-            <div class="icon-item"><i data-lucide="tag"></i><span class="icon-name">tag</span></div>
-
-            <!-- Status & Search -->
-            <div class="icon-item"><i data-lucide="search"></i><span class="icon-name">search</span></div>
-            <div class="icon-item"><i data-lucide="bell"></i><span class="icon-name">bell</span></div>
-            <div class="icon-item"><i data-lucide="bell-off"></i><span class="icon-name">bell-off</span></div>
-            <div class="icon-item"><i data-lucide="eye"></i><span class="icon-name">eye</span></div>
-            <div class="icon-item"><i data-lucide="eye-off"></i><span class="icon-name">eye-off</span></div>
-            <div class="icon-item"><i data-lucide="zap"></i><span class="icon-name">zap</span></div>
-            <div class="icon-item"><i data-lucide="clock"></i><span class="icon-name">clock</span></div>
-            <div class="icon-item"><i data-lucide="calendar"></i><span class="icon-name">calendar</span></div>
-            <div class="icon-item"><i data-lucide="refresh-cw"></i><span class="icon-name">refresh-cw</span></div>
-            <div class="icon-item"><i data-lucide="alert-triangle"></i><span class="icon-name">alert-triangle</span></div>
-            <div class="icon-item"><i data-lucide="check-circle"></i><span class="icon-name">check-circle</span></div>
-            <div class="icon-item"><i data-lucide="x-circle"></i><span class="icon-name">x-circle</span></div>
+          <div style="width: 100%;">
+            <h4 style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-primary); margin-bottom: 12px;">Healthcare & Clinical</h4>
+            <div class="icon-grid" style="width: 100%;">
+              <div class="icon-item"><i data-lucide="activity"></i><span class="icon-name">activity</span></div>
+              <div class="icon-item"><i data-lucide="heart"></i><span class="icon-name">heart</span></div>
+              <div class="icon-item"><i data-lucide="heart-pulse"></i><span class="icon-name">heart-pulse</span></div>
+              <div class="icon-item"><i data-lucide="stethoscope"></i><span class="icon-name">stethoscope</span></div>
+              <div class="icon-item"><i data-lucide="syringe"></i><span class="icon-name">syringe</span></div>
+              <div class="icon-item"><i data-lucide="thermometer"></i><span class="icon-name">thermometer</span></div>
+              <div class="icon-item"><i data-lucide="pill"></i><span class="icon-name">pill</span></div>
+              <div class="icon-item"><i data-lucide="hospital"></i><span class="icon-name">hospital</span></div>
+            </div>
           </div>
+
+          <div style="width: 100%;">
+            <h4 style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-primary); margin-bottom: 12px;">Users, Patients & Security</h4>
+            <div class="icon-grid" style="width: 100%;">
+              <div class="icon-item"><i data-lucide="user"></i><span class="icon-name">user</span></div>
+              <div class="icon-item"><i data-lucide="user-plus"></i><span class="icon-name">user-plus</span></div>
+              <div class="icon-item"><i data-lucide="user-check"></i><span class="icon-name">user-check</span></div>
+              <div class="icon-item"><i data-lucide="user-cog"></i><span class="icon-name">user-cog</span></div>
+              <div class="icon-item"><i data-lucide="users"></i><span class="icon-name">users</span></div>
+              <div class="icon-item"><i data-lucide="contact"></i><span class="icon-name">contact</span></div>
+              <div class="icon-item"><i data-lucide="briefcase"></i><span class="icon-name">briefcase</span></div>
+              <div class="icon-item"><i data-lucide="shield"></i><span class="icon-name">shield</span></div>
+              <div class="icon-item"><i data-lucide="shield-check"></i><span class="icon-name">shield-check</span></div>
+              <div class="icon-item"><i data-lucide="shield-alert"></i><span class="icon-name">shield-alert</span></div>
+              <div class="icon-item"><i data-lucide="lock"></i><span class="icon-name">lock</span></div>
+              <div class="icon-item"><i data-lucide="unlock"></i><span class="icon-name">unlock</span></div>
+              <div class="icon-item"><i data-lucide="key"></i><span class="icon-name">key</span></div>
+              <div class="icon-item"><i data-lucide="fingerprint"></i><span class="icon-name">fingerprint</span></div>
+            </div>
+          </div>
+
+          <div style="width: 100%;">
+            <h4 style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-primary); margin-bottom: 12px;">Actions & Editing (CRUD)</h4>
+            <div class="icon-grid" style="width: 100%;">
+              <div class="icon-item"><i data-lucide="plus"></i><span class="icon-name">plus</span></div>
+              <div class="icon-item"><i data-lucide="plus-circle"></i><span class="icon-name">plus-circle</span></div>
+              <div class="icon-item"><i data-lucide="minus"></i><span class="icon-name">minus</span></div>
+              <div class="icon-item"><i data-lucide="minus-circle"></i><span class="icon-name">minus-circle</span></div>
+              <div class="icon-item"><i data-lucide="edit"></i><span class="icon-name">edit</span></div>
+              <div class="icon-item"><i data-lucide="edit-2"></i><span class="icon-name">edit-2</span></div>
+              <div class="icon-item"><i data-lucide="edit-3"></i><span class="icon-name">edit-3</span></div>
+              <div class="icon-item"><i data-lucide="trash"></i><span class="icon-name">trash</span></div>
+              <div class="icon-item"><i data-lucide="trash-2"></i><span class="icon-name">trash-2</span></div>
+              <div class="icon-item"><i data-lucide="copy"></i><span class="icon-name">copy</span></div>
+              <div class="icon-item"><i data-lucide="filter"></i><span class="icon-name">filter</span></div>
+              <div class="icon-item"><i data-lucide="check"></i><span class="icon-name">check</span></div>
+              <div class="icon-item"><i data-lucide="x"></i><span class="icon-name">x</span></div>
+              <div class="icon-item"><i data-lucide="external-link"></i><span class="icon-name">external-link</span></div>
+            </div>
+          </div>
+
+          <div style="width: 100%;">
+            <h4 style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-primary); margin-bottom: 12px;">Files, Folders & Documents</h4>
+            <div class="icon-grid" style="width: 100%;">
+              <div class="icon-item"><i data-lucide="file"></i><span class="icon-name">file</span></div>
+              <div class="icon-item"><i data-lucide="file-text"></i><span class="icon-name">file-text</span></div>
+              <div class="icon-item"><i data-lucide="file-plus"></i><span class="icon-name">file-plus</span></div>
+              <div class="icon-item"><i data-lucide="file-check"></i><span class="icon-name">file-check</span></div>
+              <div class="icon-item"><i data-lucide="file-spreadsheet"></i><span class="icon-name">file-spreadsheet</span></div>
+              <div class="icon-item"><i data-lucide="folder"></i><span class="icon-name">folder</span></div>
+              <div class="icon-item"><i data-lucide="folder-plus"></i><span class="icon-name">folder-plus</span></div>
+              <div class="icon-item"><i data-lucide="paperclip"></i><span class="icon-name">paperclip</span></div>
+              <div class="icon-item"><i data-lucide="download"></i><span class="icon-name">download</span></div>
+              <div class="icon-item"><i data-lucide="upload"></i><span class="icon-name">upload</span></div>
+              <div class="icon-item"><i data-lucide="printer"></i><span class="icon-name">printer</span></div>
+              <div class="icon-item"><i data-lucide="share-2"></i><span class="icon-name">share-2</span></div>
+              <div class="icon-item"><i data-lucide="badge-check"></i><span class="icon-name">badge-check</span></div>
+              <div class="icon-item"><i data-lucide="tag"></i><span class="icon-name">tag</span></div>
+            </div>
+          </div>
+
+          <div style="width: 100%;">
+            <h4 style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-primary); margin-bottom: 12px;">Analytics & System Hardware</h4>
+            <div class="icon-grid" style="width: 100%;">
+              <div class="icon-item"><i data-lucide="bar-chart-2"></i><span class="icon-name">bar-chart-2</span></div>
+              <div class="icon-item"><i data-lucide="trending-up"></i><span class="icon-name">trending-up</span></div>
+              <div class="icon-item"><i data-lucide="trending-down"></i><span class="icon-name">trending-down</span></div>
+              <div class="icon-item"><i data-lucide="pie-chart"></i><span class="icon-name">pie-chart</span></div>
+              <div class="icon-item"><i data-lucide="settings"></i><span class="icon-name">settings</span></div>
+              <div class="icon-item"><i data-lucide="sliders"></i><span class="icon-name">sliders</span></div>
+              <div class="icon-item"><i data-lucide="database"></i><span class="icon-name">database</span></div>
+              <div class="icon-item"><i data-lucide="server"></i><span class="icon-name">server</span></div>
+              <div class="icon-item"><i data-lucide="cpu"></i><span class="icon-name">cpu</span></div>
+              <div class="icon-item"><i data-lucide="hard-drive"></i><span class="icon-name">hard-drive</span></div>
+              <div class="icon-item"><i data-lucide="laptop"></i><span class="icon-name">laptop</span></div>
+              <div class="icon-item"><i data-lucide="smartphone"></i><span class="icon-name">smartphone</span></div>
+              <div class="icon-item"><i data-lucide="monitor"></i><span class="icon-name">monitor</span></div>
+              <div class="icon-item"><i data-lucide="wifi"></i><span class="icon-name">wifi</span></div>
+              <div class="icon-item"><i data-lucide="bluetooth"></i><span class="icon-name">bluetooth</span></div>
+            </div>
+          </div>
+
+          <div style="width: 100%;">
+            <h4 style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-primary); margin-bottom: 12px;">Navigation & UI Controls</h4>
+            <div class="icon-grid" style="width: 100%;">
+              <div class="icon-item"><i data-lucide="search"></i><span class="icon-name">search</span></div>
+              <div class="icon-item"><i data-lucide="grid"></i><span class="icon-name">grid</span></div>
+              <div class="icon-item"><i data-lucide="list"></i><span class="icon-name">list</span></div>
+              <div class="icon-item"><i data-lucide="menu"></i><span class="icon-name">menu</span></div>
+              <div class="icon-item"><i data-lucide="more-horizontal"></i><span class="icon-name">more-horizontal</span></div>
+              <div class="icon-item"><i data-lucide="more-vertical"></i><span class="icon-name">more-vertical</span></div>
+              <div class="icon-item"><i data-lucide="chevron-down"></i><span class="icon-name">chevron-down</span></div>
+              <div class="icon-item"><i data-lucide="chevron-up"></i><span class="icon-name">chevron-up</span></div>
+              <div class="icon-item"><i data-lucide="chevron-left"></i><span class="icon-name">chevron-left</span></div>
+              <div class="icon-item"><i data-lucide="chevron-right"></i><span class="icon-name">chevron-right</span></div>
+              <div class="icon-item"><i data-lucide="arrow-right"></i><span class="icon-name">arrow-right</span></div>
+              <div class="icon-item"><i data-lucide="arrow-left"></i><span class="icon-name">arrow-left</span></div>
+              <div class="icon-item"><i data-lucide="sun"></i><span class="icon-name">sun</span></div>
+              <div class="icon-item"><i data-lucide="moon"></i><span class="icon-name">moon</span></div>
+            </div>
+          </div>
+
+          <div style="width: 100%;">
+            <h4 style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-primary); margin-bottom: 12px;">Communication, Status & Feedback</h4>
+            <div class="icon-grid" style="width: 100%;">
+              <div class="icon-item"><i data-lucide="bell"></i><span class="icon-name">bell</span></div>
+              <div class="icon-item"><i data-lucide="bell-off"></i><span class="icon-name">bell-off</span></div>
+              <div class="icon-item"><i data-lucide="mail"></i><span class="icon-name">mail</span></div>
+              <div class="icon-item"><i data-lucide="message-square"></i><span class="icon-name">message-square</span></div>
+              <div class="icon-item"><i data-lucide="phone"></i><span class="icon-name">phone</span></div>
+              <div class="icon-item"><i data-lucide="eye"></i><span class="icon-name">eye</span></div>
+              <div class="icon-item"><i data-lucide="eye-off"></i><span class="icon-name">eye-off</span></div>
+              <div class="icon-item"><i data-lucide="zap"></i><span class="icon-name">zap</span></div>
+              <div class="icon-item"><i data-lucide="clock"></i><span class="icon-name">clock</span></div>
+              <div class="icon-item"><i data-lucide="calendar"></i><span class="icon-name">calendar</span></div>
+              <div class="icon-item"><i data-lucide="refresh-cw"></i><span class="icon-name">refresh-cw</span></div>
+              <div class="icon-item"><i data-lucide="help-circle"></i><span class="icon-name">help-circle</span></div>
+              <div class="icon-item"><i data-lucide="info"></i><span class="icon-name">info</span></div>
+              <div class="icon-item"><i data-lucide="alert-triangle"></i><span class="icon-name">alert-triangle</span></div>
+              <div class="icon-item"><i data-lucide="check-circle"></i><span class="icon-name">check-circle</span></div>
+              <div class="icon-item"><i data-lucide="x-circle"></i><span class="icon-name">x-circle</span></div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>

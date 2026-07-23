@@ -4,6 +4,11 @@ All notable prototype UI changes are documented here.
 
 ## [Unreleased] - 2026-07-22
 
+### Experimental
+
+- Added a TanStack Table pilot for the exam list, preserving Beat table markup while moving sorting, global search, pagination and column visibility to the headless table engine.
+- Added shared table settings for density and protected column visibility, plus advanced-search entry points for patients and reports.
+
 ### Added
 
 - Complete mock flows for exam filtering, advanced search, reports, ECG and PDF report viewers.

@@ -15,6 +15,51 @@ export {
   CardContent,
 } from './components/card';
 
+export { Badge, badgeVariants } from './components/badge';
+export type { BadgeProps } from './components/badge';
+export { Checkbox } from './components/checkbox';
+export { Switch } from './components/switch';
+export type { SwitchProps } from './components/switch';
+export { Tabs, TabsList, TabsTrigger, TabsContent } from './components/tabs';
+
+export {
+  Dialog,
+  DialogPortal,
+  DialogOverlay,
+  DialogTrigger,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from './components/dialog';
+
+export {
+  AlertDialog,
+  AlertDialogPortal,
+  AlertDialogOverlay,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from './components/alert-dialog';
+
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuGroup,
+  DropdownMenuPortal,
+} from './components/dropdown-menu';
+
 /* ─── Utilities ──────────────────────────────────────────────── */
 export { cn } from './lib/utils';
 

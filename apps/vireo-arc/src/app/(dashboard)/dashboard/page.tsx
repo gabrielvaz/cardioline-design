@@ -116,7 +116,7 @@ export default function DashboardPage() {
                     }`}>
                       <span className={`h-2 w-2 rounded-full ${
                         device.status === 'Online' ? 'bg-green-500' :
-                        device.status === 'In Use' ? 'bg-[#ee5b00]' : 'bg-gray-400'
+                        device.status === 'In Use' ? 'bg-primary' : 'bg-gray-400'
                       }`} />
                       {device.status}
                     </div>

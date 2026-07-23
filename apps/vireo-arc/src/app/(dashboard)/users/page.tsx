@@ -2,12 +2,97 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, Filter, Pencil, Plus, Search, Trash2 } from 'lucide-react';
-import { Button, Card, CardContent, Input } from '@cardioline/ui';
+import { Filter, Pencil, Plus, Search, Trash2 } from 'lucide-react';
+import {
+  Badge, Button, Card, CardContent, Input,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from '@cardioline/ui';
 import { PrototypeToast } from '@/components/ui/prototype-toast';
+import { SortableHeader, type SortDirection } from '@/components/ui/sortable-header';
+import { TablePagination } from '@/components/ui/table-pagination';
 
 const users = [
   ['marco.rossi', 'Carlos Almeida', 'Clinician', 'Pending'], ['giulia.verdi', 'Andrea Bigazzi', 'Technician', 'Inactive'], ['alessandro.bianchi', 'Gabriel Kruschewsky Mattos Vaz', 'Administrator', 'Inactive'], ['sofia.gallo', 'Chiara Mancini', 'Clinician', 'Inactive'], ['matteo.ferri', 'Cristiano Montanari', 'Technician', 'Active'], ['francesca.martini', 'Junior Delagore', 'Clinician', 'Active'], ['luca.russo', 'Larissa Oliveira Montanari', 'Clinician', 'Inactive'], ['chiara.conti', 'Laura Lombardi', 'Technician', 'Pending'],
 ] as const;
-export default function UsersPage() { const [query, setQuery] = React.useState(''); const [status, setStatus] = React.useState('All'); const [toast, setToast] = React.useState<string | null>(null); const visible = users.filter((user) => `${user[0]} ${user[1]} ${user[2]}`.toLowerCase().includes(query.toLowerCase()) && (status === 'All' || user[3] === status)); return <div className="space-y-6"><div><p className="text-sm text-gray-500">Administration › Users</p><h1 className="mt-1 text-2xl font-bold tracking-tight text-[#071046]">Users</h1></div><Card className="border-gray-200 bg-white shadow-sm"><div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 p-4"><div className="flex flex-wrap gap-3"><div className="relative w-72"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" /><Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Type to search..." className="border-gray-200 bg-gray-50 pl-9" /></div><select value={status} onChange={(event) => setStatus(event.target.value)} className="h-10 rounded-md border border-gray-200 bg-white px-3 text-sm text-gray-700"><option>All</option><option>Active</option><option>Pending</option><option>Inactive</option></select><Button variant="outline" onClick={() => { setQuery(''); setStatus('All'); }} className="border-gray-200 text-gray-600"><Filter className="mr-2" />Clear</Button></div><Button asChild className="bg-[#ee5b00] text-white hover:bg-[#d05000]"><Link href="/users/new"><Plus className="mr-2" />Add user</Link></Button></div><CardContent className="p-0"><div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500"><tr><th className="px-5 py-4">Username</th><th className="px-5 py-4">Name</th><th className="px-5 py-4">Role</th><th className="px-5 py-4">Status</th><th className="px-5 py-4 text-right">Actions</th></tr></thead><tbody className="divide-y divide-gray-100">{visible.map((user) => <tr key={user[0]} className="hover:bg-gray-50"><td className="px-5 py-4 font-medium text-gray-900">{user[0]}</td><td className="px-5 py-4 text-gray-700">{user[1]}</td><td className="px-5 py-4 text-gray-600">{user[2]}</td><td className="px-5 py-4"><Badge value={user[3]} /></td><td className="px-5 py-4"><div className="flex justify-end gap-1"><Button asChild size="icon" variant="ghost" aria-label={`Edit ${user[0]}`}><Link href={`/users/${user[0]}/edit`}><Pencil /></Link></Button><Button size="icon" variant="ghost" aria-label={`Remove ${user[0]}`} onClick={() => setToast(`${user[1]} removed from this mock list.`)} className="text-red-600 hover:bg-red-50 hover:text-red-700"><Trash2 /></Button></div></td></tr>)}</tbody></table>{!visible.length && <p className="p-10 text-center text-sm text-gray-500">No users found.</p>}</div><div className="flex items-center justify-between border-t border-gray-100 p-4 text-sm text-gray-500"><span>Showing {visible.length} of 100 entries</span><div className="flex gap-1"><Button size="icon" variant="outline" aria-label="Previous page"><ChevronLeft /></Button><Button size="icon" variant="outline" className="bg-[#071046] text-white">1</Button><Button size="icon" variant="outline">2</Button><Button size="icon" variant="outline">3</Button><Button size="icon" variant="outline" aria-label="Next page"><ChevronRight /></Button></div></div></CardContent></Card><PrototypeToast message={toast} onClose={() => setToast(null)} /></div>; }
-function Badge({ value }: { value: string }) { const color = value === 'Active' ? 'bg-green-100 text-green-700' : value === 'Pending' ? 'bg-gray-100 text-gray-600' : 'bg-red-100 text-red-700'; return <span className={`rounded-full px-2 py-1 text-xs font-medium ${color}`}>{value}</span>; }
+
+type SortKey = 0 | 1 | 2 | 3;
+const pageSize = 5;
+
+export default function UsersPage() {
+  const [query, setQuery] = React.useState('');
+  const [status, setStatus] = React.useState('All');
+  const [page, setPage] = React.useState(1);
+  const [sort, setSort] = React.useState<{ key: SortKey; direction: SortDirection }>({ key: 0, direction: 'asc' });
+  const [toast, setToast] = React.useState<string | null>(null);
+
+  const filtered = users
+    .filter((user) => `${user[0]} ${user[1]} ${user[2]}`.toLowerCase().includes(query.toLowerCase()) && (status === 'All' || user[3] === status))
+    .sort((a, b) => { const result = a[sort.key].localeCompare(b[sort.key], undefined, { numeric: true }); return sort.direction === 'asc' ? result : -result; });
+  const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const visible = filtered.slice((page - 1) * pageSize, page * pageSize);
+  const toggleSort = (key: SortKey) => { setSort((current) => current.key === key ? { key, direction: current.direction === 'asc' ? 'desc' : 'asc' } : { key, direction: 'asc' }); setPage(1); };
+  const columns: [string, SortKey][] = [['Username', 0], ['Name', 1], ['Role', 2], ['Status', 3]];
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <p className="text-sm text-muted-foreground">Administration › Users</p>
+        <h1 className="mt-1 text-2xl font-bold tracking-tight text-accent">Users</h1>
+      </div>
+      <Card>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border p-4">
+          <div className="flex flex-wrap gap-3">
+            <div className="relative w-72">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input value={query} onChange={(event) => { setQuery(event.target.value); setPage(1); }} placeholder="Type to search..." className="bg-muted pl-9" />
+            </div>
+            <Select value={status} onValueChange={(value) => { setStatus(value); setPage(1); }}>
+              <SelectTrigger aria-label="Filter by status" className="h-10 min-w-[140px]"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {['All', 'Active', 'Pending', 'Inactive'].map((option) => <SelectItem key={option} value={option}>{option}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <Button variant="outline" onClick={() => { setQuery(''); setStatus('All'); setPage(1); }}><Filter className="mr-2" />Clear</Button>
+          </div>
+          <Button asChild><Link href="/users/new"><Plus className="mr-2" />Add user</Link></Button>
+        </div>
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-muted text-xs text-muted-foreground">
+                <tr>
+                  {columns.map(([label, key]) => <th key={label} className="px-5 py-4"><SortableHeader label={label} active={sort.key === key} direction={sort.direction} onClick={() => toggleSort(key)} /></th>)}
+                  <th className="px-5 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {visible.map((user) => (
+                  <tr key={user[0]} className="hover:bg-muted">
+                    <td className="px-5 py-4 font-medium text-foreground">{user[0]}</td>
+                    <td className="px-5 py-4 text-foreground">{user[1]}</td>
+                    <td className="px-5 py-4 text-muted-foreground">{user[2]}</td>
+                    <td className="px-5 py-4"><StatusBadge value={user[3]} /></td>
+                    <td className="px-5 py-4">
+                      <div className="flex justify-end gap-1">
+                        <Button asChild size="icon" variant="ghost" aria-label={`Edit ${user[0]}`}><Link href={`/users/${user[0]}/edit`}><Pencil /></Link></Button>
+                        <Button size="icon" variant="ghost" aria-label={`Remove ${user[0]}`} onClick={() => setToast(`${user[1]} removed from this mock list.`)} className="text-destructive hover:bg-destructive/10"><Trash2 /></Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {!visible.length && <p className="p-10 text-center text-sm text-muted-foreground">No users found.</p>}
+          </div>
+          <TablePagination page={page} pageCount={pageCount} total={filtered.length} pageSize={pageSize} onPageChange={setPage} />
+        </CardContent>
+      </Card>
+      <PrototypeToast message={toast} onClose={() => setToast(null)} />
+    </div>
+  );
+}
+
+function StatusBadge({ value }: { value: string }) {
+  const variant = value === 'Active' ? 'success' : value === 'Pending' ? 'neutral' : 'destructive';
+  return <Badge variant={variant}>{value}</Badge>;
+}

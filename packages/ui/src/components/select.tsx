@@ -15,14 +15,14 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      'flex h-8 items-center justify-between gap-2 rounded-md border border-slate-200 bg-white px-2.5 text-sm font-medium text-slate-700 outline-none transition-colors hover:border-[#ee5b00]/50 focus:border-[#ee5b00] focus:ring-2 focus:ring-[#ee5b00]/15 disabled:cursor-not-allowed disabled:opacity-50',
+      'flex h-8 items-center justify-between gap-2 rounded-md border border-input bg-background px-2.5 text-sm font-medium text-foreground outline-none transition-colors hover:border-primary/50 focus:border-primary focus:ring-2 focus:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
       className,
     )}
     {...props}
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <ChevronDown className="h-3.5 w-3.5 shrink-0 text-[#ee5b00]" />
+      <ChevronDown className="h-3.5 w-3.5 shrink-0 text-primary" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
@@ -37,7 +37,7 @@ const SelectContent = React.forwardRef<
       ref={ref}
       position={position}
       className={cn(
-        'z-[100] min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-md border border-slate-200 bg-white p-1 text-slate-700 shadow-[0_12px_28px_rgba(15,23,42,0.14)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+        'z-[100] min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
         position === 'popper' && 'translate-y-1',
         className,
       )}
@@ -57,10 +57,10 @@ const SelectItem = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <SelectPrimitive.Item
     ref={ref}
-    className={cn('relative flex h-8 cursor-pointer select-none items-center rounded-sm py-1.5 pl-8 pr-3 text-sm outline-none transition-colors focus:bg-[#fff0df] focus:text-[#c94b00] data-[disabled]:pointer-events-none data-[disabled]:opacity-50', className)}
+    className={cn('relative flex h-8 cursor-pointer select-none items-center rounded-sm py-1.5 pl-8 pr-3 text-sm outline-none transition-colors focus:bg-primary/10 focus:text-primary data-[disabled]:pointer-events-none data-[disabled]:opacity-50', className)}
     {...props}
   >
-    <span className="absolute left-2 flex h-4 w-4 items-center justify-center"><SelectPrimitive.ItemIndicator><Check className="h-3.5 w-3.5 text-[#ee5b00]" /></SelectPrimitive.ItemIndicator></span>
+    <span className="absolute left-2 flex h-4 w-4 items-center justify-center"><SelectPrimitive.ItemIndicator><Check className="h-3.5 w-3.5 text-primary" /></SelectPrimitive.ItemIndicator></span>
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
   </SelectPrimitive.Item>
 ));
