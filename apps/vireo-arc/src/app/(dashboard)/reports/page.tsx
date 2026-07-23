@@ -30,6 +30,8 @@ import { TableSettingsMenu } from "@/components/ui/table-settings-menu";
 import { useGlobalTableDensity } from "@/components/ui/use-global-table-density";
 import { AdvancedSearchModal } from "@/components/ui/advanced-search-modal";
 import { PageHeader } from "@/components/ui/page-header";
+import { RowActionsMenu } from "@/components/ui/row-actions-menu";
+import { PrototypeToast } from "@/components/ui/prototype-toast";
 
 type SortKey = "id" | "patient" | "date" | "status";
 const reportTableColumns = [
@@ -52,13 +54,16 @@ export default function ReportsPage() {
     reportTableColumns.map((column) => column.id),
   );
   const [density, setDensity] = useGlobalTableDensity();
+  const [removedIds, setRemovedIds] = React.useState<string[]>([]);
+  const [toast, setToast] = React.useState<string | null>(null);
   const list = reports
     .filter(
       (report) =>
         `${report.patient} ${report.type} ${report.id}`
           .toLowerCase()
           .includes(query.toLowerCase()) &&
-        (!statusFilter.length || statusFilter.includes(report.status)),
+        (!statusFilter.length || statusFilter.includes(report.status)) &&
+        !removedIds.includes(report.id),
     )
     .sort((a, b) => {
       const result = String(a[sort.key]).localeCompare(
@@ -224,7 +229,7 @@ export default function ReportsPage() {
                       </td>
                     )}
                     <td className={`px-6 ${densityClass}`}>
-                      <div className="flex justify-end gap-2">
+                      <div className="flex items-center justify-end gap-2">
                         <Button asChild size="sm" variant="outline">
                           <Link href={`/reports/${report.id}`}>View</Link>
                         </Button>
@@ -239,6 +244,14 @@ export default function ReportsPage() {
                             <Download />
                           </a>
                         </Button>
+                        <RowActionsMenu
+                          entity="Report"
+                          name={`${report.type} ${report.id}`}
+                          onDelete={() => {
+                            setRemovedIds((ids) => [...ids, report.id]);
+                            setToast(`${report.type} ${report.id} removed from this mock list.`);
+                          }}
+                        />
                       </div>
                     </td>
                   </tr>
@@ -274,6 +287,7 @@ export default function ReportsPage() {
           { label: "Status", options: statuses },
         ]}
       />
+      <PrototypeToast message={toast} onClose={() => setToast(null)} />
     </div>
   );
 }

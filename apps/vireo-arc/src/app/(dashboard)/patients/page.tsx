@@ -3,14 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  Edit,
-  Eye,
-  Filter,
-  Plus,
-  Search,
-  SlidersHorizontal,
-} from "lucide-react";
+import { Edit, Filter, Plus, Search, SlidersHorizontal } from "lucide-react";
 import {
   Badge,
   Button,
@@ -40,6 +33,8 @@ import { TableSettingsMenu } from "@/components/ui/table-settings-menu";
 import { useGlobalTableDensity } from "@/components/ui/use-global-table-density";
 import { AdvancedSearchModal } from "@/components/ui/advanced-search-modal";
 import { PageHeader } from "@/components/ui/page-header";
+import { RowActionsMenu } from "@/components/ui/row-actions-menu";
+import { PrototypeToast } from "@/components/ui/prototype-toast";
 
 type SortKey = "name" | "id" | "dob" | "lastExam" | "status";
 type PatientFilters = {
@@ -79,12 +74,14 @@ export default function PatientsPage() {
   );
   const [density, setDensity] = useGlobalTableDensity();
   const [pageSize, setPageSize] = React.useState(10);
+  const [removedIds, setRemovedIds] = React.useState<string[]>([]);
+  const [toast, setToast] = React.useState<string | null>(null);
   React.useEffect(
     () => setQuery(new URLSearchParams(window.location.search).get("q") ?? ""),
     [],
   );
   const list = patients
-    .filter((patient) => matchesFilters(patient, query, filters))
+    .filter((patient) => matchesFilters(patient, query, filters) && !removedIds.includes(patient.id))
     .sort((a, b) => compare(a[sort.key], b[sort.key], sort.direction));
   const pageCount = Math.max(1, Math.ceil(list.length / pageSize));
   const visible = list.slice((page - 1) * pageSize, page * pageSize);
@@ -264,29 +261,31 @@ export default function PatientsPage() {
                       </td>
                     )}
                     <td className={`px-6 ${densityClass}`}>
-                      <div className="flex justify-end gap-1">
-                        <Button
-                          asChild
-                          size="icon"
-                          variant="ghost"
-                          onClick={(event) => event.stopPropagation()}
-                          aria-label={`View ${patient.name}`}
-                        >
-                          <Link href={`/patients/${patient.id}`}>
-                            <Eye />
-                          </Link>
+                      <div
+                        className="flex items-center justify-end gap-1"
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        <Button asChild size="sm" variant="outline">
+                          <Link href={`/patients/${patient.id}`}>View</Link>
                         </Button>
                         <Button
                           asChild
                           size="icon"
                           variant="ghost"
-                          onClick={(event) => event.stopPropagation()}
                           aria-label={`Edit ${patient.name}`}
                         >
                           <Link href={`/patients/${patient.id}/edit`}>
                             <Edit />
                           </Link>
                         </Button>
+                        <RowActionsMenu
+                          entity="Patient"
+                          name={patient.name}
+                          onDelete={() => {
+                            setRemovedIds((ids) => [...ids, patient.id]);
+                            setToast(`${patient.name} removed from this mock list.`);
+                          }}
+                        />
                       </div>
                     </td>
                   </tr>
@@ -339,6 +338,7 @@ export default function PatientsPage() {
           { label: "Status", options: ["Active", "Critical", "Inactive"] },
         ]}
       />
+      <PrototypeToast message={toast} onClose={() => setToast(null)} />
     </div>
   );
 }
