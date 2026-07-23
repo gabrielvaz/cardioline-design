@@ -1583,7 +1583,9 @@
 
     <div class="nav-section">
       <div class="nav-section-title">Blocks</div>
-      <!-- Blocks nav links land here as blocks ship. -->
+      <a class="nav-link" onclick="scrollToSection('blocks')">
+        <i data-lucide="list-checks"></i> MultiSelectDropdown
+      </a>
     </div>
 
     <div class="nav-section">
@@ -2201,8 +2203,52 @@
       <div class="section-header">
         <div class="section-eyebrow">Blocks</div>
         <h2 class="section-title">Blocks</h2>
-        <p class="section-desc">Composed patterns built from Beat DS primitives for common product surfaces. Coming soon.</p>
+        <p class="section-desc">Composed patterns built from Beat DS primitives for common product surfaces.</p>
       </div>
+
+      <div style="margin-bottom: 12px; font-size: 13px; font-weight: 600; color: var(--color-gray-700);">MultiSelectDropdown</div>
+      <div class="component-card">
+        <div class="component-preview" style="align-items: flex-start; min-height: 220px;">
+          <div style="position: relative; display: inline-block;">
+            <button type="button" class="btn btn-outline btn-sm" aria-expanded="true">
+              Leads<span style="opacity: .85;">: 2 selected</span>
+              <i data-lucide="chevron-down" style="width: 14px; height: 14px; transform: rotate(180deg);"></i>
+            </button>
+            <div class="command-palette" style="position: absolute; top: calc(100% + 8px); left: 0; width: 260px; max-width: 80vw;">
+              <div class="command-group">
+                <div class="command-group-label">Filter leads</div>
+                <div class="command-group-label" style="text-transform: none; letter-spacing: normal; font-size: 12.5px; font-weight: 600; color: var(--color-gray-600); padding-top: 0;">Limb Leads</div>
+                <label class="command-item" style="cursor: pointer;">
+                  <input class="checkbox" type="checkbox" checked style="margin: 0;" /> Lead I
+                </label>
+                <label class="command-item" style="cursor: pointer;">
+                  <input class="checkbox" type="checkbox" checked style="margin: 0;" /> Lead II
+                </label>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-top: 1px solid var(--color-gray-100);">
+                <button type="button" style="background: none; border: none; padding: 0; font-size: 12px; font-weight: 600; color: var(--color-gray-500); cursor: pointer;">Clear</button>
+                <button type="button" style="background: none; border: none; padding: 0; font-size: 12px; font-weight: 600; color: var(--color-primary); cursor: pointer;">Done</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="component-code">
+          <pre><code class="language-tsx">import { MultiSelectDropdown } from '@cardioline/ui';
+
+&lt;MultiSelectDropdown
+  label="Leads"
+  value={selected}
+  onChange={setSelected}
+  options={[
+    { label: 'Lead I', group: 'Limb Leads' },
+    { label: 'Lead II', group: 'Limb Leads' },
+    { label: 'V1', group: 'Precordial' },
+    { label: 'V2', group: 'Precordial' },
+  ]}
+/&gt;</code></pre>
+        </div>
+      </div>
+      <p class="section-desc" style="margin-top: -8px;">A selected value is the option's <code>value ?? label</code>. Optional <code>align</code> ("start" | "end"), <code>summary(count)</code> and <code>triggerClassName</code> customize menu position and trigger content.</p>
     </section>
 
     <!-- CARDS -->

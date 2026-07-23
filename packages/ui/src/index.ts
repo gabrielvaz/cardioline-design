@@ -61,6 +61,8 @@ export {
 } from './components/dropdown-menu';
 
 /* ─── Blocks ─────────────────────────────────────────────────── */
+export { MultiSelectDropdown } from './blocks/multi-select-dropdown';
+export type { MultiSelectOption } from './blocks/multi-select-dropdown';
 
 /* ─── Utilities ──────────────────────────────────────────────── */
 export { cn } from './lib/utils';
