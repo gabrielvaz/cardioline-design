@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Activity, Users, Clock, AlertTriangle, FileText } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '@cardioline/ui';
+import { Badge, Card, CardHeader, CardTitle, CardContent } from '@cardioline/ui';
 import { PageHeader } from '@/components/ui/page-header';
 
 export default function DashboardPage() {
@@ -79,12 +79,9 @@ export default function DashboardPage() {
                       </div>
                     </div>
                   </div>
-                  <div className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-                    exam.alert ? 'bg-red-100 text-red-700' : 
-                    exam.status === 'Normal' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
-                  }`}>
+                  <Badge variant={exam.alert ? 'destructive' : exam.status === 'Normal' ? 'success' : 'warning'}>
                     {exam.status}
-                  </div>
+                  </Badge>
                 </Link>
               ))}
             </div>

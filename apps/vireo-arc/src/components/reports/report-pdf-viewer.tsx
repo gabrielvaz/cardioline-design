@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Download, Hand, Monitor, MousePointer2, Printer, Redo2, RotateCcw, Search, ZoomIn, ZoomOut } from 'lucide-react';
+import { ArrowLeft, Download, Hand, Maximize2, MousePointer2, Printer, Search, ZoomIn, ZoomOut } from 'lucide-react';
 import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@cardioline/ui';
 import { PrototypeToast } from '@/components/ui/prototype-toast';
 
@@ -15,6 +15,11 @@ export function ReportPdfViewer({ report }: { report: Report }) {
   const [conclusion, setConclusion] = React.useState('');
   const [summary, setSummary] = React.useState('Normal');
   const [toast, setToast] = React.useState<string | null>(null);
+  const [search, setSearch] = React.useState('');
+  const [match, setMatch] = React.useState(1);
+  const [tool, setTool] = React.useState<'pointer' | 'hand'>('pointer');
+  const totalMatches = search.trim() ? 10 : 0;
+  const stepMatch = (delta: number) => setMatch((current) => totalMatches ? ((current - 1 + delta + totalMatches) % totalMatches) + 1 : 1);
   return (
     <div className="-m-6 flex h-[calc(100vh-4rem)] min-h-[720px] flex-col bg-[#f4f7fa]">
       <header className="flex shrink-0 items-center justify-between border-b border-slate-100 bg-white px-3 py-2 sm:px-5">
@@ -42,7 +47,7 @@ export function ReportPdfViewer({ report }: { report: Report }) {
           <Button onClick={() => setToast(`Report saved as ${summary}.`)} className="mt-auto w-full bg-primary text-white">Save</Button>
         </aside>
       </div>
-      <footer className="flex shrink-0 flex-wrap items-center gap-2 border-t border-slate-100 bg-white px-4 py-2 text-slate-500"><div className="relative"><Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2" /><Input placeholder="Search" className="h-9 w-36 pl-8" /></div><Button size="icon" variant="ghost" aria-label="Previous match"><ArrowLeft /></Button><span className="text-sm">1 / 10</span><Button size="icon" variant="ghost" aria-label="Next match"><ArrowLeft className="rotate-180" /></Button><Button size="icon" variant="ghost" onClick={() => setZoom((value) => Math.min(140, value + 10))} aria-label="Zoom in"><ZoomIn /></Button><Button size="icon" variant="ghost" onClick={() => setZoom((value) => Math.max(70, value - 10))} aria-label="Zoom out"><ZoomOut /></Button><span className="ml-2 rounded-md border border-slate-200 px-3 py-2 text-sm">{zoom}%</span><span className="mx-1 h-6 w-px bg-slate-200" /><Button size="icon" variant="ghost" aria-label="Undo"><RotateCcw /></Button><Button size="icon" variant="ghost" aria-label="Redo"><Redo2 /></Button><Button size="icon" variant="ghost" aria-label="Pointer"><MousePointer2 /></Button><Button size="icon" variant="ghost" aria-label="Hand"><Hand /></Button><Button size="icon" variant="ghost" aria-label="Screen"><Monitor /></Button></footer>
+      <footer className="flex shrink-0 flex-wrap items-center gap-2 border-t border-slate-100 bg-white px-4 py-2 text-slate-500"><div className="relative"><Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2" /><Input value={search} onChange={(event) => { setSearch(event.target.value); setMatch(1); }} placeholder="Search in report" className="h-9 w-40 pl-8" /></div><Button size="icon" variant="ghost" disabled={!totalMatches} onClick={() => stepMatch(-1)} aria-label="Previous match"><ArrowLeft /></Button><span className="min-w-[3.5rem] text-center text-sm tabular-nums">{totalMatches ? `${match} / ${totalMatches}` : '0 / 0'}</span><Button size="icon" variant="ghost" disabled={!totalMatches} onClick={() => stepMatch(1)} aria-label="Next match"><ArrowLeft className="rotate-180" /></Button><span className="mx-1 h-6 w-px bg-slate-200" /><Button size="icon" variant="ghost" onClick={() => setZoom((value) => Math.min(140, value + 10))} aria-label="Zoom in"><ZoomIn /></Button><Button size="icon" variant="ghost" onClick={() => setZoom((value) => Math.max(70, value - 10))} aria-label="Zoom out"><ZoomOut /></Button><span className="ml-1 rounded-md border border-slate-200 px-3 py-2 text-sm tabular-nums">{zoom}%</span><Button size="icon" variant="ghost" onClick={() => setZoom(100)} aria-label="Fit to page"><Maximize2 /></Button><span className="mx-1 h-6 w-px bg-slate-200" /><Button size="icon" variant={tool === 'pointer' ? 'secondary' : 'ghost'} aria-pressed={tool === 'pointer'} onClick={() => setTool('pointer')} aria-label="Pointer tool"><MousePointer2 /></Button><Button size="icon" variant={tool === 'hand' ? 'secondary' : 'ghost'} aria-pressed={tool === 'hand'} onClick={() => setTool('hand')} aria-label="Hand tool"><Hand /></Button></footer>
       <PrototypeToast message={toast} onClose={() => setToast(null)} />
     </div>
   );

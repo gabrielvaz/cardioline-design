@@ -14,6 +14,7 @@ import {
   UserRoundPlus,
 } from "lucide-react";
 import {
+  Badge,
   Button,
   Card,
   CardContent,
@@ -688,23 +689,14 @@ function PriorityPill({ score }: { score: number }) {
   const urgent = score >= 70;
   const elevated = score >= 40;
   return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold",
-        urgent
-          ? "bg-red-100 text-red-700"
-          : elevated
-            ? "bg-orange-100 text-orange-700"
-            : "bg-gray-100 text-gray-700",
-      )}
-    >
+    <Badge variant={urgent ? "destructive" : elevated ? "warning" : "neutral"}>
       {urgent ? (
         <AlertTriangle className="h-3.5 w-3.5" />
       ) : (
         <ArrowUpDown className="h-3.5 w-3.5" />
       )}
       {urgent ? "Urgent" : elevated ? "Elevated" : "Routine"}
-    </span>
+    </Badge>
   );
 }
 
