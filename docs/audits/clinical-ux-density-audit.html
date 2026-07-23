@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Densidade Clínica no Beat Design System</title>
+<style>
+  :root {
+    --bg: #f6f4ee;
+    --bg-grid-line: rgba(179, 38, 30, 0.05);
+    --surface: #ffffff;
+    --surface-2: #edeae1;
+    --ink: #1b2523;
+    --ink-muted: #5c665f;
+    --border: rgba(27, 37, 35, 0.12);
+    --accent: #0f6b72;
+    --accent-soft: #dcecec;
+
+    --p0: #b3261e;
+    --p0-bg: rgba(179, 38, 30, 0.07);
+    --p1: #a35a0c;
+    --p1-bg: rgba(163, 90, 12, 0.08);
+    --p2: #2f5e8c;
+    --p2-bg: rgba(47, 94, 140, 0.07);
+    --p3: #5b6b63;
+    --p3-bg: rgba(91, 107, 99, 0.08);
+
+    --font-display: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --font-body: "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
+    --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0c1412;
+      --bg-grid-line: rgba(94, 201, 196, 0.055);
+      --surface: #121b19;
+      --surface-2: #17211f;
+      --ink: #e6efec;
+      --ink-muted: #9db0a9;
+      --border: rgba(230, 239, 236, 0.14);
+      --accent: #5fc9c4;
+      --accent-soft: rgba(95, 201, 196, 0.12);
+
+      --p0: #ff6b63;
+      --p0-bg: rgba(255, 107, 99, 0.13);
+      --p1: #ffb454;
+      --p1-bg: rgba(255, 180, 84, 0.13);
+      --p2: #74acdf;
+      --p2-bg: rgba(116, 172, 223, 0.13);
+      --p3: #98ada1;
+      --p3-bg: rgba(152, 173, 161, 0.13);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c1412;
+    --bg-grid-line: rgba(94, 201, 196, 0.055);
+    --surface: #121b19;
+    --surface-2: #17211f;
+    --ink: #e6efec;
+    --ink-muted: #9db0a9;
+    --border: rgba(230, 239, 236, 0.14);
+    --accent: #5fc9c4;
+    --accent-soft: rgba(95, 201, 196, 0.12);
+    --p0: #ff6b63; --p0-bg: rgba(255, 107, 99, 0.13);
+    --p1: #ffb454; --p1-bg: rgba(255, 180, 84, 0.13);
+    --p2: #74acdf; --p2-bg: rgba(116, 172, 223, 0.13);
+    --p3: #98ada1; --p3-bg: rgba(152, 173, 161, 0.13);
+  }
+  :root[data-theme="light"] {
+    --bg: #f6f4ee;
+    --bg-grid-line: rgba(179, 38, 30, 0.05);
+    --surface: #ffffff;
+    --surface-2: #edeae1;
+    --ink: #1b2523;
+    --ink-muted: #5c665f;
+    --border: rgba(27, 37, 35, 0.12);
+    --accent: #0f6b72;
+    --accent-soft: #dcecec;
+    --p0: #b3261e; --p0-bg: rgba(179, 38, 30, 0.07);
+    --p1: #a35a0c; --p1-bg: rgba(163, 90, 12, 0.08);
+    --p2: #2f5e8c; --p2-bg: rgba(47, 94, 140, 0.07);
+    --p3: #5b6b63; --p3-bg: rgba(91, 107, 99, 0.08);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; padding: 0; }
+
+  .report {
+    font-family: var(--font-body);
+    background:
+      repeating-linear-gradient(to bottom, var(--bg-grid-line) 0 1px, transparent 1px 24px),
+      repeating-linear-gradient(to right, var(--bg-grid-line) 0 1px, transparent 1px 24px),
+      var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  .wrap { max-width: 800px; margin: 0 auto; }
+
+  .masthead { position: relative; padding-bottom: 1.75rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border); }
+
+  .eyebrow {
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.9rem;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    margin: 0 0 0.75rem;
+    text-wrap: balance;
+    max-width: 18ch;
+  }
+
+  .dek {
+    font-size: 1.05rem;
+    line-height: 1.55;
+    color: var(--ink-muted);
+    max-width: 62ch;
+    margin: 0 0 1.1rem;
+  }
+
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .meta .dot { opacity: 0.5; }
+
+  .trace {
+    position: absolute;
+    right: 0;
+    top: 0.25rem;
+    width: 140px;
+    height: 36px;
+    opacity: 0.7;
+  }
+  @media (max-width: 640px) { .trace { display: none; } }
+
+  .vitals {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 2.25rem;
+  }
+  .tile {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--tile-c);
+    border-radius: 6px;
+    padding: 0.85rem 0.7rem;
+    text-align: center;
+  }
+  .tile.p0 { --tile-c: var(--p0); }
+  .tile.p1 { --tile-c: var(--p1); }
+  .tile.p2 { --tile-c: var(--p2); }
+  .tile.p3 { --tile-c: var(--p3); }
+  .tile-count {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 1.9rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--tile-c);
+    line-height: 1;
+  }
+  .tile-label {
+    display: block;
+    margin-top: 0.4rem;
+    font-family: var(--font-display);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  @media (max-width: 560px) {
+    .vitals { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .method {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    max-width: 68ch;
+    margin-bottom: 2.75rem;
+    padding: 1rem 1.1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .method strong { color: var(--ink); }
+
+  .tier { margin-bottom: 2.75rem; }
+
+  .tier h2 {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding-left: 0.85rem;
+    border-left: 5px solid var(--tier-c);
+    margin: 0 0 1.1rem;
+  }
+  .tier[data-tier="p0"] { --tier-c: var(--p0); }
+  .tier[data-tier="p1"] { --tier-c: var(--p1); }
+  .tier[data-tier="p2"] { --tier-c: var(--p2); }
+  .tier[data-tier="p3"] { --tier-c: var(--p3); }
+
+  .tier-code {
+    font-family: var(--font-mono);
+    color: var(--tier-c);
+  }
+  .tier-sub {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--ink-muted);
+  }
+
+  .finding {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--tier-c);
+    border-radius: 4px;
+    padding: 1rem 1.15rem;
+    margin-bottom: 0.85rem;
+  }
+  .finding h3 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 0.55rem;
+    color: var(--ink);
+  }
+  .finding p {
+    font-size: 0.94rem;
+    line-height: 1.55;
+    margin: 0 0 0.4rem;
+  }
+  .finding p:last-child { margin-bottom: 0; }
+  .finding strong { color: var(--ink); }
+  .finding .principle, .finding .fix { color: var(--ink-muted); }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    background: var(--surface-2);
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    word-break: break-all;
+  }
+
+  .sources {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    margin-top: 3rem;
+  }
+  .sources h3 {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin: 0 0 0.9rem;
+  }
+  .sources ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+  }
+  .sources a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  .sources a:hover, .sources a:focus-visible { border-bottom-color: var(--accent); }
+  a:focus-visible, .sources a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+<div class="report">
+  <div class="wrap">
+    <header class="masthead">
+      <div class="eyebrow">Auditoria de UX &middot; Software Clínico de Alta Densidade</div>
+      <h1>Densidade Clínica no Beat Design System</h1>
+      <p class="dek">Boas práticas de pesquisa em UX para dashboards, ECG e prontuário eletrônico, comparadas ponto a ponto com o que está implementado hoje no Beat DS e no Vireo ARC.</p>
+      <div class="meta">
+        <span>23 jul 2026</span>
+        <span class="dot">&middot;</span>
+        <span>Escopo: packages/ui/src, apps/vireo-arc/src</span>
+        <span class="dot">&middot;</span>
+        <span>Auditoria read-only, nenhum código alterado</span>
+      </div>
+      <svg class="trace" viewBox="0 0 140 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M0 20 H35 L42 20 L47 4 L54 32 L60 20 L66 20 L72 12 L78 20 H140" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      </svg>
+    </header>
+
+    <section class="vitals" aria-label="Resumo por severidade">
+      <div class="tile p0"><span class="tile-count">4</span><span class="tile-label">P0 Gravíssimo</span></div>
+      <div class="tile p1"><span class="tile-count">5</span><span class="tile-label">P1 Grave</span></div>
+      <div class="tile p2"><span class="tile-count">5</span><span class="tile-label">P2 Médio</span></div>
+      <div class="tile p3"><span class="tile-count">3</span><span class="tile-label">P3 Baixo</span></div>
+    </section>
+
+    <section class="method">
+      <p><strong>Método:</strong> pesquisa de boas práticas de UX para software clínico de alta densidade (dashboards, monitoramento, EHR, ECG, normas de usabilidade para dispositivo médico) cruzada com uma auditoria read-only do código do Beat DS e do Vireo ARC neste repositório. Cada achado abaixo cita o princípio de pesquisa violado e o arquivo:linha correspondente. A severidade reflete risco à segurança clínica e à integridade diagnóstica, não apenas estética.</p>
+    </section>
+
+    <section class="tier" data-tier="p0">
+      <h2><span class="tier-code">P0</span> Gravíssimo <span class="tier-sub">risco direto à segurança clínica ou à integridade diagnóstica</span></h2>
+
+      <article class="finding">
+        <h3>Critérios de priorização da Exam Inbox são 100% desligáveis, sem trava</h3>
+        <p class="principle"><strong>Princípio violado:</strong> Situational Awareness (Endsley) exige que dados de nível 2 (compreensão de gravidade) não possam ser removidos silenciosamente da leitura do profissional; IEC 62366 exige mitigação de risco de uso incorreto em tarefas críticas.</p>
+        <p class="evidence"><strong>Evidência:</strong> <code>apps/vireo-arc/src/components/exams/exam-inbox.tsx:264-314</code> (PrioritySettings) permite desligar o critério "Emergency" sem confirmação; um caso emergencial deixa de subir no ranking sem aviso.</p>
+        <p class="fix"><strong>Recomendação:</strong> bloquear ou exigir confirmação explícita e reversível para desligar o critério de emergência.</p>
+      </article>
+
+      <article class="finding">
+        <h3>Ordenação por gravidade pode ser trocada sem aviso de perda de hierarquia clínica</h3>
+        <p class="principle"><strong>Princípio violado:</strong> mesmo princípio de SA acima: a ausência de sinalização de que a lista não está mais ordenada por urgência quebra a projeção de risco (nível 3).</p>
+        <p class="evidence"><strong>Evidência:</strong> <code>exam-inbox.tsx:83</code>, dropdown de ordenação com opções "Longest waiting / Most recent / Patient name" substituindo "priority" sem indicador persistente.</p>
+        <p class="fix"><strong>Recomendação:</strong> manter um selo visual fixo de "fora de ordem por gravidade" enquanto outro critério estiver ativo.</p>
+      </article>
+
+      <article class="finding">
+        <h3>O traçado do ECG renderiza só 6 das 12 derivações</h3>
+        <p class="principle"><strong>Princípio violado:</strong> leitura de 12 derivações é o padrão clínico mínimo para localizar isquemia ou infarto; reduzir 6 derivações a números de tabela, sem traçado visual, compromete o diagnóstico.</p>
+        <p class="evidence"><strong>Evidência:</strong> <code>ecg-viewer.tsx:12</code> define 12 leads, mas o componente <code>Waveform</code> na linha 85 só recebe aVF, V1 a V5.</p>
+        <p class="fix"><strong>Recomendação:</strong> garantir as 12 derivações visíveis como traçado, mesmo que exija rolagem interna dedicada e sinalizada.</p>
+      </article>
+
+      <article class="finding">
+        <h3>Controle "Compare" no ECG viewer é decorativo, não funcional</h3>
+        <p class="principle"><strong>Princípio violado:</strong> affordance enganosa em ferramenta clínica gera falsa sensação de projeção (SA nível 3): o profissional pode acreditar que comparou exames quando não comparou nada.</p>
+        <p class="evidence"><strong>Evidência:</strong> <code>ecg-viewer.tsx:74</code>, Select com opções "Compare / None / Previous exam" sem nenhuma lógica de renderização conectada.</p>
+        <p class="fix"><strong>Recomendação:</strong> remover o controle até a função existir, ou marcá-lo claramente como indisponível.</p>
+      </article>
+    </section>
+
+    <section class="tier" data-tier="p1">
+      <h2><span class="tier-code">P1</span> Grave <span class="tier-sub">fricção séria de workflow clínico, adjacente à segurança</span></h2>
+
+      <article class="finding">
+        <h3>Nenhum zoom ou pan no traçado de ECG</h3>
+        <p class="principle"><strong>Princípio violado:</strong> inspeção fina de onda para medição exige controle de escala; ausência força leitura na resolução fixa da tela.</p>
+        <p class="evidence"><strong>Evidência:</strong> ausente em <code>ecg-viewer.tsx</code>; zoom só existe no <code>report-pdf-viewer.tsx:14,32</code>, fora do fluxo de diagnóstico.</p>
+        <p class="fix"><strong>Recomendação:</strong> portar o mecanismo de zoom do PDF viewer para o ECG viewer.</p>
+      </article>
+
+      <article class="finding">
+        <h3>Nenhum breadcrumb ou contexto persistente de paciente no produto</h3>
+        <p class="principle"><strong>Princípio violado:</strong> perda de contexto do paciente ao alternar rapidamente entre casos é um risco clássico de erro de identificação em ambientes clínicos.</p>
+        <p class="evidence"><strong>Evidência:</strong> breadcrumb só existe hardcoded em <code>patient-detail-view.tsx:25</code>; ausente no ECG workspace e demais telas de detalhe.</p>
+        <p class="fix"><strong>Recomendação:</strong> componentizar um breadcrumb com identificação do paciente e aplicar a todas as telas de exame/detalhe.</p>
+      </article>
+
+      <article class="finding">
+        <h3>"Critical alerts" tem o mesmo peso visual dos demais cards do dashboard</h3>
+        <p class="principle"><strong>Princípio violado:</strong> hierarquia de urgência precisa ser perceptível já no nível 1 de SA (percepção), não apenas legível dentro de um card neutro.</p>
+        <p class="evidence"><strong>Evidência:</strong> <code>dashboard-overview.tsx:207</code> usa o mesmo componente Card genérico dos outros 3 indicadores.</p>
+        <p class="fix"><strong>Recomendação:</strong> dar destaque estrutural (tamanho, posição ou cor) ao card crítico em vez de tratá-lo como métrica neutra.</p>
+      </article>
+
+      <article class="finding">
+        <h3>Truncamento de texto em densidade compact/comfortable sem fallback visível</h3>
+        <p class="principle"><strong>Princípio violado:</strong> dado clínico truncado sem meio de recuperação (tooltip) é informação perdida, não só estética.</p>
+        <p class="evidence"><strong>Evidência:</strong> <code>exam-inbox.tsx:516-517</code>, texto quebra em múltiplas linhas só na densidade spacious; nas demais, trunca com <code>truncate</code>.</p>
+        <p class="fix"><strong>Recomendação:</strong> adicionar tooltip/hover em toda célula truncada, independentemente da densidade escolhida.</p>
+      </article>
+
+      <article class="finding">
+        <h3>Rolagem horizontal obrigatória na tela mais crítica do produto</h3>
+        <p class="principle"><strong>Princípio violado:</strong> dados de decisão clínica deveriam evitar rolagem fragmentada; aqui o ECG exige rolagem vertical e horizontal simultâneas.</p>
+        <p class="evidence"><strong>Evidência:</strong> linhas de derivação com largura mínima de 1160px e tabela de medições com 920px, ambas em <code>overflow-auto</code> (<code>ecg-viewer.tsx:39-48,85</code>).</p>
+        <p class="fix"><strong>Recomendação:</strong> redesenhar o layout responsivo para caber sem rolagem horizontal nas resoluções-alvo, ou paginar por grupo de derivações.</p>
+      </article>
+    </section>
+
+    <section class="tier" data-tier="p2">
+      <h2><span class="tier-code">P2</span> Médio <span class="tier-sub">perda de eficiência e consistência, sem risco direto</span></h2>
+
+      <article class="finding">
+        <h3>Nenhuma tabela clínica tem cabeçalho fixo (sticky header)</h3>
+        <p class="principle"><strong>Princípio violado:</strong> cabeçalho fixo é prática padrão de enterprise data tables para listas longas, evitando perder o rótulo da coluna ao rolar.</p>
+        <p class="evidence"><strong>Evidência:</strong> nenhuma ocorrência de <code>sticky</code> em <code>thead</code>; o único sticky do sistema é a coluna de ação em mobile (<code>globals.css:153</code>).</p>
+        <p class="fix"><strong>Recomendação:</strong> tornar o thead sticky em Exam list, Patient list e Reports.</p>
+      </article>
+
+      <article class="finding">
+        <h3>Barra de métricas do Exam Inbox não é fixa ao rolar</h3>
+        <p class="principle"><strong>Princípio violado:</strong> dado de resumo (SA nível 1) deveria permanecer visível durante a navegação na lista.</p>
+        <p class="evidence"><strong>Evidência:</strong> <code>exam-inbox.tsx:153-157</code>, métricas Awaiting/Urgent/Avg. wait embutidas no slot de ações do PageHeader, sem <code>sticky</code>.</p>
+        <p class="fix"><strong>Recomendação:</strong> fixar a barra de métricas ao topo da lista ao rolar.</p>
+      </article>
+
+      <article class="finding">
+        <h3>Nenhum atalho de teclado em toda a aplicação</h3>
+        <p class="principle"><strong>Princípio violado:</strong> a janela de 90 a 120 segundos de uso clínico premia eficiência; usuários de tabela o dia todo esperam atalhos de navegação e ação.</p>
+        <p class="evidence"><strong>Evidência:</strong> busca por <code>keydown/shortcut/hotkey</code> não retorna resultado em <code>apps/vireo-arc/src</code> nem <code>packages/ui/src</code>.</p>
+        <p class="fix"><strong>Recomendação:</strong> mapear atalhos básicos (busca, navegação de linha, confirmar/rejeitar).</p>
+      </article>
+
+      <article class="finding">
+        <h3>Densidade de tabela é uma preferência global única, não tokenizada</h3>
+        <p class="principle"><strong>Princípio violado:</strong> compact/comfortable/spacious deveriam ser tokens do design system, não reimplementação por componente; mercado permite densidade por contexto ou papel do usuário.</p>
+        <p class="evidence"><strong>Evidência:</strong> <code>use-global-table-density.ts:13-27</code> persiste um único valor para todas as tabelas (default "comfortable"); classes duplicadas em <code>exam-inbox.tsx:474-479</code> e <code>tanstack-exam-table.tsx</code>.</p>
+        <p class="fix"><strong>Recomendação:</strong> extrair token de densidade em <code>packages/ui/src/tokens</code> e permitir override por tabela.</p>
+      </article>
+
+      <article class="finding">
+        <h3>Nenhuma tipografia numérica dedicada para dados clínicos</h3>
+        <p class="principle"><strong>Princípio violado:</strong> alinhamento numérico (tabular figures) é prática básica para leitura rápida de tabelas de medição.</p>
+        <p class="evidence"><strong>Evidência:</strong> <code>font-variant-numeric: tabular-nums</code> só aparece pontualmente em <code>report-pdf-viewer.tsx</code>, não como regra do design system.</p>
+        <p class="fix"><strong>Recomendação:</strong> aplicar tabular-nums como token global para toda célula numérica.</p>
+      </article>
+    </section>
+
+    <section class="tier" data-tier="p3">
+      <h2><span class="tier-code">P3</span> Baixo <span class="tier-sub">maturidade do design system, sem impacto imediato</span></h2>
+
+      <article class="finding">
+        <h3>Nenhuma paleta de cor clínica além do genérico destructive/warning/success</h3>
+        <p class="principle"><strong>Princípio violado:</strong> escalas de triagem (tipo Manchester/ESI) ajudam a padronizar sinalização de urgência entre futuros fluxos clínicos.</p>
+        <p class="evidence"><strong>Evidência:</strong> <code>packages/ui/src/tokens/colors.ts</code> só define paleta de marca e semantic genérico.</p>
+        <p class="fix"><strong>Recomendação:</strong> avaliar tokens de urgência clínica dedicados se o produto crescer em número de fluxos de triagem.</p>
+      </article>
+
+      <article class="finding">
+        <h3>Busca global some por completo na ECG workspace</h3>
+        <p class="principle"><strong>Princípio violado:</strong> perder acesso rápido a outro paciente durante o exame atual é fricção de workflow, não risco direto.</p>
+        <p class="evidence"><strong>Evidência:</strong> <code>dashboard-shell.tsx:51</code>, <code>{!isExamView &amp;&amp; &lt;Header /&gt;}</code> remove o Header inteiro na tela de exame.</p>
+        <p class="fix"><strong>Recomendação:</strong> manter uma busca compacta acessível mesmo dentro da workspace.</p>
+      </article>
+
+      <article class="finding">
+        <h3>Documentação do Beat DS não menciona densidade clínica como princípio</h3>
+        <p class="principle"><strong>Princípio violado:</strong> lacuna de documentação do design system, não do produto.</p>
+        <p class="evidence"><strong>Evidência:</strong> <code>.agents/skills/beat-design-system/SKILL.md</code> não cita densidade ou "acima da rolagem" como diretriz.</p>
+        <p class="fix"><strong>Recomendação:</strong> registrar a diretriz de densidade clínica na skill/documentação do DS.</p>
+      </article>
+    </section>
+
+    <footer class="sources">
+      <h3>Fontes da pesquisa</h3>
+      <ul>
+        <li><a href="https://www.aufaitux.com/blog/healthcare-dashboard-ui-ux-design-best-practices/">Aufait UX: Healthcare Dashboard UI/UX Design Best Practices</a></li>
+        <li><a href="https://fuselabcreative.com/healthcare-dashboard-design-best-practices/">Fuselab Creative: Healthcare Dashboard Design Best Practices</a></li>
+        <li><a href="https://www.pencilandpaper.io/articles/ux-pattern-analysis-enterprise-data-tables">Pencil &amp; Paper: Data Table Design UX Patterns</a></li>
+        <li><a href="https://www.setproduct.com/blog/data-table-ui-design">Setproduct: Data Table UI Design Reference Guide</a></li>
+        <li><a href="https://link.springer.com/article/10.1007/s00134-024-07450-3">Intensive Care Medicine (Springer): Alarm Fatigue and Cognitive Load Theory</a></li>
+        <li><a href="https://humanfactors.jmir.org/2020/3/e15052/">JMIR Human Factors: Novel Interface Designs for Patient Monitoring</a></li>
+        <li><a href="https://www.greenlight.guru/blog/iec-62366-usability-engineering">Greenlight Guru: IEC 62366 Usability Engineering</a></li>
+        <li><a href="https://www.researchgate.net/publication/389370407_Designing_for_Situation_Awareness_An_Approach_to_User-Centered_Design_Third_Edition">Endsley &amp; Jones: Designing for Situation Awareness (3rd ed.)</a></li>
+        <li><a href="https://www.nngroup.com/articles/scrolling-and-attention/">Nielsen Norman Group: Scrolling and Attention</a></li>
+      </ul>
+    </footer>
+  </div>
+</div>
+</body>
+</html>
