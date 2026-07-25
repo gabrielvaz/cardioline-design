@@ -5,12 +5,12 @@ import { useRouter } from 'next/navigation';
 import { Button, Card, CardContent, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@cardioline/ui';
 
 type PatientFormProps = { mode: 'create' | 'edit'; patientId?: string; patientName?: string };
-const personalFields = [['first-name', 'First name (mandatory)', 'Type here', 'text', true], ['last-name', 'Last name', 'Type here', 'text', false], ['phone', 'Phone', 'Type here', 'tel', false], ['patient-id', 'Patient ID', 'Type here', 'text', false], ['patient-id-2', 'Patient ID 2', 'Type here', 'text', false], ['email', 'Email', 'Type here', 'email', false], ['birthday', 'Birthday', 'dd/mm/yy', 'text', false], ['ethnicity', 'Ethnicity', 'Type here', 'text', false]] as const;
+const personalFields = [['first-name', 'First name (mandatory)', 'Type here', 'text', true], ['last-name', 'Last name', 'Type here', 'text', false], ['phone', 'Phone', 'Type here', 'tel', false], ['patient-id', 'Patient ID', 'Type here', 'text', false], ['patient-id-2', 'Patient ID 2', 'Type here', 'text', false], ['email', 'Email', 'Type here', 'email', false], ['birthday', 'Birthday', 'dd/mm/yy', 'text', false], ['ethnicity', 'Ethnicity', 'Type here', 'text', false], ['age', 'Age', 'Type here', 'number', false], ['weight', 'Weight (kg)', 'Type here', 'number', false], ['height', 'Height (cm)', 'Type here', 'number', false], ['blood-pressure', 'Blood pressure', 'Type here', 'text', false]] as const;
 const locationFields = [['address', 'Address', 'Type here'], ['city', 'City', 'Type here'], ['province', 'Province', 'dd/mm/yy'], ['region', 'Region', 'Type here'], ['country', 'Country', 'Type here']] as const;
 
 function patientValues(patientId: string, patientName: string): Record<string, string> {
   const [firstName = '', ...lastName] = patientName.split(' ');
-  return { 'first-name': firstName, 'last-name': lastName.join(' '), phone: '0362 209391012', 'patient-id': patientId, 'patient-id-2': '43397744', email: `${patientName.toLowerCase().replaceAll(' ', '')}@email.com`, birthday: '05/02/1982', ethnicity: 'White', address: 'Via Linz Spini di Gardolo, 151', city: 'Gardolo', province: 'Trento', region: 'Trentino-Alto Adige', country: 'Italy' };
+  return { 'first-name': firstName, 'last-name': lastName.join(' '), phone: '0362 209391012', 'patient-id': patientId, 'patient-id-2': '43397744', email: `${patientName.toLowerCase().replaceAll(' ', '')}@email.com`, birthday: '05/02/1982', ethnicity: 'White', age: '46', weight: '80', height: '180', 'blood-pressure': '98', address: 'Via Linz Spini di Gardolo, 151', city: 'Gardolo', province: 'Trento', region: 'Trentino-Alto Adige', country: 'Italy' };
 }
 
 export function PatientForm({ mode, patientId = 'P-10029', patientName = 'Andrea Gallo' }: PatientFormProps) {

@@ -17,6 +17,11 @@ import {
   Input,
   MultiSelectDropdown,
   RowActionsMenu,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   TableToolbarMenu,
 } from "@cardioline/ui";
 import { reports } from "@/lib/mock-data";
@@ -38,9 +43,41 @@ const reportTableColumns = [
   { id: "actions", label: "Actions", locked: true },
 ];
 
+/** Anchor date for the mock report set (Oct 19-24, 2026), used to compute "Generated at" buckets. */
+const REPORTS_ANCHOR = new Date("2026-10-24T23:59:59");
+const generatedAtLabels: Record<string, string> = {
+  all: "All time",
+  yesterday: "Yesterday",
+  "3d": "Last 3 days",
+  "7d": "Last 7 days",
+  prevWeek: "Previous week",
+  prevMonth: "Previous month",
+};
+function matchesGeneratedAt(date: string, filter: string) {
+  if (filter === "all") return true;
+  const daysAgo = Math.round(
+    (REPORTS_ANCHOR.getTime() - new Date(date).getTime()) / 86_400_000,
+  );
+  switch (filter) {
+    case "yesterday":
+      return daysAgo <= 1;
+    case "3d":
+      return daysAgo <= 3;
+    case "7d":
+      return daysAgo <= 7;
+    case "prevWeek":
+      return daysAgo > 7 && daysAgo <= 14;
+    case "prevMonth":
+      return daysAgo > 14 && daysAgo <= 45;
+    default:
+      return true;
+  }
+}
+
 export default function ReportsPage() {
   const [query, setQuery] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState<string[]>([]);
+  const [generatedAt, setGeneratedAt] = React.useState("all");
   const [filtersShown, setFiltersShown] = React.useState(true);
   const [advancedOpen, setAdvancedOpen] = React.useState(false);
   const [sort, setSort] = React.useState<{
@@ -60,6 +97,7 @@ export default function ReportsPage() {
           .toLowerCase()
           .includes(query.toLowerCase()) &&
         (!statusFilter.length || statusFilter.includes(report.status)) &&
+        matchesGeneratedAt(report.date, generatedAt) &&
         !removedIds.includes(report.id),
     )
     .sort((a, b) => {
@@ -135,9 +173,25 @@ export default function ReportsPage() {
               onChange={setStatusFilter}
               align="start"
             />
+            <Select value={generatedAt} onValueChange={setGeneratedAt}>
+              <SelectTrigger className="h-9 w-auto shrink-0 gap-2 px-3">
+                <SelectValue>{`Generated at: ${generatedAtLabels[generatedAt]}`}</SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yesterday">Yesterday</SelectItem>
+                <SelectItem value="3d">Last 3 days</SelectItem>
+                <SelectItem value="7d">Last 7 days</SelectItem>
+                <SelectItem value="prevWeek">Previous week</SelectItem>
+                <SelectItem value="prevMonth">Previous month</SelectItem>
+                <SelectItem value="all">All time</SelectItem>
+              </SelectContent>
+            </Select>
             <button
               type="button"
-              onClick={() => setStatusFilter([])}
+              onClick={() => {
+                setStatusFilter([]);
+                setGeneratedAt("all");
+              }}
               className="ml-1 shrink-0 text-sm font-medium text-gray-600 underline underline-offset-2 hover:text-[#071046]"
             >
               Clear all

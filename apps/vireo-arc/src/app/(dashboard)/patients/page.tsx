@@ -34,8 +34,16 @@ import {
 } from "@/components/ui/sortable-header";
 import { useGlobalTableDensity } from "@/components/ui/use-global-table-density";
 import { AdvancedSearchModal } from "@/components/ui/advanced-search-modal";
+import { DateRangeFilter } from "@/components/ui/date-range-filter";
 import { PageHeader } from "@/components/ui/page-header";
 import { PrototypeToast } from "@/components/ui/prototype-toast";
+
+const lastExamLabels: Record<string, string> = {
+  any: "Any period",
+  today: "Today",
+  week: "Last 7 days",
+  month: "Last 30 days",
+};
 
 type SortKey = "name" | "id" | "dob" | "lastExam" | "status";
 type PatientFilters = {
@@ -168,43 +176,28 @@ export default function PatientsPage() {
               onChange={(values) => updateFilters({ status: values })}
               align="start"
             />
-            <div className="flex shrink-0 items-center gap-1.5">
-              <span className="text-xs font-medium text-gray-500">Born</span>
-              <Input
-                type="date"
-                value={filters.bornFrom}
-                onChange={(event) => updateFilters({ bornFrom: event.target.value })}
-                className="h-9 w-[145px] border-gray-200 bg-white text-sm"
-                aria-label="Born from"
-              />
-              <span className="text-xs text-gray-400">to</span>
-              <Input
-                type="date"
-                value={filters.bornTo}
-                onChange={(event) => updateFilters({ bornTo: event.target.value })}
-                className="h-9 w-[145px] border-gray-200 bg-white text-sm"
-                aria-label="Born to"
-              />
-            </div>
-            <div className="flex shrink-0 items-center gap-1.5">
-              <span className="text-xs font-medium text-gray-500">Last exam</span>
-              <Select
-                value={filters.examPeriod || "any"}
-                onValueChange={(value) =>
-                  updateFilters({ examPeriod: value === "any" ? "" : value })
-                }
-              >
-                <SelectTrigger className="h-9 w-[150px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="any">Any period</SelectItem>
-                  <SelectItem value="today">Today</SelectItem>
-                  <SelectItem value="week">Last 7 days</SelectItem>
-                  <SelectItem value="month">Last 30 days</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <DateRangeFilter
+              label="Born"
+              from={filters.bornFrom}
+              to={filters.bornTo}
+              onApply={({ from, to }) => updateFilters({ bornFrom: from, bornTo: to })}
+            />
+            <Select
+              value={filters.examPeriod || "any"}
+              onValueChange={(value) =>
+                updateFilters({ examPeriod: value === "any" ? "" : value })
+              }
+            >
+              <SelectTrigger className="h-9 w-auto shrink-0 gap-2 px-3">
+                <SelectValue>{`Last exam: ${lastExamLabels[filters.examPeriod || "any"]}`}</SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="any">Any period</SelectItem>
+                <SelectItem value="today">Today</SelectItem>
+                <SelectItem value="week">Last 7 days</SelectItem>
+                <SelectItem value="month">Last 30 days</SelectItem>
+              </SelectContent>
+            </Select>
             <button
               type="button"
               onClick={clearFilters}

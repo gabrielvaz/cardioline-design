@@ -17,11 +17,16 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       : null;
   const [mode, setMode] = React.useState<SidebarMode>("expanded");
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const mainRef = React.useRef<HTMLElement>(null);
 
   React.useEffect(() => {
     setDrawerOpen(false);
     setMode(routeMode ?? "expanded");
   }, [routeMode]);
+
+  React.useEffect(() => {
+    mainRef.current?.scrollTo(0, 0);
+  }, [pathname]);
 
   React.useEffect(() => {
     const openSidebar = () => setDrawerOpen(true);
@@ -31,7 +36,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50 font-sans text-gray-900">
+    <div className="flex h-screen overflow-hidden bg-white font-sans text-gray-900">
       <Sidebar
         mode={routeMode ?? mode}
         onModeChange={setMode}
@@ -49,7 +54,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           </button>
         )}
         {!isExamView && <Header sidebarHidden={mode === "hidden"} />}
-        <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
+        <main ref={mainRef} className="flex-1 overflow-y-auto bg-white p-6">
           {children}
         </main>
       </div>

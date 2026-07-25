@@ -2,7 +2,7 @@
 
 All notable prototype UI changes are documented here.
 
-## [Unreleased] - 2026-07-22
+## [Unreleased] - 2026-07-25
 
 ### Experimental
 
@@ -11,6 +11,7 @@ All notable prototype UI changes are documented here.
 
 ### Added
 
+- Added distinct SVG favicons for the Vireo Arc application and Beat Design System documentation.
 - Added Dashboard Exam Inbox and weekly operational analytics widgets, including mock exam/report volume and median report-time trends.
 - Reused the searchable reporting-professional assignment dialog from Exam Inbox in the main exam list.
 - Added patient editing directly from the ECG workspace, plus a format choice before saving an examination.
@@ -24,6 +25,11 @@ All notable prototype UI changes are documented here.
 - Consolidated Settings navigation with account, configuration and administration areas for users, sites, groups, roles and devices.
 - Reusable UI primitives for confirmations, toast feedback, sorting, pagination, selection checkboxes and Radix/ShadCN Select controls.
 - Functional login recovery, mock administration creation dialogs, tooltip-enabled action buttons and responsive table navigation.
+- Added hover tooltips to the Dashboard weekly volume and median report-time charts, surfacing the underlying exam, report and timing figures per week.
+- Added a "Generated at" filter (Yesterday, Last 3 days, Last 7 days, Previous week, Previous month, All time) to the Reports list.
+- Added a mouse-resizable divider between the ECG lead measurements table and the waveform strips, plus a collapsible clinical panel on the ECG workspace.
+- Added Age, Weight, Height and Blood pressure as editable fields on patient creation and editing.
+- Added a clinical UX density audit of the Beat Design System, comparing research-backed best practices for high-density clinical software against the current implementation (`docs/audits/`).
 
 ### Changed
 
@@ -44,6 +50,12 @@ All notable prototype UI changes are documented here.
 - Standardized table headers, row hover behavior, controls, dropdowns, checkboxes and destructive-action confirmation patterns across the prototype.
 - Improved sidebar states (expanded, compact and drawer), navigation organization and Cardioline logo sizing.
 - Updated reports to use tables and enhanced PDF report preview interactions.
+- Fixed the Dashboard median report-time chart rendering its data points as ellipses instead of circles.
+- Reworked the Patients date-of-birth and last-exam filters to show the active value inside the trigger, with the date range picked from a modal instead of inline inputs.
+- Made page navigation scroll the content area back to the top instead of preserving the previous scroll position.
+- Softened the Dashboard chart entrance and hover animations and removed the divider lines between Exam Inbox and Recent Reports list items.
+- Removed gray page backgrounds across the Vireo Arc shell and ECG workspace in favor of white.
+- Made the ECG lead measurements table show all rows without wrapping the row labels onto two lines.
 
 ### Fixed
 
