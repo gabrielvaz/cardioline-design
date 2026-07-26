@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import { BrandPanel } from '@/components/auth/brand-panel';
 import { LoginForm } from '@/components/auth/login-form';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
 
 export const metadata: Metadata = {
   title: 'Sign In',
@@ -8,14 +10,12 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <main
-      id="login-main"
-      className="relative min-h-screen flex items-center justify-center bg-white"
-    >
-      {/* Login card */}
-      <div className="relative z-10 w-full max-w-md px-6">
+    <main id="login-main" className="grid min-h-screen bg-background lg:grid-cols-2">
+      <BrandPanel />
+      <div className="flex items-center justify-center px-6 py-12">
         <LoginForm />
       </div>
+      <ThemeToggle />
     </main>
   );
 }

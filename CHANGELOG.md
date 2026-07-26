@@ -33,6 +33,7 @@ All notable prototype UI changes are documented here.
 
 ### Changed
 
+- Redesigned the sign-in and password-recovery routes as a split-screen layout with a deep-navy brand panel (Vireo ARC wordmark, animated ECG trace with reduced-motion fallback) and a semantic-token form that now fully supports dark mode.
 - Made the ECG waveform dynamically use the available viewport height when measurements are hidden.
 - Replaced the ECG save-format dropdown with selectable format cards for faster visual comparison.
 - Made the Beat sidebar collapse and expand with a smoother transition while keeping the Vireo ARC wordmark stable.
