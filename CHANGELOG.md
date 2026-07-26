@@ -60,6 +60,10 @@ All notable prototype UI changes are documented here.
 
 ### Fixed
 
+- Fixed broken navigation and mock-data integrity across the prototype: the Exams "Report area" button now opens the Reports area, header notifications deep-link to the referenced exam, and the header patient search reapplies while already on the Patients page.
+- Unknown patient, exam and report URLs now render a styled 404 page instead of silently showing the first mock record, and the report download endpoint returns 404 for unknown reports.
+- Aligned the Exam Inbox worklist with the exam and patient mock sets so every inbox item opens the ECG of the same patient it describes.
+- Removed the orphaned stand-alone Users section (duplicated by Settings → Administration → Users and unreachable from navigation) and the unused ECG background component.
 - Fixed broken report and exam navigation paths, including patient-specific report actions.
 - Fixed filter dropdown layering, small-screen table actions and inconsistent action-button widths.
 - Removed save-button icons for consistent button treatment.

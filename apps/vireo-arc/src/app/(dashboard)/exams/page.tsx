@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { ChevronDown, ChevronUp, ListFilter, Search, SlidersHorizontal } from "lucide-react";
 import {
   Button,
@@ -104,11 +105,8 @@ export default function ExamsPage() {
         <PageHeader
           title="Exam list"
           description="Review, filter and manage clinical examinations."
-          actions={<Button
-            onClick={() => setToast("Report area opened.")}
-            className="h-11 shrink-0 bg-primary px-5 text-white"
-          >
-            Report area
+          actions={<Button asChild className="h-11 shrink-0 bg-primary px-5 text-white">
+            <Link href="/reports">Report area</Link>
           </Button>}
         />
 

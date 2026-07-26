@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ChevronDown,
   ChevronUp,
@@ -68,7 +68,16 @@ const patientTableColumns = [
 ];
 
 export default function PatientsPage() {
+  return (
+    <React.Suspense fallback={null}>
+      <PatientsPageContent />
+    </React.Suspense>
+  );
+}
+
+function PatientsPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [query, setQuery] = React.useState("");
   const [page, setPage] = React.useState(1);
   const [filtersShown, setFiltersShown] = React.useState(true);
@@ -86,8 +95,8 @@ export default function PatientsPage() {
   const [removedIds, setRemovedIds] = React.useState<string[]>([]);
   const [toast, setToast] = React.useState<string | null>(null);
   React.useEffect(
-    () => setQuery(new URLSearchParams(window.location.search).get("q") ?? ""),
-    [],
+    () => setQuery(searchParams.get("q") ?? ""),
+    [searchParams],
   );
   const list = patients
     .filter((patient) => matchesFilters(patient, query, filters) && !removedIds.includes(patient.id))
