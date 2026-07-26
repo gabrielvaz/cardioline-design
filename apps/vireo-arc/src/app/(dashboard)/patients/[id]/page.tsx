@@ -1,8 +1,6 @@
-import { PatientDetailView } from '@/components/patients/patient-detail-view';
-import { patients } from '@/lib/mock-data';
+import { PatientDetailsLoader } from '@/components/patients/patient-details-loader';
 
 export default async function PatientDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const patient = patients.find((item) => item.id === id) ?? patients[0];
-  return <PatientDetailView patient={patient} />;
+  return <PatientDetailsLoader id={id} />;
 }

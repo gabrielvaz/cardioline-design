@@ -5,15 +5,15 @@ import Link from 'next/link';
 import { ArrowLeft, Download, Hand, Maximize2, MousePointer2, Printer, Search, ZoomIn, ZoomOut } from 'lucide-react';
 import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@cardioline/ui';
 import { PrototypeToast } from '@/components/ui/prototype-toast';
-
-type Report = { id: string; patient: string; patientId: string; type: string; date: string; status: string };
+import { usePrototypeData, type Report } from '@/lib/prototype-data';
 
 const examInfo = [['Type', 'Holter'], ['Acquisition', '11/17/2022 9:53'], ['Reception', '11/17/2022 9:53'], ['Device', 'Walk400h (NG)'], ['Unit', 'Ambulatorio Salus'], ['Accession', '568'], ['Review date', '12/1/2022 7:09'], ['Reviewer', 'Leonella Panzacchi']];
 
 export function ReportPdfViewer({ report }: { report: Report }) {
+  const { updateReport } = usePrototypeData();
   const [zoom, setZoom] = React.useState(100);
-  const [conclusion, setConclusion] = React.useState('');
-  const [summary, setSummary] = React.useState('Normal');
+  const [conclusion, setConclusion] = React.useState(report.conclusion ?? '');
+  const [summary, setSummary] = React.useState(report.summary ?? 'Normal');
   const [toast, setToast] = React.useState<string | null>(null);
   const [search, setSearch] = React.useState('');
   const [match, setMatch] = React.useState(1);
@@ -44,7 +44,7 @@ export function ReportPdfViewer({ report }: { report: Report }) {
           <div className="mt-8 flex items-center justify-between"><Label className="text-xs uppercase tracking-wide text-slate-600">Conclusions</Label><button type="button" onClick={() => setConclusion('Holter monitoring with sinus rhythm. No significant arrhythmias identified.')} className="text-xs font-medium text-[#177bd1] hover:underline">Pick a template</button></div>
           <textarea value={conclusion} onChange={(event) => setConclusion(event.target.value)} placeholder="Type here" className="mt-2 min-h-28 w-full rounded-md border border-slate-200 bg-white p-3 text-sm outline-none focus:border-[#ee5b00]" />
           <div className="mt-6 space-y-2"><Label htmlFor="report-summary" className="text-xs uppercase tracking-wide text-slate-600">Summary</Label><Select value={summary} onValueChange={setSummary}><SelectTrigger id="report-summary" className="h-10 w-full"><SelectValue /></SelectTrigger><SelectContent>{['Normal', 'Borderline', 'Abnormal', 'Pending review'].map((option) => <SelectItem key={option} value={option}>{option}</SelectItem>)}</SelectContent></Select></div>
-          <Button onClick={() => setToast(`Report saved as ${summary}.`)} className="mt-auto w-full bg-primary text-white">Save</Button>
+          <Button onClick={() => { updateReport(report.id, { conclusion, summary }); setToast(`Report saved as ${summary}.`); }} className="mt-auto w-full bg-primary text-white">Save</Button>
         </aside>
       </div>
       <footer className="flex shrink-0 flex-wrap items-center gap-2 border-t border-slate-100 bg-white px-4 py-2 text-slate-500"><div className="relative"><Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2" /><Input value={search} onChange={(event) => { setSearch(event.target.value); setMatch(1); }} placeholder="Search in report" className="h-9 w-40 pl-8" /></div><Button size="icon" variant="ghost" disabled={!totalMatches} onClick={() => stepMatch(-1)} aria-label="Previous match"><ArrowLeft /></Button><span className="min-w-[3.5rem] text-center text-sm tabular-nums">{totalMatches ? `${match} / ${totalMatches}` : '0 / 0'}</span><Button size="icon" variant="ghost" disabled={!totalMatches} onClick={() => stepMatch(1)} aria-label="Next match"><ArrowLeft className="rotate-180" /></Button><span className="mx-1 h-6 w-px bg-slate-200" /><Button size="icon" variant="ghost" onClick={() => setZoom((value) => Math.min(140, value + 10))} aria-label="Zoom in"><ZoomIn /></Button><Button size="icon" variant="ghost" onClick={() => setZoom((value) => Math.max(70, value - 10))} aria-label="Zoom out"><ZoomOut /></Button><span className="ml-1 rounded-md border border-slate-200 px-3 py-2 text-sm tabular-nums">{zoom}%</span><Button size="icon" variant="ghost" onClick={() => setZoom(100)} aria-label="Fit to page"><Maximize2 /></Button><span className="mx-1 h-6 w-px bg-slate-200" /><Button size="icon" variant={tool === 'pointer' ? 'secondary' : 'ghost'} aria-pressed={tool === 'pointer'} onClick={() => setTool('pointer')} aria-label="Pointer tool"><MousePointer2 /></Button><Button size="icon" variant={tool === 'hand' ? 'secondary' : 'ghost'} aria-pressed={tool === 'hand'} onClick={() => setTool('hand')} aria-label="Hand tool"><Hand /></Button></footer>

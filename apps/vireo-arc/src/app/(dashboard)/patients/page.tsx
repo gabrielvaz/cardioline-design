@@ -26,7 +26,7 @@ import {
   SelectValue,
   TableToolbarMenu,
 } from "@cardioline/ui";
-import { patients } from "@/lib/mock-data";
+import { usePrototypeData, type Patient } from "@/lib/prototype-data";
 import { TablePagination } from "@/components/ui/table-pagination";
 import {
   SortableHeader,
@@ -92,14 +92,14 @@ function PatientsPageContent() {
   );
   const [density, setDensity] = useGlobalTableDensity();
   const [pageSize, setPageSize] = React.useState(10);
-  const [removedIds, setRemovedIds] = React.useState<string[]>([]);
+  const { data, deletePatient } = usePrototypeData();
   const [toast, setToast] = React.useState<string | null>(null);
   React.useEffect(
     () => setQuery(searchParams.get("q") ?? ""),
     [searchParams],
   );
-  const list = patients
-    .filter((patient) => matchesFilters(patient, query, filters) && !removedIds.includes(patient.id))
+  const list = data.patients
+    .filter((patient) => matchesFilters(patient, query, filters))
     .sort((a, b) => compare(a[sort.key], b[sort.key], sort.direction));
   const pageCount = Math.max(1, Math.ceil(list.length / pageSize));
   const visible = list.slice((page - 1) * pageSize, page * pageSize);
@@ -343,7 +343,7 @@ function PatientsPageContent() {
                           confirmDescription="Are you sure you want to delete this patient? This action is permanent and cannot be undone."
                           name={patient.name}
                           onDelete={() => {
-                            setRemovedIds((ids) => [...ids, patient.id]);
+                            deletePatient(patient.id);
                             setToast(`${patient.name} removed from this mock list.`);
                           }}
                         />
@@ -399,7 +399,7 @@ function PatientsPageContent() {
 }
 
 function matchesFilters(
-  patient: (typeof patients)[number],
+  patient: Patient,
   query: string,
   filters: PatientFilters,
 ) {

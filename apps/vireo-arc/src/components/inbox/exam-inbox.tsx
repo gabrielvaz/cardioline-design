@@ -34,12 +34,11 @@ import { PrototypeToast } from "@/components/ui/prototype-toast";
 import { useGlobalTableDensity } from "@/components/ui/use-global-table-density";
 import { PageHeader } from "@/components/ui/page-header";
 import { AssignmentDialog } from "@/components/exams/assignment-dialog";
-import { inboxExams } from "@/lib/mock-data";
+import { usePrototypeData, type InboxExam } from "@/lib/prototype-data";
 
 type ViewMode = "cards" | "table";
 type SortMode = "priority" | "waiting" | "recent" | "patient";
 type Criterion = "emergency" | "pediatric" | "elderly" | "waiting";
-type InboxExam = (typeof inboxExams)[number];
 
 const criteria: { id: Criterion; label: string; description: string }[] = [
   {
@@ -74,6 +73,7 @@ const inboxTableColumns = [
 ];
 
 export function ExamInbox() {
+  const { data, assignInboxExam } = usePrototypeData();
   const [view, setView] = React.useState<ViewMode>("cards");
   const [sort, setSort] = React.useState<SortMode>("priority");
   const [query, setQuery] = React.useState("");
@@ -114,7 +114,7 @@ export function ExamInbox() {
 
   const exams = React.useMemo(
     () =>
-      inboxExams
+      data.inbox
         .filter((exam) =>
           `${exam.patient} ${exam.patientId} ${exam.type} ${exam.unit}`
             .toLowerCase()
@@ -130,7 +130,7 @@ export function ExamInbox() {
           if (sort === "recent") return a.waitingMinutes - b.waitingMinutes;
           return a.patient.localeCompare(b.patient);
         }),
-    [priorityScore, query, sort],
+    [data.inbox, priorityScore, query, sort],
   );
 
   const urgentCount = exams.filter((exam) => priorityScore(exam) >= 70).length;
@@ -260,6 +260,7 @@ export function ExamInbox() {
         exam={assignmentExam}
         onOpenChange={(open) => !open && setAssignmentExam(null)}
         onAssign={(professional) => {
+          if (assignmentExam) assignInboxExam(assignmentExam.id, professional);
           setToast(`${assignmentExam?.id} assigned to ${professional}.`);
           setAssignmentExam(null);
         }}
@@ -412,6 +413,11 @@ function InboxCard({
             <span className="font-semibold text-gray-700">
               {formatMinutes(exam.waitingMinutes)}
             </span>
+            {exam.assignedTo && (
+              <span className="mt-0.5 block text-xs font-medium text-[#177bd1]">
+                Assigned to {exam.assignedTo}
+              </span>
+            )}
           </span>
           <div className="flex items-center gap-2">
             <Button
@@ -505,6 +511,11 @@ function InboxTable({
                     <div className="mt-0.5 text-xs text-gray-400">
                       Waiting {formatMinutes(exam.waitingMinutes)}
                     </div>
+                    {exam.assignedTo && (
+                      <div className="mt-0.5 text-xs font-medium text-[#177bd1]">
+                        Assigned to {exam.assignedTo}
+                      </div>
+                    )}
                   </td>}
                   {isVisible("factors") && <td className={`px-5 ${densityClass}`}>
                     <div className="flex max-w-64 flex-wrap gap-1.5">

@@ -11,6 +11,9 @@ All notable prototype UI changes are documented here.
 
 ### Added
 
+- Added a client-side prototype store (`lib/prototype-data.tsx`) that seeds from the mock dataset and persists every change to localStorage: patient creation/editing/deletion (with cascade to exams, inbox entries and reports), exam registration and deletion, inbox assignment, and report conclusion/summary edits now survive page refreshes.
+- Added a "New ECG" acquisition dialog on the patient detail page that registers a mock examination for the current patient and opens its ECG workspace, replacing the previous hardcoded link to another patient's exam.
+- Added a "Restore demo data" action (Settings → Profile) that reseeds the prototype store with the original mock dataset.
 - Added distinct SVG favicons for the Vireo Arc application and Beat Design System documentation.
 - Added Dashboard Exam Inbox and weekly operational analytics widgets, including mock exam/report volume and median report-time trends.
 - Reused the searchable reporting-professional assignment dialog from Exam Inbox in the main exam list.
@@ -33,6 +36,7 @@ All notable prototype UI changes are documented here.
 
 ### Changed
 
+- Made the Dashboard "Total exams" and "New patients" metric cards clickable and sourced from live prototype data, with empty states for the inbox and recent-reports widgets.
 - Redesigned the sign-in and password-recovery routes as a split-screen layout with a deep-navy brand panel (Vireo ARC wordmark, animated ECG trace with reduced-motion fallback) and a semantic-token form that now fully supports dark mode.
 - Made the ECG waveform dynamically use the available viewport height when measurements are hidden.
 - Replaced the ECG save-format dropdown with selectable format cards for faster visual comparison.

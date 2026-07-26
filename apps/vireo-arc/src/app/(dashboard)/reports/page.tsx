@@ -24,7 +24,7 @@ import {
   SelectValue,
   TableToolbarMenu,
 } from "@cardioline/ui";
-import { reports } from "@/lib/mock-data";
+import { usePrototypeData } from "@/lib/prototype-data";
 import {
   SortableHeader,
   type SortDirection,
@@ -88,17 +88,16 @@ export default function ReportsPage() {
     reportTableColumns.map((column) => column.id),
   );
   const [density, setDensity] = useGlobalTableDensity();
-  const [removedIds, setRemovedIds] = React.useState<string[]>([]);
+  const { data, deleteReport } = usePrototypeData();
   const [toast, setToast] = React.useState<string | null>(null);
-  const list = reports
+  const list = data.reports
     .filter(
       (report) =>
         `${report.patient} ${report.type} ${report.id}`
           .toLowerCase()
           .includes(query.toLowerCase()) &&
         (!statusFilter.length || statusFilter.includes(report.status)) &&
-        matchesGeneratedAt(report.date, generatedAt) &&
-        !removedIds.includes(report.id),
+        matchesGeneratedAt(report.date, generatedAt),
     )
     .sort((a, b) => {
       const result = String(a[sort.key]).localeCompare(
@@ -317,7 +316,7 @@ export default function ReportsPage() {
                           confirmDescription="Are you sure you want to delete this report? This action is permanent and cannot be undone."
                           name={`${report.type} ${report.id}`}
                           onDelete={() => {
-                            setRemovedIds((ids) => [...ids, report.id]);
+                            deleteReport(report.id);
                             setToast(`${report.type} ${report.id} removed from this mock list.`);
                           }}
                         />

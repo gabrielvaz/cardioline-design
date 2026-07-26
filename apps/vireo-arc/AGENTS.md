@@ -25,7 +25,8 @@ components/patients/         Shared patient form and patient detail view
 components/reports/          PDF-like report viewer
 components/settings/         Settings navigation and generic admin resource UI
 components/ui/               Feature-level reusable UI patterns
-lib/mock-data.ts             Source of truth for prototype data
+lib/mock-data.ts             Seed dataset for the prototype store
+lib/prototype-data.tsx       Client store (context + localStorage) for runtime data
 ```
 
 Keep route files thin. Put interactive state in the domain component that owns it, not in a page unless the state is route-specific.
@@ -39,10 +40,12 @@ Keep route files thin. Put interactive state in the domain component that owns i
 
 ## Data and mock behavior
 
-- Use `patients`, `exams` and `reports` from `lib/mock-data.ts` for list/detail relationships.
+- `lib/mock-data.ts` is the seed dataset. At runtime the app reads and mutates data through the client-side prototype store in `lib/prototype-data.tsx` (`usePrototypeData`), which is provided by the `(dashboard)` layout.
+- The store persists every change to `localStorage` (`vireo-arc-prototype-v1`), so created, edited and deleted records survive refreshes. Settings → Profile has a "Restore demo data" action that reseeds the store.
+- Detail routes (`/patients/[id]`, `/exams/[id]`, `/reports/[id]`) resolve records through store loaders (`components/*/*-loader.tsx`) that wait for hydration and call `notFound()` for unknown IDs.
 - Map report actions by `examId`, not array position.
-- New or edited records can remain in local component state; the prototype does not persist data after a refresh.
-- Preserve the 20-patient and 30-exam datasets unless the requested scenario needs different coverage.
+- Deleting a patient cascades to their exams, inbox entries and reports inside the store.
+- Preserve the 20-patient and 30-exam seed datasets unless the requested scenario needs different coverage.
 
 ## Interaction conventions
 

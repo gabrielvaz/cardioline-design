@@ -12,7 +12,8 @@ import {
   Users,
 } from "lucide-react";
 import { Badge, Card, CardContent, CardHeader, CardTitle, cn } from "@cardioline/ui";
-import { dashboardWeeklyPerformance, inboxExams, reports } from "@/lib/mock-data";
+import { dashboardWeeklyPerformance } from "@/lib/mock-data";
+import { usePrototypeData, type InboxExam, type Report } from "@/lib/prototype-data";
 
 function useEnterAnimation() {
   const [mounted, setMounted] = React.useState(false);
@@ -63,7 +64,7 @@ function MetricCard({ title, value, detail, icon: Icon, href, tone = "default" }
   );
 }
 
-function QueueItem({ exam }: { exam: (typeof inboxExams)[number] }) {
+function QueueItem({ exam }: { exam: InboxExam }) {
   const priority = exam.emergency ? "Emergency" : exam.pediatric ? "Pediatric" : "Waiting";
   return (
     <Link
@@ -82,7 +83,7 @@ function QueueItem({ exam }: { exam: (typeof inboxExams)[number] }) {
   );
 }
 
-function RecentReportItem({ report }: { report: (typeof reports)[number] }) {
+function RecentReportItem({ report }: { report: Report }) {
   const pending = report.status === "Pending Review" || report.status === "Draft";
   return (
     <Link
@@ -303,12 +304,13 @@ function MedianReportTimeChart() {
 }
 
 export function DashboardOverview() {
+  const { data } = usePrototypeData();
   return (
     <>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <MetricCard title="Exam inbox" value={String(inboxExams.length)} detail="Awaiting your report" icon={Inbox} href="/exam-inbox" />
-        <MetricCard title="Total exams (today)" value="124" detail="+14% from yesterday" icon={Activity} />
-        <MetricCard title="New patients" value="42" detail="+5 this week" icon={Users} />
+        <MetricCard title="Exam inbox" value={String(data.inbox.length)} detail="Awaiting your report" icon={Inbox} href="/exam-inbox" />
+        <MetricCard title="Total exams (today)" value={String(data.exams.length)} detail="Across all units" icon={Activity} href="/exams" />
+        <MetricCard title="New patients" value={String(data.patients.length)} detail="Registered in the prototype" icon={Users} href="/patients" />
         <MetricCard title="Critical alerts" value="3" detail="Requires immediate attention" icon={AlertTriangle} href="/exam-inbox" tone="critical" />
       </div>
 
@@ -319,7 +321,10 @@ export function DashboardOverview() {
             <Link href="/exam-inbox" className="text-sm font-medium text-primary hover:underline">View inbox</Link>
           </CardHeader>
           <CardContent className="space-y-1">
-            {inboxExams.slice(0, 4).map((exam) => <QueueItem key={exam.id} exam={exam} />)}
+            {data.inbox.slice(0, 4).map((exam) => <QueueItem key={exam.id} exam={exam} />)}
+            {!data.inbox.length && (
+              <p className="px-2 py-6 text-center text-sm text-muted-foreground">Your inbox is clear.</p>
+            )}
           </CardContent>
         </Card>
 
@@ -330,7 +335,10 @@ export function DashboardOverview() {
               <Link href="/reports" className="text-sm font-medium text-primary hover:underline">View reports</Link>
             </CardHeader>
             <CardContent className="space-y-1">
-              {reports.slice(0, 3).map((report) => <RecentReportItem key={report.id} report={report} />)}
+              {data.reports.slice(0, 3).map((report) => <RecentReportItem key={report.id} report={report} />)}
+              {!data.reports.length && (
+                <p className="px-2 py-6 text-center text-sm text-muted-foreground">No reports generated yet.</p>
+              )}
             </CardContent>
           </Card>
           <DeviceStatus />

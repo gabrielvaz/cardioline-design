@@ -14,7 +14,7 @@ This repository is the Cardioline frontend monorepo. It contains the **Beat Desi
 ## Working agreement
 
 - Keep all product strings, code comments and documentation in English.
-- Preserve the front-end prototype model: user, patient, examination and report data are mock data in `apps/vireo-arc/src/lib/mock-data.ts`.
+- Preserve the front-end prototype model: `apps/vireo-arc/src/lib/mock-data.ts` is the seed dataset and runtime data lives in the client-side prototype store (`apps/vireo-arc/src/lib/prototype-data.tsx`), persisted to localStorage. There is no backend integration.
 - Prefer small domain components over large route files. Reuse an existing component before adding a near-duplicate.
 - Use `@cardioline/ui` first. Add a reusable primitive to `packages/ui` when a missing ShadCN/Radix pattern will be reused.
 - Use Lucide for icons. Icon-only buttons require an `aria-label`; this also supplies the application tooltip.

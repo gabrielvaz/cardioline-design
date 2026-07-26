@@ -17,19 +17,18 @@ import {
 } from '@tanstack/react-table';
 import { ArrowDown, ArrowUp, ChevronsUpDown, Download, Eye, FileText, PenLine, Repeat2, UserRound } from 'lucide-react';
 import { Button, Card, CardContent, RowActionsMenu, type TableDensity } from '@cardioline/ui';
-import { exams, reports } from '@/lib/mock-data';
+import { usePrototypeData, type Exam } from '@/lib/prototype-data';
 import { PrototypeToast } from '@/components/ui/prototype-toast';
 import { TablePagination } from '@/components/ui/table-pagination';
 import { AssignmentDialog, type AssignableExam } from '@/components/exams/assignment-dialog';
 
-type ExamRow = (typeof exams)[number] & { key: number; unit: string; modifiedBy: string };
+type ExamRow = Exam & { key: string; unit: string; modifiedBy: string };
 
-const tableRows: ExamRow[] = exams.map((exam, index) => ({
-  ...exam,
-  key: index,
-  unit: ['Via Paoletti', 'Bella Salute', 'San Giovanni'][index % 3],
-  modifiedBy: ['Carlos Almeida', 'Andrea Bigazzi', 'Luca Moretti'][index % 3],
-}));
+/** Deterministic pseudo-random pick so each exam keeps stable mock metadata. */
+function pickById<T>(id: string, options: T[]): T {
+  const hash = [...id].reduce((total, char) => total + char.charCodeAt(0), 0);
+  return options[hash % options.length];
+}
 
 const visibilityLabels: Record<string, string> = {
   id: 'Exam ID', name: 'Patient name', patientId: 'Patient ID', date: 'Reception', unit: 'Unit', modifiedBy: 'Modified by', type: 'Exam type', result: 'Summary', actions: 'Actions',
@@ -37,12 +36,19 @@ const visibilityLabels: Record<string, string> = {
 
 export function TanstackExamTable({ query, visibleColumns, density }: { query: string; visibleColumns: string[]; density: TableDensity }) {
   const router = useRouter();
+  const { data, deleteExam } = usePrototypeData();
   const [sorting, setSorting] = React.useState<SortingState>([{ id: 'date', desc: true }]);
   const [pagination, setPagination] = React.useState<PaginationState>({ pageIndex: 0, pageSize: 10 });
   const [toast, setToast] = React.useState<string | null>(null);
   const [assignmentExam, setAssignmentExam] = React.useState<AssignableExam | null>(null);
   const columnVisibility = React.useMemo(() => Object.fromEntries(Object.keys(visibilityLabels).map((id) => [id, visibleColumns.includes(id)])), [visibleColumns]);
   const cellDensity = density === 'compact' ? 'whitespace-nowrap py-2' : density === 'spacious' ? 'whitespace-normal break-words py-5' : 'whitespace-nowrap py-3';
+  const tableRows = React.useMemo<ExamRow[]>(() => data.exams.map((exam) => ({
+    ...exam,
+    key: exam.id,
+    unit: pickById(exam.id, ['Via Paoletti', 'Bella Salute', 'San Giovanni']),
+    modifiedBy: pickById(exam.id, ['Carlos Almeida', 'Andrea Bigazzi', 'Luca Moretti']),
+  })), [data.exams]);
 
   const columns = React.useMemo<ColumnDef<ExamRow>[]>(() => [
     { accessorKey: 'id', header: 'Exam ID', cell: ({ row }) => <span className="font-semibold">{row.original.id}</span> },
@@ -55,7 +61,7 @@ export function TanstackExamTable({ query, visibleColumns, density }: { query: s
     { accessorKey: 'result', header: 'Summary', cell: ({ row }) => <Status value={row.original.result} /> },
     { id: 'actions', header: 'Actions', enableSorting: false, cell: ({ row }) => {
       const exam = row.original;
-      const report = reports.find((item) => item.examId === exam.id);
+      const report = data.reports.find((item) => item.examId === exam.id);
       return <div className="flex gap-1" onClick={(event) => event.stopPropagation()}>
         <Button asChild size="icon" variant="ghost"><Link href={`/exams/${exam.id}`} aria-label="View exam"><Eye /></Link></Button>
         {report ? <Button asChild size="icon" variant="ghost"><Link href={`/reports/${report.id}`} aria-label="View report"><FileText /></Link></Button> : <Button size="icon" variant="ghost" disabled aria-label="Report unavailable"><FileText /></Button>}
@@ -69,11 +75,11 @@ export function TanstackExamTable({ query, visibleColumns, density }: { query: s
             { icon: Repeat2, label: 'Reassociate', onSelect: () => setToast(`Reassociate started for ${exam.id}.`) },
             { icon: UserRound, label: 'Assign to a doctor', onSelect: () => setAssignmentExam({ id: exam.id, patient: exam.name, patientId: exam.patientId, type: exam.type }) },
           ]}
-          onDelete={() => setToast(`${exam.id} deleted from this mock list.`)}
+          onDelete={() => { deleteExam(exam.id); setToast(`${exam.id} deleted from this mock list.`); }}
         />
       </div>;
     } },
-  ], []);
+  ], [data.reports, deleteExam]);
 
   const table = useReactTable({
     data: tableRows,
