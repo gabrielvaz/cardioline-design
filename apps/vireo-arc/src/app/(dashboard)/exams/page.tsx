@@ -92,10 +92,22 @@ export default function ExamsPage() {
       "Spirometry",
     ],
   });
+  const [appliedFilters, setAppliedFilters] = React.useState<
+    Record<string, string[]>
+  >({});
+  const [advancedFilters, setAdvancedFilters] = React.useState<
+    Record<string, string[]>
+  >({});
   const updateFilter = (name: string, values: string[]) =>
     setFilterValues((current) => ({ ...current, [name]: values }));
+  const applyFilters = () => {
+    setAppliedFilters({ ...filterValues });
+    setToast("Filters applied to the exam list.");
+  };
   const clearFilters = () => {
     setFilterValues({});
+    setAppliedFilters({});
+    setAdvancedFilters({});
     setQuery("");
   };
 
@@ -170,7 +182,7 @@ export default function ExamsPage() {
               <Button
                 size="sm"
                 variant="secondary"
-                onClick={() => setToast("Filters applied to the mock list.")}
+                onClick={applyFilters}
                 className="ml-1 h-9 shrink-0"
               >
                 <ListFilter className="mr-2" />
@@ -188,11 +200,27 @@ export default function ExamsPage() {
         )}
       </section>
 
-      {advanced && <AdvancedExamFilters onClose={() => setAdvanced(false)} />}
+      {advanced && (
+        <AdvancedExamFilters
+          onClose={() => setAdvanced(false)}
+          onApply={(selections) => {
+            setAdvancedFilters(selections);
+            setAdvanced(false);
+            const count = Object.values(selections).flat().length;
+            setToast(
+              count
+                ? `Advanced search applied (${count} ${count === 1 ? "criterion" : "criteria"}).`
+                : "Advanced search cleared.",
+            );
+          }}
+        />
+      )}
       <TanstackExamTable
         query={query}
         visibleColumns={visibleColumns}
         density={density}
+        filters={appliedFilters}
+        advancedFilters={advancedFilters}
       />
       <PrototypeToast message={toast} onClose={() => setToast(null)} />
     </div>

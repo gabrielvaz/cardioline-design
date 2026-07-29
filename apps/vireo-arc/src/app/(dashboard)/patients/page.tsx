@@ -83,6 +83,7 @@ function PatientsPageContent() {
   const [filtersShown, setFiltersShown] = React.useState(true);
   const [advancedOpen, setAdvancedOpen] = React.useState(false);
   const [filters, setFilters] = React.useState<PatientFilters>(emptyFilters);
+  const [advanced, setAdvanced] = React.useState<string[]>([]);
   const [sort, setSort] = React.useState<{
     key: SortKey;
     direction: SortDirection;
@@ -99,7 +100,7 @@ function PatientsPageContent() {
     [searchParams],
   );
   const list = data.patients
-    .filter((patient) => matchesFilters(patient, query, filters))
+    .filter((patient) => matchesFilters(patient, query, filters) && matchesAdvanced(patient, advanced))
     .sort((a, b) => compare(a[sort.key], b[sort.key], sort.direction));
   const pageCount = Math.max(1, Math.ceil(list.length / pageSize));
   const visible = list.slice((page - 1) * pageSize, page * pageSize);
@@ -377,6 +378,14 @@ function PatientsPageContent() {
         onOpenChange={setAdvancedOpen}
         title="Advanced patient search"
         description="Refine the mock patient list using additional criteria."
+        onApply={(selected) => {
+          setAdvanced(selected);
+          setToast(
+            selected.length
+              ? `Advanced search applied (${selected.length} ${selected.length === 1 ? "criterion" : "criteria"}).`
+              : "Advanced search cleared.",
+          );
+        }}
         groups={[
           {
             label: "Date of birth",
@@ -398,6 +407,49 @@ function PatientsPageContent() {
   );
 }
 
+function matchesLastExamPeriod(lastExam: string, period: "today" | "week" | "month") {
+  const time = lastExam.toLowerCase();
+  if (period === "today") return /(mins|hour|just now)/.test(time);
+  if (period === "week") return !/week/.test(time);
+  return /(min|hour|day|week|just now)/.test(time);
+}
+
+const advancedExamPeriods: Record<string, "today" | "week" | "month"> = {
+  Today: "today",
+  "Last 7 days": "week",
+  "Last 30 days": "month",
+};
+const advancedStatuses = ["Active", "Critical", "Inactive"];
+const advancedDobBuckets = [
+  "Born in the last 30 years",
+  "Born 30–50 years ago",
+  "Born more than 50 years ago",
+];
+
+function matchesDobBucket(dob: string, bucket: string) {
+  const year = Number(dob.match(/\d{4}/)?.[0]);
+  if (!year) return false;
+  if (bucket === "Born in the last 30 years") return year >= 1997;
+  if (bucket === "Born 30–50 years ago") return year >= 1977 && year <= 1996;
+  return year <= 1976;
+}
+
+/** AND across advanced-search groups, OR inside each group. */
+function matchesAdvanced(patient: Patient, selections: string[]) {
+  const statuses = selections.filter((option) => advancedStatuses.includes(option));
+  if (statuses.length && !statuses.includes(patient.status)) return false;
+  const periods = selections.filter((option) => option in advancedExamPeriods);
+  if (
+    periods.length &&
+    !periods.some((option) => matchesLastExamPeriod(patient.lastExam, advancedExamPeriods[option]))
+  )
+    return false;
+  const buckets = selections.filter((option) => advancedDobBuckets.includes(option));
+  if (buckets.length && !buckets.some((option) => matchesDobBucket(patient.dob, option)))
+    return false;
+  return true;
+}
+
 function matchesFilters(
   patient: Patient,
   query: string,
@@ -413,11 +465,10 @@ function matchesFilters(
   if (filters.bornFrom && birthday < new Date(filters.bornFrom)) return false;
   if (filters.bornTo && birthday > new Date(`${filters.bornTo}T23:59:59`))
     return false;
-  const time = patient.lastExam.toLowerCase();
-  if (filters.examPeriod === "today" && !/(mins|hour)/.test(time)) return false;
-  if (filters.examPeriod === "week" && /week|2 weeks|3 weeks/.test(time))
-    return false;
-  if (filters.examPeriod === "month" && !/(min|hour|day|week)/.test(time))
+  if (
+    filters.examPeriod &&
+    !matchesLastExamPeriod(patient.lastExam, filters.examPeriod as "today" | "week" | "month")
+  )
     return false;
   return true;
 }

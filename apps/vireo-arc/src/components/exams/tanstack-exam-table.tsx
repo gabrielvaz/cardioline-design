@@ -30,11 +30,95 @@ function pickById<T>(id: string, options: T[]): T {
   return options[hash % options.length];
 }
 
+/** Anchor "today" of the mock timeline for period-based filtering. */
+const EXAMS_ANCHOR = new Date('2026-10-24T23:59:59');
+
+function examDate(date: string) {
+  const match = date.match(/(\w{3}) (\d+), (\d{4})/);
+  return match ? new Date(`${match[1]} ${match[2]}, ${match[3]}`) : null;
+}
+
+function matchesType(type: string, option: string) {
+  const examType = type.toLowerCase();
+  const filter = option.toLowerCase();
+  if (filter.includes('holter')) return examType.includes('holter');
+  if (filter.includes('stress')) return examType.includes('stress');
+  if (filter.includes('resting')) return examType.includes('resting');
+  if (filter.includes('single lead')) return examType.includes('single lead');
+  return false;
+}
+
+type FilterContext = { statIds: Set<string>; pediatricIds: Set<string> };
+
+function matchesOption(row: ExamRow, category: string, option: string, context: FilterContext) {
+  switch (category) {
+    case 'Period': {
+      if (option === 'Custom period') return true;
+      const date = examDate(row.date);
+      if (!date) return false;
+      const daysAgo = Math.round((EXAMS_ANCHOR.getTime() - date.getTime()) / 86_400_000);
+      if (option === 'Today') return daysAgo <= 0;
+      if (option === 'Last 7 days') return daysAgo <= 7;
+      if (option === 'Last 30 days') return daysAgo <= 30;
+      return true;
+    }
+    case 'Exam type':
+      return matchesType(row.type, option);
+    case 'Status':
+      return option === 'Pending review'
+        ? row.result === 'Pending Review'
+        : row.result !== 'Pending Review';
+    case 'Summary':
+      return row.result.toLowerCase() === option.toLowerCase();
+    case 'STAT':
+      return option === 'STAT exams' ? context.statIds.has(row.id) : !context.statIds.has(row.id);
+    case 'Pediatric':
+      return option === 'Pediatric exams' ? context.pediatricIds.has(row.id) : !context.pediatricIds.has(row.id);
+    case 'Units':
+      return row.unit === option;
+    default:
+      return true;
+  }
+}
+
+function matchesAdvancedOption(row: ExamRow, group: string, option: string, context: FilterContext) {
+  switch (group) {
+    case 'Exam type':
+      return matchesType(row.type, option);
+    case 'Status':
+      if (option === 'Pending review') return row.result === 'Pending Review';
+      return row.result.toLowerCase() === option.toLowerCase();
+    case 'Summary':
+      return row.result.toLowerCase() === option.toLowerCase();
+    case 'STAT':
+      return context.statIds.has(row.id);
+    case 'Pediatric':
+      return context.pediatricIds.has(row.id);
+    case 'Units':
+      return row.unit === option;
+    default:
+      return true;
+  }
+}
+
+/** AND across categories, OR inside each category. Empty categories are ignored. */
+function matchesFilters(row: ExamRow, filters: Record<string, string[]>, context: FilterContext) {
+  return Object.entries(filters).every(([category, selected]) =>
+    !selected.length || selected.some((option) => matchesOption(row, category, option, context)),
+  );
+}
+
+function matchesAdvanced(row: ExamRow, groups: Record<string, string[]>, context: FilterContext) {
+  return Object.entries(groups).every(([group, selected]) =>
+    !selected.length || selected.some((option) => matchesAdvancedOption(row, group, option, context)),
+  );
+}
+
 const visibilityLabels: Record<string, string> = {
   id: 'Exam ID', name: 'Patient name', patientId: 'Patient ID', date: 'Reception', unit: 'Unit', modifiedBy: 'Modified by', type: 'Exam type', result: 'Summary', actions: 'Actions',
 };
 
-export function TanstackExamTable({ query, visibleColumns, density }: { query: string; visibleColumns: string[]; density: TableDensity }) {
+export function TanstackExamTable({ query, visibleColumns, density, filters = {}, advancedFilters = {} }: { query: string; visibleColumns: string[]; density: TableDensity; filters?: Record<string, string[]>; advancedFilters?: Record<string, string[]> }) {
   const router = useRouter();
   const { data, deleteExam } = usePrototypeData();
   const [sorting, setSorting] = React.useState<SortingState>([{ id: 'date', desc: true }]);
@@ -43,12 +127,16 @@ export function TanstackExamTable({ query, visibleColumns, density }: { query: s
   const [assignmentExam, setAssignmentExam] = React.useState<AssignableExam | null>(null);
   const columnVisibility = React.useMemo(() => Object.fromEntries(Object.keys(visibilityLabels).map((id) => [id, visibleColumns.includes(id)])), [visibleColumns]);
   const cellDensity = density === 'compact' ? 'whitespace-nowrap py-2' : density === 'spacious' ? 'whitespace-normal break-words py-5' : 'whitespace-nowrap py-3';
+  const filterContext = React.useMemo<FilterContext>(() => ({
+    statIds: new Set(data.inbox.filter((exam) => exam.emergency).map((exam) => exam.id)),
+    pediatricIds: new Set(data.inbox.filter((exam) => exam.pediatric).map((exam) => exam.id)),
+  }), [data.inbox]);
   const tableRows = React.useMemo<ExamRow[]>(() => data.exams.map((exam) => ({
     ...exam,
     key: exam.id,
     unit: pickById(exam.id, ['Via Paoletti', 'Bella Salute', 'San Giovanni']),
     modifiedBy: pickById(exam.id, ['Carlos Almeida', 'Andrea Bigazzi', 'Luca Moretti']),
-  })), [data.exams]);
+  })).filter((row) => matchesFilters(row, filters, filterContext) && matchesAdvanced(row, advancedFilters, filterContext)), [data.exams, filters, advancedFilters, filterContext]);
 
   const columns = React.useMemo<ColumnDef<ExamRow>[]>(() => [
     { accessorKey: 'id', header: 'Exam ID', cell: ({ row }) => <span className="font-semibold">{row.original.id}</span> },
@@ -94,7 +182,7 @@ export function TanstackExamTable({ query, visibleColumns, density }: { query: s
     globalFilterFn: (row, _columnId, filterValue) => `${row.original.name} ${row.original.id} ${row.original.type}`.toLowerCase().includes(String(filterValue).toLowerCase()),
   });
 
-  React.useEffect(() => { table.setPageIndex(0); }, [query, visibleColumns, table]);
+  React.useEffect(() => { table.setPageIndex(0); }, [query, visibleColumns, filters, advancedFilters, table]);
   const total = table.getFilteredRowModel().rows.length;
 
   return <>

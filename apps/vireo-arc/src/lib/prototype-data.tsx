@@ -92,6 +92,16 @@ export function formatExamDate(date: Date) {
   return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()} · ${String(hours).padStart(2, "0")}:${minutes} ${suffix}`;
 }
 
+/**
+ * "Now" inside the mock timeline (the seed dataset ends on Oct 24, 2026).
+ * New records get this date with the real current time so period filters
+ * and chronological sorting stay coherent across the prototype.
+ */
+export function mockNow() {
+  const now = new Date();
+  return new Date(2026, 9, 24, now.getHours(), now.getMinutes());
+}
+
 type PrototypeDataContextValue = {
   /** False until the persisted snapshot has been read from localStorage. */
   hydrated: boolean;
@@ -203,7 +213,7 @@ export function PrototypeDataProvider({ children }: { children: React.ReactNode 
         patientId,
         name: patient.name,
         type,
-        date: formatExamDate(new Date()),
+        date: formatExamDate(mockNow()),
         device,
         result: "Pending Review",
       };

@@ -5,18 +5,28 @@ import { ChevronDown } from 'lucide-react';
 import { Button, Checkbox, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@cardioline/ui';
 
 const groups = [
-  ['Exam type', ['Resting ECG', 'ECG single lead (PDF)', 'Holter ECG', 'Holter ECG (PDF)', 'Stress test', 'Spirometry']],
-  ['Status', ['Pending review', 'Normal', 'Abnormal', 'Draft']],
-  ['Summary', ['Normal', 'Borderline', 'Critical']],
+  ['Exam type', ['Resting ECG', 'ECG single lead', 'Holter ECG', 'Stress test']],
+  ['Status', ['Pending review', 'Normal', 'Abnormal', 'Borderline']],
+  ['Summary', ['Normal', 'Borderline', 'Pending Review']],
   ['STAT', ['STAT only']],
   ['Pediatric', ['Pediatric only']],
-  ['Units', ['Room 302', 'Ward B', 'ER']],
+  ['Units', ['Via Paoletti', 'Bella Salute', 'San Giovanni']],
 ] as const;
 
-export function AdvancedExamFilters({ onClose }: { onClose: () => void }) {
+export function AdvancedExamFilters({ onClose, onApply }: { onClose: () => void; onApply?: (selections: Record<string, string[]>) => void }) {
   const [open, setOpen] = React.useState('Exam type');
-  const [checked, setChecked] = React.useState<string[]>([]);
-  const toggle = (name: string) => setChecked((items) => items.includes(name) ? items.filter((item) => item !== name) : [...items, name]);
+  const [checked, setChecked] = React.useState<Record<string, string[]>>({});
+  const toggle = (group: string, option: string) =>
+    setChecked((current) => {
+      const selected = current[group] ?? [];
+      return {
+        ...current,
+        [group]: selected.includes(option)
+          ? selected.filter((item) => item !== option)
+          : [...selected, option],
+      };
+    });
+  const count = Object.values(checked).flat().length;
 
   return (
     <Dialog open onOpenChange={(next) => { if (!next) onClose(); }}>
@@ -33,7 +43,7 @@ export function AdvancedExamFilters({ onClose }: { onClose: () => void }) {
                 <div className="grid gap-1 border-t border-border px-4 py-3 sm:grid-cols-2">
                   {options.map((option) => (
                     <label key={option} className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm text-foreground transition-colors hover:bg-muted">
-                      <Checkbox checked={checked.includes(option)} onCheckedChange={() => toggle(option)} />
+                      <Checkbox checked={(checked[name] ?? []).includes(option)} onCheckedChange={() => toggle(name, option)} />
                       {option}
                     </label>
                   ))}
@@ -43,8 +53,8 @@ export function AdvancedExamFilters({ onClose }: { onClose: () => void }) {
           ))}
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setChecked([])}>Reset</Button>
-          <Button onClick={onClose}>Apply {checked.length ? `(${checked.length})` : ''}</Button>
+          <Button variant="outline" onClick={() => setChecked({})}>Reset</Button>
+          <Button onClick={() => onApply ? onApply(checked) : onClose()}>Apply {count ? `(${count})` : ''}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

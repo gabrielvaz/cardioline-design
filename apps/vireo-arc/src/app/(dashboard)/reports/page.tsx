@@ -74,9 +74,43 @@ function matchesGeneratedAt(date: string, filter: string) {
   }
 }
 
+function daysAgo(date: string) {
+  return Math.round(
+    (REPORTS_ANCHOR.getTime() - new Date(date).getTime()) / 86_400_000,
+  );
+}
+
+const advancedPeriods: Record<string, number> = {
+  Today: 0,
+  "Last 7 days": 7,
+  "Last 30 days": 45,
+};
+const advancedStatuses = ["Finalized", "Pending Review", "Draft"];
+
+/** AND across advanced-search groups, OR inside each group. */
+function matchesAdvanced(
+  report: { type: string; date: string; status: string },
+  selections: string[],
+) {
+  const statuses = selections.filter((option) => advancedStatuses.includes(option));
+  if (statuses.length && !statuses.includes(report.status)) return false;
+  const types = selections.filter(
+    (option) => !(option in advancedPeriods) && !advancedStatuses.includes(option),
+  );
+  if (types.length && !types.includes(report.type)) return false;
+  const periods = selections.filter((option) => option in advancedPeriods);
+  if (
+    periods.length &&
+    !periods.some((option) => daysAgo(report.date) <= advancedPeriods[option])
+  )
+    return false;
+  return true;
+}
+
 export default function ReportsPage() {
   const [query, setQuery] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState<string[]>([]);
+  const [advanced, setAdvanced] = React.useState<string[]>([]);
   const [generatedAt, setGeneratedAt] = React.useState("all");
   const [filtersShown, setFiltersShown] = React.useState(true);
   const [advancedOpen, setAdvancedOpen] = React.useState(false);
@@ -97,7 +131,8 @@ export default function ReportsPage() {
           .toLowerCase()
           .includes(query.toLowerCase()) &&
         (!statusFilter.length || statusFilter.includes(report.status)) &&
-        matchesGeneratedAt(report.date, generatedAt),
+        matchesGeneratedAt(report.date, generatedAt) &&
+        matchesAdvanced(report, advanced),
     )
     .sort((a, b) => {
       const result = String(a[sort.key]).localeCompare(
@@ -339,6 +374,14 @@ export default function ReportsPage() {
         onOpenChange={setAdvancedOpen}
         title="Advanced report search"
         description="Refine the mock report list using additional criteria."
+        onApply={(selected) => {
+          setAdvanced(selected);
+          setToast(
+            selected.length
+              ? `Advanced search applied (${selected.length} ${selected.length === 1 ? "criterion" : "criteria"}).`
+              : "Advanced search cleared.",
+          );
+        }}
         groups={[
           {
             label: "Report type",

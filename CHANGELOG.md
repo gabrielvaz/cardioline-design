@@ -64,6 +64,9 @@ All notable prototype UI changes are documented here.
 
 ### Fixed
 
+- Made the exam list filters functional: Period, Exam type, Status, Summary, STAT, Pediatric and Units selections now filter the table when "Apply filter" is pressed (AND across categories, OR inside each), and "Clear all" resets both the draft and the applied filters.
+- Made Advanced Search apply real criteria on Exams (grouped selections), Patients (date-of-birth buckets, last-exam period, status) and Reports (type, generated date, status), with toast feedback.
+- Made the ECG workspace gain (mm/mV) and paper speed (mm/s) controls rescale the rendered waveform amplitude and duration.
 - Fixed broken navigation and mock-data integrity across the prototype: the Exams "Report area" button now opens the Reports area, header notifications deep-link to the referenced exam, and the header patient search reapplies while already on the Patients page.
 - Unknown patient, exam and report URLs now render a styled 404 page instead of silently showing the first mock record, and the report download endpoint returns 404 for unknown reports.
 - Aligned the Exam Inbox worklist with the exam and patient mock sets so every inbox item opens the ECG of the same patient it describes.
