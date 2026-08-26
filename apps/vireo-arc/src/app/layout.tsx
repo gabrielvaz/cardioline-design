@@ -1,5 +1,4 @@
-import type { Metadata } from "next";
-import { cookies } from "next/headers";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Inter, JetBrains_Mono } from "next/font/google";
 import "@cardioline/ui/src/styles/globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
@@ -40,32 +39,42 @@ export const metadata: Metadata = {
     "cardiac diagnostics",
   ],
   authors: [{ name: "Cardioline" }],
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ee5b00" },
-    { media: "(prefers-color-scheme: dark)", color: "#071046" },
-  ],
   icons: {
     icon: "/icon.svg",
   },
 };
 
-export default async function RootLayout({
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ee5b00" },
+    { media: "(prefers-color-scheme: dark)", color: "#071046" },
+  ],
+};
+
+/**
+ * The theme used to be resolved from a cookie on the server so the first paint
+ * already carried the right class. A static export has no request to read, so
+ * a blocking inline script does the same job from localStorage before the
+ * browser paints — without it, dark-mode users get a white flash on every load.
+ */
+const themeBootstrap = `(function(){try{var t=localStorage.getItem("cardioline-theme");if(t!=="dark"&&t!=="light"){t="light"}document.documentElement.classList.toggle("dark",t==="dark");document.documentElement.style.colorScheme=t}catch(e){}})()`;
+
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = await cookies();
-  const savedTheme = cookieStore.get("cardioline-theme")?.value;
-  const initialTheme = savedTheme === "dark" ? "dark" : "light";
-
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${plusJakartaSans.variable} ${jetbrainsMono.variable} ${initialTheme === "dark" ? "dark" : ""}`}
+      className={`${inter.variable} ${plusJakartaSans.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
+      </head>
       <body className="min-h-screen bg-background font-sans antialiased">
-        <ThemeProvider initialTheme={initialTheme}>{children}</ThemeProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

@@ -25,6 +25,7 @@ import {
   TableToolbarMenu,
 } from "@cardioline/ui";
 import { usePrototypeData } from "@/lib/prototype-data";
+import { downloadReport } from "@/lib/report-download";
 import {
   SortableHeader,
   type SortDirection,
@@ -336,15 +337,13 @@ export default function ReportsPage() {
                           <Link href={`/reports/${report.id}`}>View</Link>
                         </Button>
                         <Button
-                          asChild
                           size="icon"
                           variant="ghost"
                           aria-label={`Download ${report.id}`}
                           className="text-[#ee5b00]"
+                          onClick={() => downloadReport(report)}
                         >
-                          <a href={`/api/reports/${report.id}`} download>
-                            <Download />
-                          </a>
+                          <Download />
                         </Button>
                         <RowActionsMenu
                           confirmTitle="Delete Report"

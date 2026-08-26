@@ -1,0 +1,67 @@
+#  Publishes the Vireo ARK prototype to GitHub Pages as a static export, with
+#  the Beat Design System documentation mounted under /beat/.
+#
+#  `BASE_PATH` has to match the repository name, because Pages serves a project
+#  site from `https://<user>.github.io/<repo>/`. Without it every asset URL
+#  would resolve one directory too high and the page would load unstyled.
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a running deploy finish rather than cancelling it half-published.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static export
+        working-directory: apps/vireo-arc
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}
+        run: npm run build
+
+      - name: Assemble the site
+        run: |
+          mkdir -p site
+          cp -r apps/vireo-arc/out/. site/
+          # Beat Design System docs keep their own corner of the site.
+          mkdir -p site/beat
+          cp -r docs/. site/beat/
+          # Jekyll would otherwise drop Next's _next/ directory.
+          touch site/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

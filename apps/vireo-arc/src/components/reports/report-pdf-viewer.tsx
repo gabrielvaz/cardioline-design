@@ -6,6 +6,7 @@ import { ArrowLeft, Download, Hand, Maximize2, MousePointer2, Printer, Search, Z
 import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@cardioline/ui';
 import { PrototypeToast } from '@/components/ui/prototype-toast';
 import { usePrototypeData, type Report } from '@/lib/prototype-data';
+import { downloadReport } from '@/lib/report-download';
 
 const examInfo = [['Type', 'Holter'], ['Acquisition', '11/17/2022 9:53'], ['Reception', '11/17/2022 9:53'], ['Device', 'Walk400h (NG)'], ['Unit', 'Ambulatorio Salus'], ['Accession', '568'], ['Review date', '12/1/2022 7:09'], ['Reviewer', 'Leonella Panzacchi']];
 
@@ -25,7 +26,7 @@ export function ReportPdfViewer({ report }: { report: Report }) {
       <header className="flex shrink-0 items-center justify-between border-b border-slate-100 bg-white px-3 py-2 sm:px-5">
         <div className="flex min-w-0 items-center gap-3"><Button asChild variant="ghost" size="sm"><Link href="/reports"><ArrowLeft className="mr-1.5 h-4 w-4" />Back</Link></Button><div className="min-w-0"><h1 className="truncate text-xl font-bold text-slate-800">{report.patient}</h1><p className="text-xs text-slate-500">Captured: {report.date} 13:59 · Reviewed: 01/03/2023 19:32</p></div></div>
         <div className="hidden items-center gap-5 xl:flex"><Metric label="Patient ID" value={report.patientId.replace('P-', '312356')} /><Metric label="Age" value="46" /><Metric label="Gender" value="Male" /><Metric label="Weight" value="80 kg" /><Metric label="Height" value="180 cm" /><Metric label="Pressure" value="98" /></div>
-        <div className="flex gap-1"><Button size="icon" variant="ghost" aria-label="Print report" onClick={() => window.print()}><Printer /></Button><Button asChild size="icon" variant="ghost" aria-label="Download report"><a href={`/api/reports/${report.id}`} download><Download /></a></Button></div>
+        <div className="flex gap-1"><Button size="icon" variant="ghost" aria-label="Print report" onClick={() => window.print()}><Printer /></Button><Button size="icon" variant="ghost" aria-label="Download report" onClick={() => downloadReport(report)}><Download /></Button></div>
       </header>
       <div className="grid min-h-0 flex-1 grid-cols-1 xl:grid-cols-[minmax(0,1fr)_24rem]">
         <section className="min-h-0 overflow-auto p-5 sm:p-7">
