@@ -165,9 +165,10 @@ export function LoginForm() {
         </Button>
       </form>
 
-      {/* Footer — below `lg` the brand panel is hidden, so this is the only
-          place the Cardioline mark appears.  Rendered as the actual logo. */}
-      <div className="mt-10 flex flex-col items-center gap-2.5">
+      {/* Footer — `lg:hidden` because the brand panel already carries the
+          Cardioline mark from `lg` up, and two of them on one screen read as a
+          mistake. Below `lg` the panel is gone and this is the only one. */}
+      <div className="mt-10 flex flex-col items-center gap-2.5 lg:hidden">
         <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
           Powered by
         </p>
