@@ -39,9 +39,8 @@ export const metadata: Metadata = {
     "cardiac diagnostics",
   ],
   authors: [{ name: "Cardioline" }],
-  icons: {
-    icon: "/icon.svg",
-  },
+  /* No `icons` entry: a literal path would skip basePath. Next derives the
+     link from `app/icon.svg` and prefixes it correctly. */
 };
 
 export const viewport: Viewport = {

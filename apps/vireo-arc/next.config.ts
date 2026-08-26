@@ -13,6 +13,9 @@ const basePath = process.env.BASE_PATH ?? '';
 const nextConfig: NextConfig = {
   output: 'export',
   basePath,
+  /* `next/image` skips basePath when unoptimized, so components prefix
+     public/ paths themselves via lib/asset.ts. */
+  env: { NEXT_PUBLIC_BASE_PATH: basePath },
   /* GitHub Pages resolves `/exams/ECG-2401` to `/exams/ECG-2401/index.html`,
      so every route needs its own directory. */
   trailingSlash: true,

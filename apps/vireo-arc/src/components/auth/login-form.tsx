@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Eye, EyeOff, Loader2, ArrowRight } from 'lucide-react';
 import { Button, Input, Label } from '@cardioline/ui';
 import { useRouter } from 'next/navigation';
+import { asset } from "@/lib/asset";
 
 /* ─── Login Form ─────────────────────────────────────────────── */
 export function LoginForm() {
@@ -36,7 +37,7 @@ export function LoginForm() {
       {/* Brand signature, visible only when the brand panel is hidden. */}
       <div className="mb-10 flex justify-center lg:hidden">
         <Image
-          src="/brand/vireo-ark.svg"
+          src={asset("/brand/vireo-ark.svg")}
           alt="Vireo ARK"
           width={390}
           height={67}
@@ -44,7 +45,7 @@ export function LoginForm() {
           className="h-7 w-auto dark:hidden"
         />
         <Image
-          src="/brand/vireo-ark-white.svg"
+          src={asset("/brand/vireo-ark-white.svg")}
           alt="Vireo ARK"
           width={390}
           height={67}

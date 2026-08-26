@@ -32,6 +32,7 @@ import {
 import { useTheme } from "@/components/theme/theme-provider";
 import { currentUser } from "@/lib/mock-data";
 import { usePrototypeData } from "@/lib/prototype-data";
+import { asset } from "@/lib/asset";
 
 export type { SidebarMode };
 
@@ -92,7 +93,7 @@ export function Sidebar({
            in dark mode — see public/brand/README.md. */
         <>
           <Image
-            src="/brand/vireo-ark.svg"
+            src={asset("/brand/vireo-ark.svg")}
             alt="Vireo ARK"
             width={390}
             height={67}
@@ -100,7 +101,7 @@ export function Sidebar({
             className="h-5 w-auto dark:hidden"
           />
           <Image
-            src="/brand/vireo-ark-white.svg"
+            src={asset("/brand/vireo-ark-white.svg")}
             alt="Vireo ARK"
             width={390}
             height={67}

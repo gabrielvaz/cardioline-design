@@ -7,6 +7,7 @@ import { ArrowLeft, CheckCircle2, Mail } from 'lucide-react';
 import { Button, Input, Label } from '@cardioline/ui';
 import { BrandPanel } from '@/components/auth/brand-panel';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
+import { asset } from "@/lib/asset";
 
 export default function ForgotPasswordPage() {
   const [sent, setSent] = React.useState(false);
@@ -19,7 +20,7 @@ export default function ForgotPasswordPage() {
           {/* Brand signature, visible only when the brand panel is hidden. */}
           <div className="mb-10 flex justify-center lg:hidden">
             <Image
-              src="/brand/vireo-ark.svg"
+              src={asset("/brand/vireo-ark.svg")}
               alt="Vireo ARK"
               width={390}
               height={67}
@@ -27,7 +28,7 @@ export default function ForgotPasswordPage() {
               className="h-7 w-auto dark:hidden"
             />
             <Image
-              src="/brand/vireo-ark-white.svg"
+              src={asset("/brand/vireo-ark-white.svg")}
               alt="Vireo ARK"
               width={390}
               height={67}

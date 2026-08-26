@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { asset } from "@/lib/asset";
 
 /**
  * Brand panel shared by the mock authentication routes (`/login`,
@@ -23,7 +24,7 @@ export function BrandPanel() {
       {/* Product wordmark, same signature used in the sidebar. The panel is
           navy in both themes, so it always takes the white lockup. */}
       <Image
-        src="/brand/vireo-ark-white.svg"
+        src={asset("/brand/vireo-ark-white.svg")}
         alt="Vireo ARK"
         width={390}
         height={67}
