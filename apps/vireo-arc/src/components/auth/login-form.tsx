@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Image from 'next/image';
 import { Eye, EyeOff, Loader2, ArrowRight } from 'lucide-react';
 import { Button, Input, Label } from '@cardioline/ui';
 import { useRouter } from 'next/navigation';
@@ -33,10 +34,23 @@ export function LoginForm() {
   return (
     <div className="w-full max-w-sm">
       {/* Brand signature, visible only when the brand panel is hidden. */}
-      <div className="mb-10 text-center lg:hidden">
-        <p className="font-heading text-2xl font-bold tracking-[0.12em] text-accent">
-          Vireo <span className="text-primary">ARC</span>
-        </p>
+      <div className="mb-10 flex justify-center lg:hidden">
+        <Image
+          src="/brand/vireo-ark.svg"
+          alt="Vireo ARK"
+          width={390}
+          height={67}
+          priority
+          className="h-7 w-auto dark:hidden"
+        />
+        <Image
+          src="/brand/vireo-ark-white.svg"
+          alt="Vireo ARK"
+          width={390}
+          height={67}
+          priority
+          className="hidden h-7 w-auto dark:block"
+        />
       </div>
 
       {/* Heading */}
@@ -45,7 +59,7 @@ export function LoginForm() {
           Sign in
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Access the Vireo Arc diagnostic workspace.
+          Access the Vireo ARK diagnostic workspace.
         </p>
       </div>
 
@@ -150,10 +164,21 @@ export function LoginForm() {
         </Button>
       </form>
 
-      {/* Footer */}
-      <p className="mt-10 text-center text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-        Powered by Cardioline S.p.A.
-      </p>
+      {/* Footer — below `lg` the brand panel is hidden, so this is the only
+          place the Cardioline mark appears.  Rendered as the actual logo. */}
+      <div className="mt-10 flex flex-col items-center gap-2.5">
+        <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+          Powered by
+        </p>
+        <Image
+          src="https://cardioline.com/wp-content/uploads/2022/08/logo.png"
+          alt="Cardioline S.p.A."
+          width={600}
+          height={38}
+          sizes="256px"
+          className="h-4 w-auto"
+        />
+      </div>
     </div>
   );
 }

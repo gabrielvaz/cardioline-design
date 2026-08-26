@@ -14,11 +14,11 @@ All notable prototype UI changes are documented here.
 - Added a client-side prototype store (`lib/prototype-data.tsx`) that seeds from the mock dataset and persists every change to localStorage: patient creation/editing/deletion (with cascade to exams, inbox entries and reports), exam registration and deletion, inbox assignment, and report conclusion/summary edits now survive page refreshes.
 - Added a "New ECG" acquisition dialog on the patient detail page that registers a mock examination for the current patient and opens its ECG workspace, replacing the previous hardcoded link to another patient's exam.
 - Added a "Restore demo data" action (Settings → Profile) that reseeds the prototype store with the original mock dataset.
-- Added distinct SVG favicons for the Vireo Arc application and Beat Design System documentation.
+- Added distinct SVG favicons for the Vireo ARK application and Beat Design System documentation.
 - Added Dashboard Exam Inbox and weekly operational analytics widgets, including mock exam/report volume and median report-time trends.
 - Reused the searchable reporting-professional assignment dialog from Exam Inbox in the main exam list.
 - Added patient editing directly from the ECG workspace, plus a format choice before saving an examination.
-- Added a Beat Design System "Blocks" layer (MultiSelectDropdown, TableToolbarMenu, ConfirmDialog, RowActionsMenu, AppSidebar): generic, slot-driven composites now consumed by Vireo Arc, with the local duplicates removed so Beat is the single source of truth.
+- Added a Beat Design System "Blocks" layer (MultiSelectDropdown, TableToolbarMenu, ConfirmDialog, RowActionsMenu, AppSidebar): generic, slot-driven composites now consumed by Vireo ARK, with the local duplicates removed so Beat is the single source of truth.
 - Added a repository-local Beat Design System skill and Markdown component catalog for agent consumption.
 - Added active component search to the Beat Design System documentation sidebar.
 - Added the Exam Inbox as a clinical worklist with urgency rules, Cards/Table settings, and mock reassignment of examinations to reporting professionals.
@@ -37,18 +37,18 @@ All notable prototype UI changes are documented here.
 ### Changed
 
 - Made the Dashboard "Total exams" and "New patients" metric cards clickable and sourced from live prototype data, with empty states for the inbox and recent-reports widgets.
-- Redesigned the sign-in and password-recovery routes as a split-screen layout with a deep-navy brand panel (Vireo ARC wordmark, animated ECG trace with reduced-motion fallback) and a semantic-token form that now fully supports dark mode.
+- Redesigned the sign-in and password-recovery routes as a split-screen layout with a deep-navy brand panel (Vireo ARK wordmark, animated ECG trace with reduced-motion fallback) and a semantic-token form that now fully supports dark mode.
 - Made the ECG waveform dynamically use the available viewport height when measurements are hidden.
 - Replaced the ECG save-format dropdown with selectable format cards for faster visual comparison.
-- Made the Beat sidebar collapse and expand with a smoother transition while keeping the Vireo ARC wordmark stable.
+- Made the Beat sidebar collapse and expand with a smoother transition while keeping the Vireo ARK wordmark stable.
 - Increased the ECG workspace's vertical density on large displays and refined lead-table hover behavior.
-- Refined the sign-in card with a slow moving brand border, expanded breathing room, Vireo ARC wordmark, and a persistent theme toggle.
-- Standardized Vireo Arc modal and confirmation-dialog transitions with an eased fade for opening and closing.
+- Refined the sign-in card with a slow moving brand border, expanded breathing room, Vireo ARK wordmark, and a persistent theme toggle.
+- Standardized Vireo ARK modal and confirmation-dialog transitions with an eased fade for opening and closing.
 - Updated Beat documentation buttons to demonstrate leading Lucide icons and removed decorative toast side rails.
 - Reorganized clinical list controls so search, ordering, advanced search and filters follow a consistent workflow hierarchy.
 - Improved Exam Inbox featured-card hierarchy and dark-mode surface contrast.
 - Unified the Dashboard, Inbox, Patients, Exams, Reports, Settings and ECG workspace page headers through a shared title and subtitle treatment.
-- Updated sidebar branding to present Vireo ARC in the navigation header and Cardioline alongside the signed-in professional.
+- Updated sidebar branding to present Vireo ARK in the navigation header and Cardioline alongside the signed-in professional.
 - Made Spacious table density allow multi-line values instead of truncating clinical data.
 - Simplified the Exam Inbox card view to a single-column clinical worklist with neutral row actions and no decorative side rail.
 - Refined the exam workspace: hidden navigation on exam views, ECG loading state, interactive lead measurements and clinical sidebar states.
@@ -59,7 +59,7 @@ All notable prototype UI changes are documented here.
 - Reworked the Patients date-of-birth and last-exam filters to show the active value inside the trigger, with the date range picked from a modal instead of inline inputs.
 - Made page navigation scroll the content area back to the top instead of preserving the previous scroll position.
 - Softened the Dashboard chart entrance and hover animations and removed the divider lines between Exam Inbox and Recent Reports list items.
-- Removed gray page backgrounds across the Vireo Arc shell and ECG workspace in favor of white.
+- Removed gray page backgrounds across the Vireo ARK shell and ECG workspace in favor of white.
 - Made the ECG lead measurements table show all rows without wrapping the row labels onto two lines.
 
 ### Fixed

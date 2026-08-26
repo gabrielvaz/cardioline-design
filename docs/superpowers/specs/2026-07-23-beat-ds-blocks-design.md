@@ -6,8 +6,8 @@ Status: proposed (awaiting review)
 ## Context
 
 Beat Design System (`@cardioline/ui`) is meant to be the source of truth for
-Cardioline products, starting with Vireo Arc. In practice, larger composite
-components have been evolving inside Vireo Arc (filter dropdowns, table
+Cardioline products, starting with Vireo ARK. In practice, larger composite
+components have been evolving inside Vireo ARK (filter dropdowns, table
 settings, sidebar shell, confirmation dialogs, row action menus) and the app,
 not the DS, has become the "better" version. This spec reverses that: the DS
 gains a curated second layer of composite components ("Blocks"), the app
@@ -19,7 +19,7 @@ consumes them, and the local duplicates are removed.
 - Port the composite components that are worth reusing across future systems,
   generalized so they carry no Vireo-specific data or routing.
 - Document the Blocks under a new "Blocks" category in the Beat docs.
-- Make Vireo Arc consume the Blocks from `@cardioline/ui` and delete the local
+- Make Vireo ARK consume the Blocks from `@cardioline/ui` and delete the local
   copies, so Beat is the single source of truth.
 - Keep the ShadCN model intact so the DS stays updatable: Blocks only compose
   primitives, primitives only wrap Radix.
@@ -27,7 +27,7 @@ consumes them, and the local duplicates are removed.
 ## Non-goals
 
 - No visual redesign of the components; behavior and look stay equivalent.
-- No new product features in Vireo Arc.
+- No new product features in Vireo ARK.
 - No exhaustive live documentation for every state in this first pass (concise
   preview per Block now; deeper demos later).
 
@@ -149,7 +149,7 @@ Replaces Vireo `Sidebar`. The DS owns the shell and the three-mode interaction;
 the app passes nav config, brand logo and a `renderLink` that wraps items in
 `next/link`, plus active-state via `usePathname`.
 
-## Migration (Vireo Arc consumes Beat)
+## Migration (Vireo ARK consumes Beat)
 
 | Vireo file (removed/thinned) | Becomes |
 | --- | --- |

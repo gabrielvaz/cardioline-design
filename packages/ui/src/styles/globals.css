@@ -67,7 +67,7 @@
     --destructive-foreground: 0 0% 100%;
 
     /* Borders & Inputs */
-    --border:             220 15% 88%;
+    --border:             220 15% 90.4%;   /* Divider hairline — 20% lighter */
     --input:              220 15% 91%;
     --ring:               22 100% 47%;        /* Orange focus ring */
 
@@ -251,8 +251,8 @@
   }
 
   .overflow-x-auto > table thead th {
-    border-bottom: 1px solid #cbd5e1;
-    border-right: 1px solid #edf1f5;
+    border-bottom: 1px solid #d5dde7;
+    border-right: 1px solid #f1f4f7;
     white-space: nowrap;
     color: #1f2937;
     font-weight: 700;
@@ -268,7 +268,7 @@
 
   .overflow-x-auto > table td {
     overflow: hidden;
-    border-right: 1px solid #edf1f5;
+    border-right: 1px solid #f1f4f7;
     text-overflow: ellipsis;
     white-space: nowrap;
   }

@@ -1,1 +1,5 @@
-import { AdminResourcePage } from '@/components/settings/admin-resource-page'; export default function UsersAdminPage(){return <AdminResourcePage resource="Users"/>}
+import { UsersAdminPage } from '@/components/settings/users-admin-page';
+
+export default function UsersAdminPage_() {
+  return <UsersAdminPage />;
+}

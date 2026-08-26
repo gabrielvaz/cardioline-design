@@ -30,6 +30,8 @@ import {
   type SidebarMode,
 } from "@cardioline/ui";
 import { useTheme } from "@/components/theme/theme-provider";
+import { currentUser } from "@/lib/mock-data";
+import { usePrototypeData } from "@/lib/prototype-data";
 
 export type { SidebarMode };
 
@@ -54,15 +56,24 @@ export function Sidebar({
   onCloseDrawer: () => void;
 }) {
   const pathname = usePathname();
+  const { data } = usePrototypeData();
   const canHide = /^\/(exams|reports)\/[^/]+/.test(pathname);
   const expanded =
     mode === "expanded" || (mode === "hidden" && drawerOpen);
+
+  /* Same number the Exam Inbox header reports as "Awaiting report": every exam
+     sitting in the worklist, assigned or not. */
+  const pendingExams = data.inbox.length;
 
   const items: SidebarItem[] = navigation.map((item) => ({
     label: item.name,
     href: item.href,
     icon: item.icon,
     active: pathname === item.href || pathname.startsWith(`${item.href}/`),
+    ...(item.href === "/exam-inbox" && {
+      badge: pendingExams,
+      badgeLabel: "exams awaiting your report",
+    }),
   }));
 
   return (
@@ -76,9 +87,27 @@ export function Sidebar({
         if (!open) onCloseDrawer();
       }}
       logo={
-        <span className="font-heading text-base font-bold tracking-[0.12em] text-accent">
-          Vireo <span className="text-primary">ARC</span>
-        </span>
+        /* Official wordmark, 390x67 intrinsic. Two approved color combinations:
+           the grey lockup on light grounds, the white one on the navy sidebar
+           in dark mode — see public/brand/README.md. */
+        <>
+          <Image
+            src="/brand/vireo-ark.svg"
+            alt="Vireo ARK"
+            width={390}
+            height={67}
+            priority
+            className="h-5 w-auto dark:hidden"
+          />
+          <Image
+            src="/brand/vireo-ark-white.svg"
+            alt="Vireo ARK"
+            width={390}
+            height={67}
+            priority
+            className="hidden h-5 w-auto dark:block"
+          />
+        </>
       }
       collapsedLogo={
         <span className="font-heading text-xl font-extrabold text-accent">
@@ -96,13 +125,17 @@ function SidebarFooter({ expanded }: { expanded: boolean }) {
     <>
       {expanded && (
         <div className="px-4 pb-6">
+          {/* Intrinsic size of the source asset (600x38).  Declaring a
+              different ratio here makes next/image letterbox the artwork and
+              serve a downscaled file, which is what made the mark look
+              blurred. `sizes` keeps a 2x-ready candidate in the srcset. */}
           <Image
             src="https://cardioline.com/wp-content/uploads/2022/08/logo.png"
             alt="Cardioline"
-            width={42}
-            height={8}
-            sizes="42px"
-            className="h-2 w-auto object-contain"
+            width={600}
+            height={38}
+            sizes="128px"
+            className="h-2 w-auto"
           />
         </div>
       )}
@@ -115,7 +148,7 @@ function UserMenu({ expanded }: { expanded: boolean }) {
   const { theme, toggleTheme } = useTheme();
   const avatar = (
     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-semibold text-accent-foreground">
-      SJ
+      {currentUser.initials}
     </div>
   );
   return (
@@ -143,10 +176,10 @@ function UserMenu({ expanded }: { expanded: boolean }) {
             <>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold text-foreground">
-                  Dr. Sarah Jenkins
+                  {currentUser.name}
                 </p>
                 <p className="mt-1 truncate text-xs text-muted-foreground">
-                  Cardiologist
+                  {currentUser.role}
                 </p>
               </div>
               <DropdownMenuTrigger asChild>
@@ -161,7 +194,14 @@ function UserMenu({ expanded }: { expanded: boolean }) {
           )}
         </div>
         <DropdownMenuContent align="end" className="w-56">
-          <DropdownMenuLabel>Dr. Sarah Jenkins</DropdownMenuLabel>
+          <DropdownMenuLabel className="normal-case tracking-normal">
+            <span className="block text-sm font-semibold text-foreground">
+              {currentUser.name}
+            </span>
+            <span className="mt-0.5 block text-xs font-medium text-muted-foreground">
+              {currentUser.role}
+            </span>
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
             <Link href="/settings">

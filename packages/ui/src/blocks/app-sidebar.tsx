@@ -4,7 +4,19 @@ import * as React from 'react';
 import { EyeOff, PanelLeftClose, type LucideIcon } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-export type SidebarItem = { label: string; href: string; icon: LucideIcon; active?: boolean };
+export type SidebarItem = {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  active?: boolean;
+  /** Outstanding-work count rendered as a pill. Omit, or pass 0, to hide it. */
+  badge?: number;
+  /**
+   * What the count means, for screen readers — e.g. `"pending exams"` reads as
+   * "Exam Inbox, 9 pending exams". Without it the number is announced bare.
+   */
+  badgeLabel?: string;
+};
 export type SidebarMode = 'expanded' | 'collapsed' | 'hidden';
 
 type AppSidebarProps = {
@@ -183,6 +195,11 @@ function SidebarPanel({
         aria-label="Main navigation"
       >
         {items.map((item) => {
+          const count = item.badge ?? 0;
+          const showBadge = count > 0;
+          /* Keep the pill a fixed width: a four-digit queue would otherwise
+             push the label out of the row. */
+          const display = count > 99 ? '99+' : String(count);
           const content = (
             <span
               title={expanded ? undefined : item.label}
@@ -194,14 +211,38 @@ function SidebarPanel({
                   : 'text-muted-foreground hover:bg-muted hover:text-foreground',
               )}
             >
-              <item.icon
-                className={cn(
-                  'h-5 w-5 shrink-0',
-                  expanded && 'mr-3',
-                  item.active ? 'text-primary' : 'text-muted-foreground',
+              <span className={cn('relative shrink-0', expanded && 'mr-3')}>
+                <item.icon
+                  className={cn(
+                    'h-5 w-5',
+                    item.active ? 'text-primary' : 'text-muted-foreground',
+                  )}
+                />
+                {/* Collapsed to icons, the row has no space for a pill, so the
+                    count rides the icon instead of disappearing. */}
+                {showBadge && !expanded && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold leading-none tabular-nums text-primary-foreground ring-2 ring-card"
+                  >
+                    {display}
+                  </span>
                 )}
-              />
+              </span>
               {expanded && item.label}
+              {showBadge && expanded && (
+                <span
+                  aria-hidden="true"
+                  className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-bold leading-none tabular-nums text-primary-foreground"
+                >
+                  {display}
+                </span>
+              )}
+              {showBadge && (
+                <span className="sr-only">
+                  {count} {item.badgeLabel ?? ''}
+                </span>
+              )}
             </span>
           );
           return <React.Fragment key={item.href}>{renderLink(item, content)}</React.Fragment>;

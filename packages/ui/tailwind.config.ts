@@ -70,6 +70,21 @@ const config: Config = {
           error:       '#e0284f',
         },
       },
+      /* ─── Divider hairlines ──────────────────────────────────────
+         The clinical screens draw separators with the literal Tailwind
+         grays (`divide-gray-100`, `border-gray-200`, ...).  These shades
+         are the stock values lightened by 20% toward white, so every
+         hairline in the product softens from one place instead of being
+         retuned file by file.  Only border/divide utilities are remapped —
+         `bg-gray-*` and `text-gray-*` keep the stock scale. */
+      borderColor: {
+        gray:  { 100: '#f5f6f8', 200: '#eaecef', 300: '#dadde2' },
+        slate: { 100: '#f4f7fa', 200: '#e8edf3' },
+      },
+      divideColor: {
+        gray:  { 100: '#f5f6f8', 200: '#eaecef', 300: '#dadde2' },
+        slate: { 100: '#f4f7fa', 200: '#e8edf3' },
+      },
       borderRadius: {
         lg:  'var(--radius)',
         md:  'calc(var(--radius) - 2px)',

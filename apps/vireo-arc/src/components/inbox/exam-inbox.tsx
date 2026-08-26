@@ -6,10 +6,9 @@ import {
   AlertTriangle,
   ArrowUpDown,
   Baby,
-  ChevronDown,
-  ChevronUp,
   Clock3,
   Search,
+  SlidersHorizontal,
   Stethoscope,
   UserRound,
   UserRoundPlus,
@@ -20,6 +19,12 @@ import {
   Card,
   CardContent,
   Checkbox,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
   Input,
   Select,
   SelectContent,
@@ -77,7 +82,7 @@ export function ExamInbox() {
   const [view, setView] = React.useState<ViewMode>("cards");
   const [sort, setSort] = React.useState<SortMode>("priority");
   const [query, setQuery] = React.useState("");
-  const [filtersShown, setFiltersShown] = React.useState(true);
+  const [criteriaOpen, setCriteriaOpen] = React.useState(false);
   const [density, setDensity] = useGlobalTableDensity();
   const [visibleColumns, setVisibleColumns] = React.useState(
     inboxTableColumns.map((column) => column.id),
@@ -92,6 +97,10 @@ export function ExamInbox() {
     null,
   );
   const [toast, setToast] = React.useState<string | null>(null);
+  /* Which card carries the expanded treatment.  `null` means "whatever is at
+     the top of the queue", so the emphasis follows re-ranking until the reader
+     picks a case themselves. */
+  const [focusedExam, setFocusedExam] = React.useState<string | null>(null);
 
   const toggleCriterion = (criterion: Criterion) =>
     setActiveCriteria((current) =>
@@ -181,11 +190,18 @@ export function ExamInbox() {
           </Select>
           <Button
             variant="outline"
-            onClick={() => setFiltersShown((shown) => !shown)}
+            onClick={() => setCriteriaOpen(true)}
             className="h-10 border-gray-200"
           >
-            {filtersShown ? <ChevronUp className="mr-2" /> : <ChevronDown className="mr-2" />}
-            {filtersShown ? "Hide filters" : "Show filters"}
+            <SlidersHorizontal className="mr-2" />
+            Priority criteria
+            {/* The ranking is only trustworthy if the reader can see, without
+                opening the dialog, that it is not running on all criteria. */}
+            {activeCriteria.length < criteria.length && (
+              <span className="ml-2 rounded-full bg-amber-100 px-1.5 py-0.5 text-[11px] font-semibold text-amber-700">
+                {activeCriteria.length}/{criteria.length}
+              </span>
+            )}
           </Button>
         </div>
         <div className="flex flex-wrap items-center justify-end gap-2 self-end sm:self-auto">
@@ -199,38 +215,6 @@ export function ExamInbox() {
           />
         </div>
       </section>
-
-      {filtersShown && (
-        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-          <p className="text-sm font-semibold text-gray-900">
-            Clinical priority criteria
-          </p>
-          <p className="mt-1 text-xs text-gray-500">
-            These rules compose the default urgency score for your inbox.
-          </p>
-          <div className="mt-3 grid gap-2 sm:grid-cols-2">
-            {criteria.map((criterion) => (
-              <label
-                key={criterion.id}
-                className="flex cursor-pointer items-start gap-3 rounded-md border border-gray-100 px-3 py-3 transition-colors hover:bg-muted"
-              >
-                <Checkbox
-                  checked={activeCriteria.includes(criterion.id)}
-                  onCheckedChange={() => toggleCriterion(criterion.id)}
-                />
-                <span>
-                  <span className="block text-sm font-medium text-foreground">
-                    {criterion.label}
-                  </span>
-                  <span className="mt-0.5 block text-xs text-muted-foreground">
-                    {criterion.description}
-                  </span>
-                </span>
-              </label>
-            ))}
-          </div>
-        </div>
-      )}
 
       <div className="flex items-center justify-between px-1">
         <p className="text-sm text-gray-500">
@@ -246,6 +230,8 @@ export function ExamInbox() {
           exams={exams}
           score={priorityScore}
           onAssign={setAssignmentExam}
+          focusedExam={focusedExam}
+          onFocusExam={setFocusedExam}
         />
       ) : (
         <InboxTable
@@ -256,6 +242,13 @@ export function ExamInbox() {
           onAssign={setAssignmentExam}
         />
       )}
+      <PriorityCriteriaDialog
+        open={criteriaOpen}
+        onOpenChange={setCriteriaOpen}
+        activeCriteria={activeCriteria}
+        onToggle={toggleCriterion}
+        onReset={() => setActiveCriteria(criteria.map((item) => item.id))}
+      />
       <AssignmentDialog
         exam={assignmentExam}
         onOpenChange={(open) => !open && setAssignmentExam(null)}
@@ -267,6 +260,79 @@ export function ExamInbox() {
       />
       <PrototypeToast message={toast} onClose={() => setToast(null)} />
     </div>
+  );
+}
+
+/**
+ * Sort-order settings for the inbox.  The criteria used to sit permanently
+ * expanded above the worklist; they are configuration, not clinical content,
+ * so they live behind a dialog and give the worklist back its vertical space.
+ */
+function PriorityCriteriaDialog({
+  open,
+  onOpenChange,
+  activeCriteria,
+  onToggle,
+  onReset,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  activeCriteria: Criterion[];
+  onToggle: (criterion: Criterion) => void;
+  onReset: () => void;
+}) {
+  const allActive = activeCriteria.length === criteria.length;
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent aria-labelledby="priority-criteria-title">
+        <DialogHeader>
+          <DialogTitle id="priority-criteria-title">
+            Ranking criteria
+          </DialogTitle>
+          <DialogDescription>
+            These rules compose the urgency score that orders your inbox.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="grid gap-2">
+          {criteria.map((criterion) => (
+            <label
+              key={criterion.id}
+              className="flex cursor-pointer items-start gap-3 rounded-md border border-gray-100 px-3 py-3 transition-colors hover:bg-muted"
+            >
+              <Checkbox
+                checked={activeCriteria.includes(criterion.id)}
+                onCheckedChange={() => onToggle(criterion.id)}
+              />
+              <span>
+                <span className="block text-sm font-medium text-foreground">
+                  {criterion.label}
+                </span>
+                <span className="mt-0.5 block text-xs text-muted-foreground">
+                  {criterion.description}
+                </span>
+              </span>
+            </label>
+          ))}
+        </div>
+
+        {/* Turning a criterion off silently demotes those cases in the queue,
+            so the consequence is stated where the choice is made. */}
+        {!allActive && (
+          <p className="rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-800">
+            Disabled criteria no longer raise a case in the queue. Exams that
+            depend on them will rank lower than they otherwise would.
+          </p>
+        )}
+
+        <DialogFooter>
+          <Button variant="ghost" onClick={onReset} disabled={allActive}>
+            Reset to all criteria
+          </Button>
+          <Button onClick={() => onOpenChange(false)}>Done</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -298,12 +364,19 @@ function CardGrid({
   exams,
   score,
   onAssign,
+  focusedExam,
+  onFocusExam,
 }: {
   exams: InboxExam[];
   score: (exam: InboxExam) => number;
   onAssign: (exam: InboxExam) => void;
+  focusedExam: string | null;
+  onFocusExam: (id: string) => void;
 }) {
   if (!exams.length) return <EmptyState />;
+  /* Until the reader picks a case, the expanded treatment stays on whatever
+     the ranking put first. */
+  const featuredId = focusedExam ?? exams[0].id;
   return (
     <div className="grid gap-4">
       {exams.map((exam, index) => (
@@ -313,6 +386,8 @@ function CardGrid({
           score={score(exam)}
           index={index}
           onAssign={onAssign}
+          featured={exam.id === featuredId}
+          onFocus={() => onFocusExam(exam.id)}
         />
       ))}
     </div>
@@ -324,18 +399,32 @@ function InboxCard({
   score,
   index,
   onAssign,
+  featured,
+  onFocus,
 }: {
   exam: InboxExam;
   score: number;
   index: number;
   onAssign: (exam: InboxExam) => void;
+  featured: boolean;
+  onFocus: () => void;
 }) {
   const reasons = priorityReasons(exam);
-  const featured = index === 0;
   return (
     <Card
+      role="button"
+      tabIndex={0}
+      aria-pressed={featured}
+      onClick={onFocus}
+      onKeyDown={(event) => {
+        if (event.target !== event.currentTarget) return;
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onFocus();
+        }
+      }}
       className={cn(
-        "group relative overflow-hidden border-gray-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-orange-200",
+        "group relative cursor-pointer overflow-hidden border-gray-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-orange-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         featured
           ? "bg-white shadow-xl shadow-slate-950/10 hover:shadow-xl dark:bg-card dark:shadow-black/30"
           : "bg-slate-50/80 shadow-sm hover:shadow-md dark:bg-muted",
@@ -419,9 +508,16 @@ function InboxCard({
               </span>
             )}
           </span>
-          <div className="flex items-center gap-2">
+          {/* The card as a whole selects itself; these actions must not also
+              trip that, or "Assign" would silently move the emphasis too. */}
+          <div
+            className="flex items-center gap-2"
+            onClick={(event) => event.stopPropagation()}
+          >
+            {/* Both actions carry the same size so the pair reads as one
+                control group — only the variant marks the primary action. */}
             <Button
-              size="sm"
+              size={featured ? "default" : "sm"}
               variant="outline"
               onClick={() => onAssign(exam)}
             >
@@ -464,7 +560,7 @@ function InboxTable({
         ? "whitespace-normal break-words py-6"
         : "whitespace-nowrap py-4";
   return (
-    <Card className="border-gray-200 bg-white shadow-sm">
+    <Card className="overflow-hidden border-gray-200 bg-white shadow-sm">
       <CardContent className="p-0">
         <div className="overflow-x-auto">
           <table className="min-w-[900px] w-full text-left text-sm">
@@ -550,11 +646,6 @@ function PriorityPill({ score }: { score: number }) {
   const elevated = score >= 40;
   return (
     <Badge variant={urgent ? "destructive" : elevated ? "warning" : "neutral"}>
-      {urgent ? (
-        <AlertTriangle className="h-3.5 w-3.5" />
-      ) : (
-        <ArrowUpDown className="h-3.5 w-3.5" />
-      )}
       {urgent ? "Urgent" : elevated ? "Elevated" : "Routine"}
     </Badge>
   );

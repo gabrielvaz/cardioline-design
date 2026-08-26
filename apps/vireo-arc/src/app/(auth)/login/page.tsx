@@ -5,7 +5,7 @@ import { ThemeToggle } from '@/components/theme/theme-toggle';
 
 export const metadata: Metadata = {
   title: 'Sign In',
-  description: 'Sign in to Vireo Arc — Cardioline cardiac diagnostic platform.',
+  description: 'Sign in to Vireo ARK — Cardioline cardiac diagnostic platform.',
 };
 
 export default function LoginPage() {

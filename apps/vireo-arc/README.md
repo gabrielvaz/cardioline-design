@@ -1,4 +1,4 @@
-# Vireo Arc
+# Vireo ARK
 
 > Aplicativo de ECG e Eletrocardiograma da Cardioline
 

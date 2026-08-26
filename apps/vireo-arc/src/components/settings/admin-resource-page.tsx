@@ -19,11 +19,12 @@ import {
 } from '@cardioline/ui';
 import { PrototypeToast } from '@/components/ui/prototype-toast';
 
+/* Users and Roles are not here: both outgrew a name-plus-note record and have
+   their own pages (`users-admin-page`, `roles-admin-page`). This generic list
+   covers the resources that really are just a label and a detail. */
 const seedData = {
-  Users: ['Carlos Almeida', 'Andrea Bigazzi', 'Gabriel Kruschewsky Mattos Vaz'],
   Sites: ['Cardioline São Paulo', 'Cardioline Milano', 'Cardioline London'],
   Groups: ['Cardiology', 'Nursing', 'Technical support'],
-  Roles: ['Administrator', 'Cardiologist', 'Technician'],
   Devices: ['ECG100L · Room 302', 'Walk400h · Ward B', 'ECG200+ · ER'],
 } as const;
 
@@ -31,10 +32,8 @@ type Resource = keyof typeof seedData;
 type FormMode = 'create' | 'edit';
 
 const fieldLabels: Record<Resource, [string, string]> = {
-  Users: ['Full name', 'Role'],
   Sites: ['Site name', 'City'],
   Groups: ['Group name', 'Description'],
-  Roles: ['Role name', 'Description'],
   Devices: ['Device name', 'Location'],
 };
 
@@ -73,7 +72,7 @@ export function AdminResourcePage({ resource }: { resource: Resource }) {
   };
 
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <div className="flex items-center justify-between gap-4 border-b border-border p-4">
         <div className="relative max-w-sm flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

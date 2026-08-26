@@ -1,6 +1,6 @@
 # Cardioline Design Monorepo
 
-Welcome to the official Cardioline monorepo hosting the **Beat Design System** (`@cardioline/ui`) and **Vireo Arc**, a modern front-end web prototype for ECG / Electrocardiogram workflow management.
+Welcome to the official Cardioline monorepo hosting the **Beat Design System** (`@cardioline/ui`) and **Vireo ARK**, a modern front-end web prototype for ECG / Electrocardiogram workflow management.
 
 ---
 
@@ -60,9 +60,9 @@ The **Beat Design System** provides accessible, consistent, and accessible UI co
 
 ---
 
-## 🖥 Vireo Arc Application (`apps/vireo-arc`)
+## 🖥 Vireo ARK Application (`apps/vireo-arc`)
 
-**Vireo Arc** is a front-end ECG prototype simulating a full cardiology clinical workflow. All data (patients, exams, reports, users) is driven by mock datasets in `src/lib/mock-data.ts`.
+**Vireo ARK** is a front-end ECG prototype simulating a full cardiology clinical workflow. All data (patients, exams, reports, users) is driven by mock datasets in `src/lib/mock-data.ts`.
 
 ### 📄 Pages & Routes
 
@@ -121,7 +121,7 @@ To start all apps and packages in development mode simultaneously via Turborepo:
 npm run dev
 ```
 
-To run **Vireo Arc** specifically on port `3001`:
+To run **Vireo ARK** specifically on port `3001`:
 
 ```bash
 cd apps/vireo-arc
@@ -136,7 +136,7 @@ Open [http://localhost:3001](http://localhost:3001) in your browser.
 # Build all apps and packages
 npm run build
 
-# Start production server for Vireo Arc (Port 3001)
+# Start production server for Vireo ARK (Port 3001)
 cd apps/vireo-arc
 npm run start
 ```

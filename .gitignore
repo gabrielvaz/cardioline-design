@@ -9,3 +9,6 @@ build
 
 # superpowers execution notes (plans are internal, not versioned; specs may be)
 docs/superpowers/plans/
+
+# local dev server log
+.vireo-dev.log
