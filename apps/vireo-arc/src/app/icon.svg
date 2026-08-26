@@ -1,5 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vireo ARK">
+  <!-- O V do wordmark oficial VIREO ARK (primeiro glifo laranja de
+       public/brand/vireo-ark.svg), recortado e centralizado pela sua bounding
+       box.  Navy #071046 + laranja VIREO #E95B0C — a combinação aprovada para
+       fundo escuro na página 42 do brand guideline.  Sem contorno, sem
+       gradiente e sem alterar a forma da letra, que o guideline proíbe. -->
   <rect width="64" height="64" rx="16" fill="#071046"/>
-  <path d="M14 17h9l9 28 9-28h9L35.5 52h-7L14 17Z" fill="#ee5b00"/>
-  <path d="M17 34h10l5-9 5 9h10" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5"/>
+  <path d="M 276.972656 274.898438 L 257.1875 320.597656 L 246.742188 320.597656 L 227.027344 274.898438 L 238.453125 274.898438 L 252.359375 307.542969 L 266.460938 274.898438 Z M 276.972656 274.898438 " fill="#E95B0C" transform="translate(-159.5200 -194.2900) scale(0.760000)"/>
 </svg>

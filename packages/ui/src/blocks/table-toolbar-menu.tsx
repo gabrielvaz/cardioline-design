@@ -112,7 +112,9 @@ export function TableToolbarMenu({
           <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Visible columns
           </p>
-          <div className="grid gap-2 sm:grid-cols-2">
+          {/* One column: the labels are scannable as a vertical checklist and
+              no longer truncate inside a half-width cell. */}
+          <div className="grid gap-2">
             {columns.map((column) => (
               <label
                 key={column.id}

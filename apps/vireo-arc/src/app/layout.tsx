@@ -27,8 +27,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Vireo Arc — Cardioline",
-    template: "%s | Vireo Arc",
+    default: "Vireo ARK — Cardioline",
+    template: "%s | Vireo ARK",
   },
   description:
     "Advanced electrocardiogram and cardiac diagnostic platform. Powered by Cardioline.",

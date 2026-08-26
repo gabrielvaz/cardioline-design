@@ -1,6 +1,6 @@
-# Vireo Arc — Application Guide
+# Vireo ARK — Application Guide
 
-Vireo Arc is a single-tenant, front-end-only prototype for managing cardiac patients, examinations and reports. It uses mock data and deliberately does not implement authentication, persistence or patient-data integrations.
+Vireo ARK is a single-tenant, front-end-only prototype for managing cardiac patients, examinations and reports. It uses mock data and deliberately does not implement authentication, persistence or patient-data integrations.
 
 ## Route groups
 

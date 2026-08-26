@@ -264,7 +264,7 @@ Do not build fixed-position overlays in feature code.
 `AlertDialogHeader`, `AlertDialogTitle`, `AlertDialogDescription`,
 `AlertDialogFooter`, `AlertDialogAction`, `AlertDialogCancel`
 
-Use only when an action is consequential or irreversible. In Vireo Arc, prefer
+Use only when an action is consequential or irreversible. In Vireo ARK, prefer
 the local `ConfirmDialog` wrapper so destructive copy, labels, and callbacks
 stay consistent.
 
@@ -377,7 +377,7 @@ combines `clsx` and Tailwind conflict resolution.
 className={cn('rounded-md border-border', isActive && 'bg-primary text-primary-foreground')}
 ```
 
-## Vireo Arc conventions built on Beat
+## Vireo ARK conventions built on Beat
 
 These patterns are application-level conventions, not currently exported Beat
 blocks:
@@ -391,7 +391,7 @@ blocks:
 | `PageHeader` | Shared title/subtitle hierarchy across clinical workspace pages. |
 
 When one of these patterns becomes generic and demonstrably reusable beyond
-Vireo Arc, promote it to `packages/ui/src/blocks`, export it, and add it to this
+Vireo ARK, promote it to `packages/ui/src/blocks`, export it, and add it to this
 document.
 
 ## Change checklist

@@ -1,13 +1,13 @@
 ---
 name: beat-design-system
-description: Implement, review, document, or refactor Cardioline interfaces using the Beat Design System in this repository. Use when working in packages/ui, consuming @cardioline/ui in Vireo Arc, choosing a component or block, changing tokens or dark mode, or enforcing Beat accessibility and table conventions.
+description: Implement, review, document, or refactor Cardioline interfaces using the Beat Design System in this repository. Use when working in packages/ui, consuming @cardioline/ui in Vireo ARK, choosing a component or block, changing tokens or dark mode, or enforcing Beat accessibility and table conventions.
 ---
 
 # Beat Design System
 
 Use Beat as the shared UI foundation. Prefer an exported primitive before
 building app-local UI; add a primitive or block only when it is generic,
-reused, and not tied to Vireo Arc data or routing.
+reused, and not tied to Vireo ARK data or routing.
 
 ## Read first
 

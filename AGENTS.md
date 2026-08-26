@@ -1,12 +1,12 @@
 # Cardioline Design — Agent Guide
 
-This repository is the Cardioline frontend monorepo. It contains the **Beat Design System** and **Vireo Arc**, a front-end-only ECG workflow prototype. Treat every screen, route and interaction as mock UI unless a task explicitly asks for backend integration.
+This repository is the Cardioline frontend monorepo. It contains the **Beat Design System** and **Vireo ARK**, a front-end-only ECG workflow prototype. Treat every screen, route and interaction as mock UI unless a task explicitly asks for backend integration.
 
 ## Repository map
 
 | Area | Purpose |
 | --- | --- |
-| `apps/vireo-arc` | Next.js 15 application for the Vireo Arc ECG prototype. |
+| `apps/vireo-arc` | Next.js 15 application for the Vireo ARK ECG prototype. |
 | `packages/ui` | `@cardioline/ui`, the shared Beat Design System primitives and tokens. |
 | `docs` | Static Beat documentation published with GitHub Pages. |
 | `CHANGELOG.md` | User-facing summary of completed prototype work. Update it for notable changes. |
@@ -50,6 +50,6 @@ After `npm run build`, restart the preview server before visual verification. `n
 
 ## Focused guides
 
-- [Vireo Arc application guide](apps/vireo-arc/AGENTS.md)
+- [Vireo ARK application guide](apps/vireo-arc/AGENTS.md)
 - [Beat Design System guide](packages/ui/AGENTS.md)
 - [Beat Design System skill](.agents/skills/beat-design-system/SKILL.md)

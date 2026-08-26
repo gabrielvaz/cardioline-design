@@ -3,15 +3,8 @@
 import * as React from "react";
 import Link from "next/link";
 import type { ComponentType } from "react";
-import {
-  Activity,
-  AlertTriangle,
-  FileText,
-  Inbox,
-  MonitorCog,
-  Users,
-} from "lucide-react";
-import { Badge, Card, CardContent, CardHeader, CardTitle, cn } from "@cardioline/ui";
+import { Activity, AlertTriangle, Inbox, Users } from "lucide-react";
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, cn } from "@cardioline/ui";
 import { dashboardWeeklyPerformance } from "@/lib/mock-data";
 import { usePrototypeData, type InboxExam, type Report } from "@/lib/prototype-data";
 
@@ -46,7 +39,7 @@ function MetricCard({ title, value, detail, icon: Icon, href, tone = "default" }
         <CardTitle className={tone === "critical" ? "text-sm font-medium text-destructive" : "text-sm font-medium text-muted-foreground"}>
           {title}
         </CardTitle>
-        <Icon className={tone === "critical" ? "h-4 w-4 text-destructive" : "h-4 w-4 text-primary"} />
+        <Icon className={tone === "critical" ? "h-6 w-6 text-destructive" : "h-6 w-6 text-primary"} />
       </CardHeader>
       <CardContent>
         <div className={tone === "critical" ? "text-2xl font-bold text-destructive" : "text-2xl font-bold text-foreground"}>{value}</div>
@@ -64,38 +57,52 @@ function MetricCard({ title, value, detail, icon: Icon, href, tone = "default" }
   );
 }
 
+/*
+ * The row itself stays navigable, but the way in is also spelled out as an
+ * explicit secondary action — a whole-row link gives no visible affordance for
+ * "open this".  A button cannot be nested inside the row link, so the row is a
+ * plain container holding two separate links.
+ */
 function QueueItem({ exam }: { exam: InboxExam }) {
   const priority = exam.emergency ? "Emergency" : exam.pediatric ? "Pediatric" : "Waiting";
   return (
-    <Link
-      href={`/exams/${exam.id}`}
-      className="-mx-2 flex items-center justify-between gap-3 rounded-md px-2 py-3 transition-colors hover:bg-muted/60 focus-visible:bg-muted focus-visible:outline-none"
-    >
-      <div className="min-w-0">
+    <div className="-mx-2 flex items-center justify-between gap-3 rounded-md px-2 py-3 transition-colors hover:bg-muted/60">
+      <Link
+        href={`/exams/${exam.id}`}
+        className="min-w-0 flex-1 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
         <p className="truncate text-sm font-medium text-foreground">{exam.patient}</p>
         <p className="mt-0.5 truncate text-xs text-muted-foreground">{exam.type} · {exam.unit}</p>
-      </div>
+      </Link>
       <div className="flex shrink-0 items-center gap-2">
         <Badge variant={exam.emergency ? "destructive" : exam.pediatric ? "warning" : "secondary"}>{priority}</Badge>
         <span className="hidden text-xs text-muted-foreground sm:inline">{exam.received}</span>
+        <Button asChild size="sm" variant="outline">
+          <Link href={`/exams/${exam.id}`} aria-label={`Open exam for ${exam.patient}`}>Open</Link>
+        </Button>
       </div>
-    </Link>
+    </div>
   );
 }
 
 function RecentReportItem({ report }: { report: Report }) {
   const pending = report.status === "Pending Review" || report.status === "Draft";
   return (
-    <Link
-      href={`/reports/${report.id}`}
-      className="-mx-2 flex items-center justify-between gap-3 rounded-md px-2 py-3 transition-colors hover:bg-muted/60 focus-visible:bg-muted focus-visible:outline-none"
-    >
-      <div className="min-w-0">
+    <div className="-mx-2 flex items-center justify-between gap-3 rounded-md px-2 py-3 transition-colors hover:bg-muted/60">
+      <Link
+        href={`/reports/${report.id}`}
+        className="min-w-0 flex-1 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
         <p className="truncate text-sm font-medium text-foreground">{report.patient}</p>
         <p className="mt-0.5 truncate text-xs text-muted-foreground">{report.type} · {report.date}</p>
+      </Link>
+      <div className="flex shrink-0 items-center gap-2">
+        <Badge variant={pending ? "warning" : "success"}>{report.status}</Badge>
+        <Button asChild size="sm" variant="outline">
+          <Link href={`/reports/${report.id}`} aria-label={`Open report for ${report.patient}`}>Open</Link>
+        </Button>
       </div>
-      <Badge variant={pending ? "warning" : "success"} className="shrink-0">{report.status}</Badge>
-    </Link>
+    </div>
   );
 }
 
@@ -108,7 +115,7 @@ function DeviceStatus() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg"><MonitorCog className="h-5 w-5 text-primary" />Device status</CardTitle>
+        <CardTitle className="text-lg">Device status</CardTitle>
       </CardHeader>
       <CardContent className="space-y-5">
         {devices.map((device) => (
@@ -317,7 +324,7 @@ export function DashboardOverview() {
       <div className="grid gap-6 lg:grid-cols-7">
         <Card className="lg:col-span-4">
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="flex items-center gap-2 text-lg"><Inbox className="h-5 w-5 text-primary" />Exam inbox</CardTitle>
+            <CardTitle className="text-lg">Exam inbox</CardTitle>
             <Link href="/exam-inbox" className="text-sm font-medium text-primary hover:underline">View inbox</Link>
           </CardHeader>
           <CardContent className="space-y-1">
@@ -331,7 +338,7 @@ export function DashboardOverview() {
         <div className="space-y-6 lg:col-span-3">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0">
-              <CardTitle className="flex items-center gap-2 text-lg"><FileText className="h-5 w-5 text-primary" />Recent reports</CardTitle>
+              <CardTitle className="text-lg">Recent reports</CardTitle>
               <Link href="/reports" className="text-sm font-medium text-primary hover:underline">View reports</Link>
             </CardHeader>
             <CardContent className="space-y-1">

@@ -1,3 +1,19 @@
+/**
+ * The signed-in professional for this prototype.  `role` is the system
+ * permission role assigned in Settings → Admin → Roles — it is granted by an
+ * administrator, so every surface renders it read-only.  `title` is the
+ * free-text professional title the user edits on their own profile.
+ */
+export const currentUser = {
+  name: "Dr. Sarah Jenkins",
+  initials: "SJ",
+  firstName: "Sarah",
+  lastName: "Jenkins",
+  email: "s.jenkins@hospital.com",
+  title: "Senior Cardiologist",
+  role: "Cardiologist",
+} as const;
+
 const patientSeeds = [
   ["John Doe", "15 May 1965", "10 mins ago", "Active"],
   ["Jane Smith", "22 Aug 1982", "25 mins ago", "Active"],

@@ -1,6 +1,6 @@
 # Auditoria de UX: densidade clínica no Beat Design System
 
-Documento vivo. Registra rodadas de auditoria que comparam boas práticas de pesquisa em UX para software clínico de alta densidade informacional (dashboards, monitoramento, EHR, ECG, normas de usabilidade para dispositivo médico) com o que está implementado no Beat Design System e no Vireo ARC. Cada rodada é uma entrada datada, adicionada ao topo. Achados priorizados em P0 (gravíssimo) a P3 (baixo), por risco à segurança clínica e à integridade diagnóstica, não apenas por estética.
+Documento vivo. Registra rodadas de auditoria que comparam boas práticas de pesquisa em UX para software clínico de alta densidade informacional (dashboards, monitoramento, EHR, ECG, normas de usabilidade para dispositivo médico) com o que está implementado no Beat Design System e no Vireo ARK. Cada rodada é uma entrada datada, adicionada ao topo. Achados priorizados em P0 (gravíssimo) a P3 (baixo), por risco à segurança clínica e à integridade diagnóstica, não apenas por estética.
 
 ---
 

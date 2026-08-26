@@ -219,7 +219,7 @@ function PatientsPageContent() {
         </div>
       )}
 
-      <Card className="border-gray-200 bg-white shadow-sm">
+      <Card className="overflow-hidden border-gray-200 bg-white shadow-sm">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="min-w-[760px] w-full text-left text-sm">

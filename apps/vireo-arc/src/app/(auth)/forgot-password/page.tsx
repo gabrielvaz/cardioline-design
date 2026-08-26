@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle2, Mail } from 'lucide-react';
 import { Button, Input, Label } from '@cardioline/ui';
@@ -16,10 +17,23 @@ export default function ForgotPasswordPage() {
       <div className="flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-sm">
           {/* Brand signature, visible only when the brand panel is hidden. */}
-          <div className="mb-10 text-center lg:hidden">
-            <p className="font-heading text-2xl font-bold tracking-[0.12em] text-accent">
-              Vireo <span className="text-primary">ARC</span>
-            </p>
+          <div className="mb-10 flex justify-center lg:hidden">
+            <Image
+              src="/brand/vireo-ark.svg"
+              alt="Vireo ARK"
+              width={390}
+              height={67}
+              priority
+              className="h-7 w-auto dark:hidden"
+            />
+            <Image
+              src="/brand/vireo-ark-white.svg"
+              alt="Vireo ARK"
+              width={390}
+              height={67}
+              priority
+              className="hidden h-7 w-auto dark:block"
+            />
           </div>
 
           {sent ? (

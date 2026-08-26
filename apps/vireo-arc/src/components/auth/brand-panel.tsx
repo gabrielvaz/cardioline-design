@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 /**
  * Brand panel shared by the mock authentication routes (`/login`,
  * `/forgot-password`). It is a fixed deep-navy signature surface in both
@@ -18,10 +20,18 @@ export function BrandPanel() {
         }}
       />
 
-      {/* Product wordmark, same signature used in the sidebar. */}
-      <p className="relative font-heading text-lg font-bold tracking-[0.12em] text-white">
-        Vireo <span className="text-primary">ARC</span>
-      </p>
+      {/* Product wordmark, same signature used in the sidebar. The panel is
+          navy in both themes, so it always takes the white lockup. */}
+      <Image
+        src="/brand/vireo-ark-white.svg"
+        alt="Vireo ARK"
+        width={390}
+        height={67}
+        priority
+        /* `self-start`: the aside is a flex column, whose default cross-axis
+           stretch would otherwise take the mark off the left margin. */
+        className="relative h-6 w-auto self-start"
+      />
 
       {/* ECG trace + product statement. */}
       <div className="relative space-y-10">
@@ -60,11 +70,25 @@ export function BrandPanel() {
         </div>
       </div>
 
-      {/* Brand footer. */}
-      <div className="relative">
+      {/* Brand footer — the Cardioline mark carries the endorsement here, so it
+          is rendered as artwork rather than as a line of fine print.  Intrinsic
+          size is the source asset's own 600x38. */}
+      {/* `items-start` matters: a flex column stretches its children across the
+          cross axis, which would override the image's `w-auto` and blow the
+          wordmark up to the full panel width. */}
+      <div className="relative flex flex-col items-start gap-3">
         <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/40">
-          Powered by Cardioline S.p.A.
+          Powered by
         </p>
+        <Image
+          src="https://cardioline.com/wp-content/uploads/2022/08/logo.png"
+          alt="Cardioline S.p.A."
+          width={600}
+          height={38}
+          sizes="384px"
+          priority
+          className="h-5 w-auto"
+        />
       </div>
 
       <style>{`
