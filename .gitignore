@@ -12,3 +12,7 @@ docs/superpowers/plans/
 
 # local dev server log
 .vireo-dev.log
+
+# static export output
+out
+site
