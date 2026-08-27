@@ -115,8 +115,13 @@ export function WorkspaceCustomizer({
                   >
                     {moduleLabel(role, module.id)}
                   </span>
+                  {/* Always the module's own description. Swapping it for
+                      "Your initial page" made the card text shuffle every time
+                      the start page changed, which read as the list reordering
+                      itself. The disabled switch already says it cannot be
+                      turned off. */}
                   <span className="block truncate text-xs text-muted-foreground">
-                    {isHome ? "Your initial page" : module.description}
+                    {module.description}
                   </span>
                 </span>
                 <Switch
