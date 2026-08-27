@@ -10,7 +10,7 @@ import type { Report } from "@/lib/prototype-data";
  */
 export function downloadReport(report: Pick<Report, "id" | "type" | "patient" | "date" | "status">) {
   const body = [
-    "VIREO ARK — MOCK REPORT",
+    "VIREO ARK MOCK REPORT",
     "",
     report.type,
     `Patient: ${report.patient}`,

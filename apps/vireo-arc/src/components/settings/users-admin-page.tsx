@@ -315,7 +315,7 @@ function UserFormModal({
                     <Fact label="Initial page" value={moduleById(role.landing).label} />
                     <Fact
                       label="Sees"
-                      value={dataScopes.find((s) => s.id === role.scope)?.label ?? "—"}
+                      value={dataScopes.find((s) => s.id === role.scope)?.label ?? "-"}
                     />
                     <Fact
                       label="Grants"

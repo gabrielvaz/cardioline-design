@@ -204,7 +204,7 @@ export function OperationsHome() {
               <p className="mt-1 text-sm text-muted-foreground">
                 This profile does not open individual patient clinical data. Whether
                 an operational manager should is an unresolved compliance question,
-                so it stays a deliberate grant — an administrator can enable{" "}
+                so it stays a deliberate grant. An administrator can enable{" "}
                 <span className="font-medium text-foreground">Identified clinical content</span>{" "}
                 on this role.
               </p>

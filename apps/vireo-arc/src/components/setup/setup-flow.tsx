@@ -149,11 +149,11 @@ export function SetupFlow() {
             <ArrowLeft />
             Back
           </Button>
-          <p
-            className="text-center text-xs text-muted-foreground sm:text-left"
-            aria-live="polite"
-          >
-            Step {index + 1} of {steps.length} · {steps[index].label}
+          {/* The progress bar above already shows position visually, so the
+              counter is `sr-only`: removing it outright would leave a screen
+              reader with no announcement that the step changed. */}
+          <p className="sr-only" aria-live="polite">
+            Step {index + 1} of {steps.length}, {steps[index].label}
           </p>
           {step === "summary" ? (
             <Button type="button" onClick={finish} className="w-full sm:w-auto">
@@ -203,7 +203,7 @@ function Header({ index }: { index: number }) {
             <li key={item.id} className="flex-1">
               <span className="sr-only">
                 {item.label}
-                {current ? " — current step" : done ? " — completed" : ""}
+                {current ? ", current step" : done ? ", completed" : ""}
               </span>
               <span
                 aria-hidden="true"

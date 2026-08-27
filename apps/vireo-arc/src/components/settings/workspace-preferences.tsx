@@ -85,7 +85,7 @@ export function WorkspaceRoleCard() {
 
         <p className="rounded-md border border-border bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
           Your role decides what you can reach, so only an administrator can
-          change it — in Settings → Administration → Roles. Everything below
+          change it, in Settings → Administration → Roles. Everything below
           narrows that workspace; none of it widens it.
         </p>
 

@@ -238,7 +238,7 @@ export const capabilities: {
     /* Off by default for management profiles: whether an operational manager
        may open an individual patient's clinical data is an unsettled
        compliance/LGPD question, so it is a deliberate switch, never implied. */
-    description: "Open individual patient clinical data, not just aggregates — unresolved compliance question, off by default",
+    description: "Open individual patient clinical data, not just aggregates. Unresolved compliance question, off by default",
     sensitive: true,
   },
 
@@ -362,7 +362,7 @@ export const seedRoles: Role[] = [
     id: "point-of-care-operator",
     name: "Point of Care Operator",
     description:
-      "Captures exams away from the hospital — ambulance, home care, mobile unit — where connectivity comes and goes.",
+      "Captures exams away from the hospital (ambulance, home care, mobile unit), where connectivity comes and goes.",
     vertical: "Point of Care",
     landing: "capture",
     scope: "own",
@@ -398,7 +398,7 @@ export const seedRoles: Role[] = [
     id: "cardiologist",
     name: "Reviewing Physician",
     description:
-      "Interprets exams and produces the report. The core reading profile — clinical modules, AI support and the signature.",
+      "Interprets exams and produces the report. The core reading profile: clinical modules, AI support and the signature.",
     vertical: "Hospital · Overreading · Private practice",
     landing: "examInbox",
     scope: "site",
@@ -611,7 +611,7 @@ export const seedRoles: Role[] = [
     id: "referring-physician",
     name: "Referring Physician",
     description:
-      "Requesting clinician outside cardiology — including emergency medicine. Follows their own patients' results read-only.",
+      "Requesting clinician outside cardiology, including emergency medicine. Follows their own patients' results read-only.",
     vertical: "Emergency Medicine · Primary Care",
     landing: "reports",
     scope: "own",

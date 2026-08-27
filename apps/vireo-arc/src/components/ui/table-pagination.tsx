@@ -51,7 +51,7 @@ export function TablePagination({
           </Select>
         )}
         <span>
-          Showing {start}–{end} of {total} entries
+          Showing {start} to {end} of {total} entries
         </span>
       </div>
       <div className="flex items-center gap-1">

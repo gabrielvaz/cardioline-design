@@ -89,8 +89,8 @@ export function WorkspaceCustomizer({
           In your navigation
         </legend>
         <p className="mt-1 text-sm text-muted-foreground">
-          Hide what you never use. Your role decides what can appear here — an
-          administrator grants anything beyond it.
+          Hide what you never use. Your role decides what can appear here.
+          An administrator grants anything beyond it.
         </p>
         <div className="mt-3 grid gap-2 sm:grid-cols-2">
           {granted.map((module) => {

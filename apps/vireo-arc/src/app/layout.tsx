@@ -27,7 +27,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Vireo ARK — Cardioline",
+    default: "Vireo ARK · Cardioline",
     template: "%s | Vireo ARK",
   },
   description:

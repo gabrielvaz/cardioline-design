@@ -391,7 +391,7 @@ function PatientsPageContent() {
             label: "Date of birth",
             options: [
               "Born in the last 30 years",
-              "Born 30–50 years ago",
+              "Born 30 to 50 years ago",
               "Born more than 50 years ago",
             ],
           },
@@ -422,7 +422,7 @@ const advancedExamPeriods: Record<string, "today" | "week" | "month"> = {
 const advancedStatuses = ["Active", "Critical", "Inactive"];
 const advancedDobBuckets = [
   "Born in the last 30 years",
-  "Born 30–50 years ago",
+  "Born 30 to 50 years ago",
   "Born more than 50 years ago",
 ];
 
@@ -430,7 +430,7 @@ function matchesDobBucket(dob: string, bucket: string) {
   const year = Number(dob.match(/\d{4}/)?.[0]);
   if (!year) return false;
   if (bucket === "Born in the last 30 years") return year >= 1997;
-  if (bucket === "Born 30–50 years ago") return year >= 1977 && year <= 1996;
+  if (bucket === "Born 30 to 50 years ago") return year >= 1977 && year <= 1996;
   return year <= 1976;
 }
 
