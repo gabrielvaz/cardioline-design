@@ -23,6 +23,7 @@ import {
   BriefcaseMedical,
   Radio,
   Stethoscope,
+  UserCog,
   type LucideIcon,
 } from "lucide-react";
 
@@ -279,6 +280,10 @@ export type PersonaPreset = {
   actions: string[];
   /** Order the personas appear in the setup. */
   order: number;
+  /** Marks the catch-all card: the user names their own work, and the profile
+   *  starts from a conservative read-only baseline they widen in the next
+   *  step — within what the role already grants, never beyond it. */
+  freeform?: boolean;
 };
 
 export type Role = {
@@ -478,6 +483,36 @@ export const seedRoles: Role[] = [
         "Team performance",
       ],
       actions: ["View Operations", "Manage Users", "Configure SLA", "Configure Roles"],
+    },
+  },
+  {
+    id: "custom-profile",
+    name: "Custom profile",
+    description:
+      "For work that does not match the standard profiles. Starts read-only and is widened by an administrator.",
+    vertical: "Custom",
+    landing: "dashboard",
+    scope: "own",
+    access: access({
+      dashboard: "view",
+      exams: "view",
+      patients: "view",
+      reports: "view",
+    }),
+    /* Deliberately thin: nobody should be able to describe themselves into
+       clinical signing rights. An administrator grants the rest. */
+    capabilities: ["viewPatientRecord", "exportShare"],
+    builtIn: true,
+    preset: {
+      icon: UserCog,
+      order: 5,
+      freeform: true,
+      homeLabel: "Dashboard",
+      tagline: "Tell us what you do and we'll start from a safe baseline.",
+      promise:
+        "Your workspace starts read-only. Pick where you land, and an administrator can widen it from there.",
+      priorities: ["Recent activity", "Your exams", "Your patients", "Your reports"],
+      actions: ["Open Exam", "View Report"],
     },
   },
   {

@@ -155,7 +155,7 @@ export function CaptureHome() {
                   <th className="w-[150px]">Exam</th>
                   <th className="w-[140px]">Unit</th>
                   <th className="w-[220px]">Status</th>
-                  <th className="w-[110px] text-right">Action</th>
+                  <th className="w-[140px] text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -172,7 +172,10 @@ export function CaptureHome() {
                           <span className="ml-2 text-xs text-muted-foreground">{row.note}</span>
                         )}
                       </td>
-                      <td className="text-right">
+                      {/* `!text-clip` kills the ellipsis Beat paints on any
+                          overflowing cell — with a button inside, it rendered
+                          as three stray dots beside the action. */}
+                      <td className="!text-clip text-right">
                         <Button
                           size="sm"
                           variant={row.state === "failed" ? "default" : "outline"}

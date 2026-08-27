@@ -37,7 +37,7 @@ import { useTheme } from "@/components/theme/theme-provider";
 import { currentUser } from "@/lib/mock-data";
 import { usePrototypeData } from "@/lib/prototype-data";
 import { useSession } from "@/lib/session";
-import { moduleLabel, navigationFor, type ModuleId } from "@/lib/roles";
+import { moduleById, moduleLabel, type ModuleId } from "@/lib/roles";
 import { asset } from "@/lib/asset";
 
 export type { SidebarMode };
@@ -70,7 +70,7 @@ export function Sidebar({
 }) {
   const pathname = usePathname();
   const { data } = usePrototypeData();
-  const { role } = useSession();
+  const { role, visibleModules } = useSession();
   const canHide = /^\/(exams|reports)\/[^/]+/.test(pathname);
   const expanded =
     mode === "expanded" || (mode === "hidden" && drawerOpen);
@@ -80,16 +80,19 @@ export function Sidebar({
   const pendingExams = data.inbox.length;
 
   const items: SidebarItem[] = [
-    ...navigationFor(role).map((module) => ({
-      label: moduleLabel(role, module.id),
+    ...visibleModules.map((id) => {
+      const module = moduleById(id);
+      return {
+      label: moduleLabel(role, id),
       href: module.href,
-      icon: moduleIcons[module.id],
+      icon: moduleIcons[id],
       active: pathname === module.href || pathname.startsWith(`${module.href}/`),
-      ...(module.id === "examInbox" && {
+      ...(id === "examInbox" && {
         badge: pendingExams,
         badgeLabel: "exams awaiting your report",
       }),
-    })),
+      };
+    }),
     {
       label: "Settings",
       href: "/settings",
@@ -168,7 +171,7 @@ function SidebarFooter({ expanded }: { expanded: boolean }) {
 
 function UserMenu({ expanded }: { expanded: boolean }) {
   const { theme, toggleTheme } = useTheme();
-  const { role } = useSession();
+  const { roleLabel } = useSession();
   const avatar = (
     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-semibold text-accent-foreground">
       {currentUser.initials}
@@ -202,7 +205,7 @@ function UserMenu({ expanded }: { expanded: boolean }) {
                   {currentUser.name}
                 </p>
                 <p className="mt-1 truncate text-xs text-muted-foreground">
-                  {role.name}
+                  {roleLabel}
                 </p>
               </div>
               <DropdownMenuTrigger asChild>
@@ -222,7 +225,7 @@ function UserMenu({ expanded }: { expanded: boolean }) {
               {currentUser.name}
             </span>
             <span className="mt-0.5 block text-xs font-medium text-muted-foreground">
-              {role.name}
+              {roleLabel}
             </span>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />

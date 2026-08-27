@@ -3,7 +3,7 @@
 import * as React from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "@/lib/session";
-import { homeHref, modules } from "@/lib/roles";
+import { moduleById, modules } from "@/lib/roles";
 
 /**
  * Keeps the application consistent with the signed-in role.
@@ -16,7 +16,7 @@ import { homeHref, modules } from "@/lib/roles";
  * prototype behaves coherently, which is the point of the role work.
  */
 export function RoleGuard({ children }: { children: React.ReactNode }) {
-  const { hydrated, state, role } = useSession();
+  const { hydrated, state, role, home } = useSession();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -37,8 +37,8 @@ export function RoleGuard({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     if (!hydrated) return;
     if (!state.setupComplete) router.replace("/setup");
-    else if (blocked) router.replace(homeHref(role));
-  }, [blocked, hydrated, role, router, state.setupComplete]);
+    else if (blocked) router.replace(moduleById(home).href);
+  }, [blocked, home, hydrated, router, state.setupComplete]);
 
   /* Render nothing rather than a flash of a workspace the user is about to be
      moved out of. */

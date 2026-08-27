@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { roleById, seedRoles, type Role } from "@/lib/roles";
+import { landingOptions, roleById, seedRoles, type ModuleId, type Role } from "@/lib/roles";
 
 /**
  * The signed-in user's working context: which role preset they picked during
@@ -39,6 +39,15 @@ export type SessionState = {
   roleId: string;
   density: Density;
   setupComplete: boolean;
+  /** What the user typed on the catch-all "Other" card. Display only — it
+   *  never affects permissions, which come from `roleId`. */
+  customRoleLabel?: string;
+  /** Where this user starts, when they want something other than the role's
+   *  default. Only ever one of the modules the role already grants. */
+  homeOverride?: ModuleId;
+  /** Granted modules the user chose to keep out of their navigation. Hiding
+   *  is always safe; there is no matching "show" for anything ungranted. */
+  hiddenModules?: ModuleId[];
 };
 
 const STORAGE_KEY = "vireo-ark-session";
@@ -55,9 +64,18 @@ type SessionContextValue = {
   hydrated: boolean;
   state: SessionState;
   role: Role;
+  /** The label to show for this user's profile — the typed one when they
+   *  chose "Other", the role's own name otherwise. */
+  roleLabel: string;
+  /** Modules in this user's navigation: granted by the role, minus what they
+   *  chose to hide. */
+  visibleModules: ModuleId[];
+  /** Where this user lands, honoring their override when it is still valid. */
+  home: ModuleId;
   setRole: (roleId: string) => void;
   setDensity: (density: Density) => void;
-  completeSetup: (choices: { roleId: string; density: Density }) => void;
+  update: (patch: Partial<SessionState>) => void;
+  completeSetup: (choices: Partial<SessionState> & { roleId: string; density: Density }) => void;
   /** Sends the user back through the first-login setup. */
   resetSetup: () => void;
 };
@@ -74,6 +92,10 @@ function read(): SessionState | null {
       roleId: parsed.roleId,
       density: parsed.density === "compact" ? "compact" : "comfortable",
       setupComplete: parsed.setupComplete === true,
+      customRoleLabel:
+        typeof parsed.customRoleLabel === "string" ? parsed.customRoleLabel : undefined,
+      homeOverride: parsed.homeOverride,
+      hiddenModules: Array.isArray(parsed.hiddenModules) ? parsed.hiddenModules : undefined,
     };
   } catch {
     return null;
@@ -109,14 +131,26 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
 
   const value = React.useMemo<SessionContextValue>(() => {
     const role = roleById(state.roleId) ?? seedRoles[0];
+    const granted = landingOptions(role.access).map((module) => module.id);
+    const hidden = state.hiddenModules ?? [];
+    /* An override only survives while the role still grants it — editing the
+       preset in Administration must not strand anyone on a module they lost. */
+    const home =
+      state.homeOverride && granted.includes(state.homeOverride)
+        ? state.homeOverride
+        : role.landing;
     return {
       hydrated,
       state,
       role,
+      roleLabel: state.customRoleLabel?.trim() || role.name,
+      visibleModules: granted.filter((id) => id === home || !hidden.includes(id)),
+      home,
       setRole: (roleId) => persist({ ...state, roleId }),
       setDensity: (density) => persist({ ...state, density }),
-      completeSetup: ({ roleId, density }) =>
-        persist({ roleId, density, setupComplete: true }),
+      update: (patch) => persist({ ...state, ...patch }),
+      completeSetup: (choices) =>
+        persist({ ...state, ...choices, setupComplete: true }),
       resetSetup: () => persist({ ...state, setupComplete: false }),
     };
   }, [hydrated, persist, state]);

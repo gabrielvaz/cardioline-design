@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { cn } from "@cardioline/ui";
-import { moduleLabel, navigationFor, type Role } from "@/lib/roles";
+import { moduleLabel, navigationFor, type ModuleId, type Role } from "@/lib/roles";
 import type { Density } from "@/lib/session";
 
 /**
@@ -17,14 +17,21 @@ import type { Density } from "@/lib/session";
 export function WorkspacePreview({
   role,
   density = "comfortable",
+  home: homeOverride,
+  hidden = [],
   className,
 }: {
   role: Role;
   density?: Density;
+  /** Defaults to the role's own landing; the setup passes the edited value. */
+  home?: ModuleId;
+  hidden?: ModuleId[];
   className?: string;
 }) {
-  const nav = navigationFor(role);
-  const home = role.landing;
+  const home = homeOverride ?? role.landing;
+  const nav = navigationFor(role).filter(
+    (module) => module.id === home || !hidden.includes(module.id),
+  );
   const rows = density === "compact" ? 7 : 4;
 
   return (

@@ -15,8 +15,16 @@ import { Button, cn } from "@cardioline/ui";
 import { asset } from "@/lib/asset";
 import { useTheme, type Theme } from "@/components/theme/theme-provider";
 import { densities, useSession, type Density } from "@/lib/session";
-import { homeHref, moduleLabel, personaRoles, roleById } from "@/lib/roles";
+import {
+  moduleById,
+  moduleLabel,
+  personaRoles,
+  roleById,
+  seedRoles,
+  type ModuleId,
+} from "@/lib/roles";
 import { WorkspacePreview } from "@/components/setup/workspace-preview";
+import { WorkspaceCustomizer } from "@/components/setup/workspace-customizer";
 
 /**
  * First-login setup: a short funnel that picks one of the existing role
@@ -29,7 +37,6 @@ import { WorkspacePreview } from "@/components/setup/workspace-preview";
  */
 
 const steps = [
-  { id: "welcome", label: "Welcome" },
   { id: "role", label: "Your role" },
   { id: "workspace", label: "Your workspace" },
   { id: "theme", label: "Appearance" },
@@ -46,17 +53,39 @@ export function SetupFlow() {
 
   const [index, setIndex] = React.useState(0);
   const [roleId, setRoleId] = React.useState(state.roleId);
+  const [customLabel, setCustomLabel] = React.useState(state.customRoleLabel ?? "");
   const [density, setDensity] = React.useState<Density>(state.density);
+  const [home, setHome] = React.useState<ModuleId | null>(state.homeOverride ?? null);
+  const [hidden, setHidden] = React.useState<ModuleId[]>(state.hiddenModules ?? []);
 
   const step: StepId = steps[index].id;
   const role = roleById(roleId) ?? personaRoles[0];
+  /* The role's own landing is the default; the customizer overrides it. */
+  const effectiveHome = home ?? role.landing;
+
+  /* Changing role resets the workspace tuning — the previous choices were
+     scoped to a different set of modules. */
+  const chooseRole = (id: string) => {
+    setRoleId(id);
+    setHome(null);
+    setHidden([]);
+  };
+
   const back = () => setIndex((i) => Math.max(0, i - 1));
   const next = () => setIndex((i) => Math.min(steps.length - 1, i + 1));
 
   const finish = () => {
-    completeSetup({ roleId, density });
-    router.push(homeHref(role));
+    completeSetup({
+      roleId,
+      density,
+      customRoleLabel: isCustom ? customLabel.trim() || undefined : undefined,
+      homeOverride: effectiveHome,
+      hiddenModules: hidden,
+    });
+    router.push(moduleById(effectiveHome).href);
   };
+
+  const isCustom = Boolean(role.preset?.freeform);
 
   /* Role is the only step that can be reached without a prior answer; the
      rest always have a defaulted value, so Next is never a dead end. */
@@ -68,11 +97,24 @@ export function SetupFlow() {
         <div className="flex flex-1 flex-col justify-center py-8">
           {/* `key` restarts the entrance transition on every step. */}
           <div key={step} className="motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:duration-300">
-            {step === "welcome" && <WelcomeStep />}
             {step === "role" && (
-              <RoleStep roleId={roleId} onSelect={setRoleId} />
+              <RoleStep
+                roleId={roleId}
+                onSelect={chooseRole}
+                customLabel={customLabel}
+                onCustomLabelChange={setCustomLabel}
+              />
             )}
-            {step === "workspace" && <WorkspaceStep role={role} density={density} />}
+            {step === "workspace" && (
+              <WorkspaceStep
+                role={role}
+                density={density}
+                home={effectiveHome}
+                hidden={hidden}
+                onHomeChange={setHome}
+                onHiddenChange={setHidden}
+              />
+            )}
             {step === "theme" && <ThemeStep theme={theme} onSelect={setTheme} />}
             {step === "density" && (
               <DensityStep
@@ -82,7 +124,14 @@ export function SetupFlow() {
               />
             )}
             {step === "summary" && (
-              <SummaryStep role={role} theme={theme} density={density} />
+              <SummaryStep
+                role={role}
+                roleLabel={isCustom ? customLabel.trim() || role.name : role.name}
+                home={effectiveHome}
+                hidden={hidden}
+                theme={theme}
+                density={density}
+              />
             )}
           </div>
         </div>
@@ -108,7 +157,7 @@ export function SetupFlow() {
             </Button>
           ) : (
             <Button type="button" onClick={next}>
-              {step === "welcome" ? "Start setup" : "Next"}
+              Next
               <ArrowRight />
             </Button>
           )}
@@ -230,41 +279,20 @@ function ChoiceCard({
 
 /* ─── Steps ──────────────────────────────────────────────────────── */
 
-function WelcomeStep() {
-  return (
-    <div className="space-y-8">
-      <Title
-        title="Let's set up your Vireo ARK"
-        lead="Tell us how you work and we'll prepare your workspace."
-      />
-      <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          ["Your home", "Where you land at sign-in"],
-          ["Your shortcuts", "The actions you reach for"],
-          ["Your density", "How much fits on screen"],
-          ["Your modules", "Only the tools you use"],
-        ].map(([title, detail]) => (
-          <li key={title} className="rounded-lg border border-border bg-card p-4">
-            <p className="text-sm font-semibold text-foreground">{title}</p>
-            <p className="mt-1 text-xs text-muted-foreground">{detail}</p>
-          </li>
-        ))}
-      </ul>
-      <p className="flex items-center gap-2 text-xs text-muted-foreground">
-        <Sparkles className="h-3.5 w-3.5 text-primary" />
-        Takes about a minute. You can change any of it later.
-      </p>
-    </div>
-  );
-}
-
 function RoleStep({
   roleId,
   onSelect,
+  customLabel,
+  onCustomLabelChange,
 }: {
   roleId: string;
   onSelect: (id: string) => void;
+  customLabel: string;
+  onCustomLabelChange: (value: string) => void;
 }) {
+  const custom = seedRoles.find((item) => item.preset?.freeform);
+  const named = personaRoles.filter((item) => !item.preset.freeform);
+
   return (
     <fieldset className="space-y-8">
       <legend>
@@ -274,7 +302,7 @@ function RoleStep({
         />
       </legend>
       <div className="grid gap-4 sm:grid-cols-2">
-        {personaRoles.map((persona) => {
+        {named.map((persona) => {
           const Icon = persona.preset.icon;
           const checked = persona.id === roleId;
           return (
@@ -304,6 +332,49 @@ function RoleStep({
             </ChoiceCard>
           );
         })}
+
+        {/* Catch-all. It still resolves to a real role — a deliberately thin,
+            read-only one — so describing yourself can never grant anything. */}
+        {custom && custom.preset && (
+          <ChoiceCard
+            key={custom.id}
+            name="role"
+            value={custom.id}
+            checked={custom.id === roleId}
+            onSelect={onSelect}
+            className="sm:col-span-2"
+          >
+            <span className="flex items-start gap-4">
+              <span
+                className={cn(
+                  "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-colors",
+                  custom.id === roleId
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground",
+                )}
+              >
+                <custom.preset.icon className="h-5 w-5" />
+              </span>
+              <span className="min-w-0 flex-1 pr-7">
+                <span className="block font-heading text-lg font-bold text-foreground">
+                  Other
+                </span>
+                <span className="mt-1 block text-sm text-muted-foreground">
+                  {custom.preset.tagline}
+                </span>
+                <input
+                  type="text"
+                  value={customLabel}
+                  placeholder="e.g. Research fellow, Nurse coordinator"
+                  aria-label="Describe your role"
+                  onFocus={() => onSelect(custom.id)}
+                  onChange={(event) => onCustomLabelChange(event.target.value)}
+                  className="mt-3 h-10 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary"
+                />
+              </span>
+            </span>
+          </ChoiceCard>
+        )}
       </div>
     </fieldset>
   );
@@ -312,28 +383,44 @@ function RoleStep({
 function WorkspaceStep({
   role,
   density,
+  home,
+  hidden,
+  onHomeChange,
+  onHiddenChange,
 }: {
   role: ReturnType<typeof roleById> & object;
   density: Density;
+  home: ModuleId;
+  hidden: ModuleId[];
+  onHomeChange: (id: ModuleId) => void;
+  onHiddenChange: (hidden: ModuleId[]) => void;
 }) {
-  const preset = role.preset;
   return (
     <div className="space-y-8">
       <Title
         title={`Here's your Vireo ARK, ${role.name}`}
-        lead={preset?.promise}
+        lead={role.preset?.promise}
       />
-      <div className="grid gap-6 lg:grid-cols-[1.1fr_1fr]">
-        <WorkspacePreview role={role} density={density} />
+      <div className="grid gap-8 lg:grid-cols-[1.05fr_1fr]">
         <div className="space-y-6">
-          <Detail
-            title="You'll start on"
-            items={[moduleLabel(role, role.landing)]}
-            highlight
+          {/* The preview reflects the edits as they are made, so the controls
+              below are not a promise the user has to take on faith. */}
+          <WorkspacePreview
+            role={role}
+            density={density}
+            home={home}
+            hidden={hidden}
           />
-          <Detail title="Ranked first" items={preset?.priorities ?? []} />
-          <Detail title="Your main actions" items={preset?.actions ?? []} />
+          <Detail title="Ranked first" items={role.preset?.priorities ?? []} />
+          <Detail title="Your main actions" items={role.preset?.actions ?? []} />
         </div>
+        <WorkspaceCustomizer
+          role={role}
+          home={home}
+          hidden={hidden}
+          onHomeChange={onHomeChange}
+          onHiddenChange={onHiddenChange}
+        />
       </div>
     </div>
   );
@@ -525,16 +612,22 @@ function DensityStep({
 
 function SummaryStep({
   role,
+  roleLabel,
+  home,
+  hidden,
   theme,
   density,
 }: {
   role: ReturnType<typeof roleById> & object;
+  roleLabel: string;
+  home: ModuleId;
+  hidden: ModuleId[];
   theme: Theme;
   density: Density;
 }) {
   const rows = [
-    ["Role", role.name],
-    ["Home", moduleLabel(role, role.landing)],
+    ["Role", roleLabel],
+    ["Home", moduleLabel(role, home)],
     ["Theme", theme === "dark" ? "Dark" : "Light"],
     ["Density", density === "compact" ? "Compact" : "Comfortable"],
   ];
@@ -542,7 +635,7 @@ function SummaryStep({
     <div className="space-y-8">
       <Title
         title="Your Vireo ARK is ready."
-        lead="You can change appearance and density any time in Settings."
+        lead="You can change all of this later in Settings."
       />
       <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
         <dl className="grid gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2">
@@ -557,7 +650,7 @@ function SummaryStep({
             </div>
           ))}
         </dl>
-        <WorkspacePreview role={role} density={density} />
+        <WorkspacePreview role={role} density={density} home={home} hidden={hidden} />
       </div>
     </div>
   );

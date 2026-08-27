@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { Rows2, Rows3, ShieldCheck } from "lucide-react";
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle, cn } from "@cardioline/ui";
 import { densities, useSession, type Density } from "@/lib/session";
-import { moduleById } from "@/lib/roles";
+import { moduleLabel } from "@/lib/roles";
+import { WorkspaceCustomizer } from "@/components/setup/workspace-customizer";
 
 /**
  * Post-setup preferences. Appearance and density are the user's own; the role
@@ -50,7 +51,7 @@ export function DensityModeSelector() {
 }
 
 export function WorkspaceRoleCard() {
-  const { role, resetSetup } = useSession();
+  const { role, roleLabel, home, state, update, resetSetup } = useSession();
   const router = useRouter();
 
   return (
@@ -63,14 +64,19 @@ export function WorkspaceRoleCard() {
           <div>
             <p className="flex items-center gap-2 text-sm font-semibold text-foreground">
               <ShieldCheck className="h-4 w-4 text-primary" />
-              {role.name}
+              {roleLabel}
+              {roleLabel !== role.name && (
+                <span className="text-xs font-normal text-muted-foreground">
+                  · {role.name} permissions
+                </span>
+              )}
             </p>
             <p className="mt-1 max-w-xl text-sm text-muted-foreground">
               {role.description}
             </p>
             <div className="mt-3 flex flex-wrap gap-1.5">
               <Badge variant="secondary">
-                Starts on {moduleById(role.landing).label}
+                Starts on {moduleLabel(role, home)}
               </Badge>
               <Badge variant="neutral">{role.capabilities.length} features</Badge>
             </div>
@@ -79,8 +85,21 @@ export function WorkspaceRoleCard() {
 
         <p className="rounded-md border border-border bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
           Your role decides what you can reach, so only an administrator can
-          change it — in Settings → Administration → Roles.
+          change it — in Settings → Administration → Roles. Everything below
+          narrows that workspace; none of it widens it.
         </p>
+
+        {/* The same control the first-login setup uses, so the two cannot
+            drift apart. */}
+        <div className="border-t border-border pt-5">
+          <WorkspaceCustomizer
+            role={role}
+            home={home}
+            hidden={state.hiddenModules ?? []}
+            onHomeChange={(id) => update({ homeOverride: id })}
+            onHiddenChange={(hiddenModules) => update({ hiddenModules })}
+          />
+        </div>
 
         {/* Re-running the setup is a preference, not an escalation: it lands on
             the same four presets and cannot grant anything an administrator
