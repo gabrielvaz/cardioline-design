@@ -124,16 +124,17 @@ export function LoginForm() {
             </p>
           )}
 
-          <button
+          <Button
             type="button"
+            variant="secondary"
             onClick={() => {
               reset();
               setUseCredentials(true);
             }}
-            className="text-sm font-medium text-primary transition-colors hover:text-primary/80 focus-visible:underline focus-visible:outline-none"
+            className="h-11 w-full text-sm font-semibold"
           >
             Sign in with an email address
-          </button>
+          </Button>
         </div>
       )}
 
