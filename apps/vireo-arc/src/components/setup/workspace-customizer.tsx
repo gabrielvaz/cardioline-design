@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Eye, EyeOff, Home } from "lucide-react";
-import { cn } from "@cardioline/ui";
+import { Home } from "lucide-react";
+import { Switch, cn } from "@cardioline/ui";
 import { landingOptions, moduleLabel, type ModuleId, type Role } from "@/lib/roles";
 
 /**
@@ -96,41 +96,41 @@ export function WorkspaceCustomizer({
           {granted.map((module) => {
             const isHome = module.id === home;
             const shown = isHome || !hidden.includes(module.id);
+            /* A settings row, not a giant label: the Switch is itself a
+               button, so wrapping the whole row in a label would nest two
+               interactive controls. The switch takes its accessible name from
+               the module heading beside it. */
             return (
-              <label
+              <div
                 key={module.id}
                 className={cn(
-                  "flex cursor-pointer items-center justify-between gap-3 rounded-md border px-3 py-2.5 text-sm transition-colors",
-                  "focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
-                  isHome && "cursor-not-allowed opacity-70",
+                  "flex items-center justify-between gap-3 rounded-md border px-3 py-2.5 text-sm transition-colors",
                   shown ? "border-border bg-card" : "border-dashed border-border bg-muted/40",
                 )}
               >
                 <span className="min-w-0">
-                  <span className="block truncate font-medium text-foreground">
+                  <span
+                    id={`module-${module.id}`}
+                    className="block truncate font-medium text-foreground"
+                  >
                     {moduleLabel(role, module.id)}
                   </span>
                   <span className="block truncate text-xs text-muted-foreground">
                     {isHome ? "Your initial page" : module.description}
                   </span>
                 </span>
-                <input
-                  type="checkbox"
+                <Switch
                   checked={shown}
                   disabled={isHome}
-                  onChange={() => toggle(module.id)}
-                  className="sr-only"
+                  onCheckedChange={() => toggle(module.id)}
+                  aria-labelledby={`module-${module.id}`}
+                  title={
+                    isHome
+                      ? "Your initial page always stays in the navigation"
+                      : undefined
+                  }
                 />
-                <span
-                  aria-hidden="true"
-                  className={cn(
-                    "shrink-0",
-                    shown ? "text-primary" : "text-muted-foreground",
-                  )}
-                >
-                  {shown ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-                </span>
-              </label>
+              </div>
             );
           })}
         </div>
