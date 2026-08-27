@@ -69,14 +69,14 @@ export function LoginForm() {
       : { title: 'Choose your account', lead: 'Or sign in with an email address.' };
 
   return (
-    <div className="w-full max-w-sm">
+    <div className="w-full min-w-0 max-w-sm">
       {/* Brand signature, visible only when the brand panel is hidden. */}
-      <div className="mb-10 flex justify-center lg:hidden">
+      <div className="mb-7 flex justify-center sm:mb-10 lg:hidden">
         <Image src={asset('/brand/vireo-ark.svg')} alt="Vireo ARK" width={390} height={67} priority className="h-7 w-auto dark:hidden" />
         <Image src={asset('/brand/vireo-ark-white.svg')} alt="Vireo ARK" width={390} height={67} priority className="hidden h-7 w-auto dark:block" />
       </div>
 
-      <div className="mb-8">
+      <div className="mb-6 sm:mb-8">
         <h1 className="font-heading text-2xl font-bold text-foreground">{heading.title}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{heading.lead}</p>
       </div>
@@ -148,6 +148,18 @@ export function LoginForm() {
           noValidate
           className="space-y-5"
         >
+          <button
+            type="button"
+            onClick={() => {
+              reset();
+              setSelected(null);
+            }}
+            className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:underline focus-visible:outline-none"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Choose another account
+          </button>
+
           <div className="flex items-center gap-3 rounded-lg border border-border bg-muted/40 p-3">
             <span className={cn('flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold', selected.tone)}>
               {selected.initials}
@@ -172,17 +184,6 @@ export function LoginForm() {
           <Button type="submit" disabled={isLoading} className="h-11 w-full text-sm font-semibold">
             {isLoading ? (<><Loader2 className="h-4 w-4 animate-spin" />Signing in...</>) : (<>Sign In<ArrowRight className="h-4 w-4" /></>)}
           </Button>
-          <button
-            type="button"
-            onClick={() => {
-              reset();
-              setSelected(null);
-            }}
-            className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:underline focus-visible:outline-none"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Choose another account
-          </button>
         </form>
       )}
 
@@ -261,7 +262,7 @@ export function LoginForm() {
       {/* Footer — `lg:hidden` because the brand panel already carries the
           Cardioline mark from `lg` up, and two of them on one screen read as a
           mistake. Below `lg` the panel is gone and this is the only one. */}
-      <div className="mt-10 flex flex-col items-center gap-2.5 lg:hidden">
+      <div className="mt-8 flex flex-col items-center gap-2.5 sm:mt-10 lg:hidden">
         <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">Powered by</p>
         <Image src="https://cardioline.com/wp-content/uploads/2022/08/logo.png" alt="Cardioline S.p.A." width={600} height={38} sizes="256px" className="h-4 w-auto" />
       </div>

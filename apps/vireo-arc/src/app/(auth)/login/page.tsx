@@ -12,7 +12,10 @@ export default function LoginPage() {
   return (
     <main id="login-main" className="grid min-h-screen bg-background lg:grid-cols-2">
       <BrandPanel />
-      <div className="flex items-center justify-center px-6 py-12">
+      {/* `min-w-0`: a grid item defaults to `min-width: auto`, which stopped
+          the form shrinking below its own max-width and pushed the page wider
+          than the phone viewport. */}
+      <div className="flex min-w-0 items-center justify-center px-5 py-10 sm:px-6 sm:py-12">
         <LoginForm />
       </div>
       <ThemeToggle />

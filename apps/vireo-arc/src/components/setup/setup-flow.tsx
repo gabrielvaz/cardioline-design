@@ -91,10 +91,10 @@ export function SetupFlow() {
      rest always have a defaulted value, so Next is never a dead end. */
   return (
     <main className="min-h-screen bg-background">
-      <div className="mx-auto flex min-h-screen w-full max-w-5xl flex-col px-6 py-10 sm:px-8">
+      <div className="mx-auto flex min-h-screen w-full max-w-5xl flex-col px-5 py-7 sm:px-8 sm:py-10">
         <Header index={index} />
 
-        <div className="flex flex-1 flex-col justify-center py-8">
+        <div className="flex flex-1 flex-col justify-center py-6 sm:py-8">
           {/* `key` restarts the entrance transition on every step. */}
           <div key={step} className="motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:duration-300">
             {step === "role" && (
@@ -136,27 +136,32 @@ export function SetupFlow() {
           </div>
         </div>
 
-        <footer className="flex items-center justify-between gap-4 border-t border-border pt-6">
+        {/* On a phone the two controls take the full row and the step counter
+            moves under them, rather than three items fighting for one line. */}
+        <footer className="flex flex-col-reverse gap-3 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:pt-6">
           <Button
             type="button"
             variant="ghost"
             onClick={back}
             disabled={index === 0}
-            className={cn(index === 0 && "invisible")}
+            className={cn("w-full sm:w-auto", index === 0 && "hidden sm:invisible sm:inline-flex")}
           >
             <ArrowLeft />
             Back
           </Button>
-          <p className="text-xs text-muted-foreground" aria-live="polite">
+          <p
+            className="text-center text-xs text-muted-foreground sm:text-left"
+            aria-live="polite"
+          >
             Step {index + 1} of {steps.length} · {steps[index].label}
           </p>
           {step === "summary" ? (
-            <Button type="button" onClick={finish}>
+            <Button type="button" onClick={finish} className="w-full sm:w-auto">
               Enter Vireo ARK
               <ArrowRight />
             </Button>
           ) : (
-            <Button type="button" onClick={next}>
+            <Button type="button" onClick={next} className="w-full sm:w-auto">
               Next
               <ArrowRight />
             </Button>
@@ -218,7 +223,7 @@ function Header({ index }: { index: number }) {
 function Title({ title, lead }: { title: string; lead?: string }) {
   return (
     <div className="max-w-2xl">
-      <h1 className="font-heading text-3xl font-bold text-foreground">{title}</h1>
+      <h1 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">{title}</h1>
       {lead && <p className="mt-2 text-muted-foreground">{lead}</p>}
     </div>
   );
@@ -401,7 +406,7 @@ function WorkspaceStep({
         title={`Here's your Vireo ARK, ${role.name}`}
         lead={role.preset?.promise}
       />
-      <div className="grid gap-8 lg:grid-cols-[1.05fr_1fr]">
+      <div className="grid gap-6 lg:grid-cols-[1.05fr_1fr] lg:gap-8">
         <div className="space-y-6">
           {/* The preview reflects the edits as they are made, so the controls
               below are not a promise the user has to take on faith. */}
