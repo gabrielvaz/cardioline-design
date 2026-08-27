@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Inter, JetBrains_Mono } from "next/font/google";
 import "@cardioline/ui/src/styles/globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { SessionProvider } from "@/lib/session";
 
 /* Cardioline brand fonts — extracted from cardioline.com */
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -56,7 +57,7 @@ export const viewport: Viewport = {
  * a blocking inline script does the same job from localStorage before the
  * browser paints — without it, dark-mode users get a white flash on every load.
  */
-const themeBootstrap = `(function(){try{var t=localStorage.getItem("cardioline-theme");if(t!=="dark"&&t!=="light"){t="light"}document.documentElement.classList.toggle("dark",t==="dark");document.documentElement.style.colorScheme=t}catch(e){}})()`;
+const themeBootstrap = `(function(){try{var t=localStorage.getItem("cardioline-theme");if(t!=="dark"&&t!=="light"){t="light"}document.documentElement.classList.toggle("dark",t==="dark");document.documentElement.style.colorScheme=t;var s=JSON.parse(localStorage.getItem("vireo-ark-session")||"{}");document.documentElement.dataset.density=s.density==="compact"?"compact":"comfortable"}catch(e){}})()`;
 
 export default function RootLayout({
   children,
@@ -73,7 +74,9 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
       </head>
       <body className="min-h-screen bg-background font-sans antialiased">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <SessionProvider>{children}</SessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

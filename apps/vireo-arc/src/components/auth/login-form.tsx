@@ -6,6 +6,8 @@ import { Eye, EyeOff, Loader2, ArrowRight } from 'lucide-react';
 import { Button, Input, Label } from '@cardioline/ui';
 import { useRouter } from 'next/navigation';
 import { asset } from "@/lib/asset";
+import { useSession } from "@/lib/session";
+import { homeHref } from "@/lib/roles";
 
 /* ─── Login Form ─────────────────────────────────────────────── */
 export function LoginForm() {
@@ -15,6 +17,9 @@ export function LoginForm() {
   const [isLoading, setIsLoading]       = React.useState(false);
   const [error, setError]               = React.useState('');
   const router = useRouter();
+  /* Signing in lands on the first-login setup until it has been completed;
+     after that, straight to whatever home the chosen role declares. */
+  const { state, role } = useSession();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -29,7 +34,7 @@ export function LoginForm() {
     /* TODO: replace with real authentication logic */
     await new Promise((r) => setTimeout(r, 1500));
     setIsLoading(false);
-    router.push('/dashboard');
+    router.push(state.setupComplete ? homeHref(role) : '/setup');
   }
 
   return (

@@ -74,6 +74,15 @@
     /* Border Radius */
     --radius: 0.5rem;
 
+    /* Interface density — set once by `data-density` on <html> (see
+       lib/session.tsx) and consumed by every listing surface, so the choice
+       reaches tables, cards and list rows without per-page CSS. */
+    --row-py: 1rem;
+    --row-py-tight: 0.75rem;
+    --cell-px: 1.25rem;
+    --list-gap: 0.75rem;
+    --card-py: 1.25rem;
+
     /* Chart — ECG-inspired palette */
     --chart-1: 22 100% 47%;    /* Primary orange */
     --chart-2: 231 93% 15%;   /* Navy blue */
@@ -244,6 +253,33 @@
   }
 
   /* Clinical list treatment: compact, readable, and never wraps row content. */
+  :root[data-density="compact"] {
+    --row-py: 0.5rem;
+    --row-py-tight: 0.375rem;
+    --cell-px: 0.875rem;
+    --list-gap: 0.375rem;
+    --card-py: 0.875rem;
+  }
+
+  /* Every clinical listing inherits the density tokens. Utility padding on a
+     cell still wins where a screen needs something specific. */
+  .overflow-x-auto > table thead th,
+  .overflow-x-auto > table tbody td {
+    padding-top: var(--row-py);
+    padding-bottom: var(--row-py);
+    padding-left: var(--cell-px);
+    padding-right: var(--cell-px);
+  }
+
+  [data-density-list] > * + * {
+    margin-top: var(--list-gap);
+  }
+
+  [data-density-row] {
+    padding-top: var(--row-py);
+    padding-bottom: var(--row-py);
+  }
+
   .overflow-x-auto > table {
     table-layout: fixed;
     border-collapse: separate;

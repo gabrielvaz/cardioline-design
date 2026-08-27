@@ -2,26 +2,34 @@
 
 import * as React from 'react';
 import type { TableDensity } from '@cardioline/ui';
-
-const STORAGE_KEY = 'cardioline-table-density';
+import { useSession } from '@/lib/session';
 
 /**
- * Stores the row-density choice once and reuses it on every clinical listing.
- * The effect keeps server and first client render identical, then restores the
- * user's cached preference without introducing a hydration mismatch.
+ * Row density for the clinical listings.
+ *
+ * The value lives on the session (chosen during the first-login setup, changed
+ * later in Settings) so tables, the Exam Inbox and the density tokens in
+ * globals.css all move together. The per-table control still offers `spacious`
+ * as a local override; picking Compact or Comfortable writes back to the
+ * session, which is the shared source.
  */
 export function useGlobalTableDensity() {
-  const [density, setDensityState] = React.useState<TableDensity>('comfortable');
+  const { state, setDensity } = useSession();
+  const [local, setLocal] = React.useState<TableDensity | null>(null);
 
-  React.useEffect(() => {
-    const cached = window.localStorage.getItem(STORAGE_KEY);
-    if (cached === 'compact' || cached === 'comfortable' || cached === 'spacious') setDensityState(cached);
-  }, []);
+  const density: TableDensity = local ?? state.density;
 
-  const setDensity = React.useCallback((nextDensity: TableDensity) => {
-    setDensityState(nextDensity);
-    window.localStorage.setItem(STORAGE_KEY, nextDensity);
-  }, []);
+  const setTableDensity = React.useCallback(
+    (next: TableDensity) => {
+      if (next === 'spacious') {
+        setLocal('spacious');
+        return;
+      }
+      setLocal(null);
+      setDensity(next);
+    },
+    [setDensity],
+  );
 
-  return [density, setDensity] as const;
+  return [density, setTableDensity] as const;
 }

@@ -10,9 +10,13 @@ import {
   Inbox,
   LayoutDashboard,
   LogOut,
+  BarChart3,
+  Radio,
   Moon,
   MoreHorizontal,
   Settings,
+  ShieldCheck,
+  SlidersHorizontal,
   Sun,
   UserRound,
   Users,
@@ -32,18 +36,26 @@ import {
 import { useTheme } from "@/components/theme/theme-provider";
 import { currentUser } from "@/lib/mock-data";
 import { usePrototypeData } from "@/lib/prototype-data";
+import { useSession } from "@/lib/session";
+import { moduleLabel, navigationFor, type ModuleId } from "@/lib/roles";
 import { asset } from "@/lib/asset";
 
 export type { SidebarMode };
 
-const navigation: Array<{ name: string; href: string; icon: SidebarItem["icon"] }> = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Exam Inbox", href: "/exam-inbox", icon: Inbox },
-  { name: "Patients", href: "/patients", icon: Users },
-  { name: "Exams and ECG", href: "/exams", icon: Activity },
-  { name: "Reports", href: "/reports", icon: FileText },
-  { name: "Settings", href: "/settings", icon: Settings },
-];
+/* Navigation is derived from the signed-in role, never hardcoded: a module the
+   role cannot open is absent, not present-and-disabled. Settings is appended
+   for everyone — every profile has preferences of its own to manage. */
+const moduleIcons: Record<ModuleId, SidebarItem["icon"]> = {
+  dashboard: LayoutDashboard,
+  capture: Radio,
+  examInbox: Inbox,
+  operations: BarChart3,
+  exams: Activity,
+  patients: Users,
+  reports: FileText,
+  administration: ShieldCheck,
+  systemConfig: SlidersHorizontal,
+};
 
 export function Sidebar({
   mode,
@@ -58,6 +70,7 @@ export function Sidebar({
 }) {
   const pathname = usePathname();
   const { data } = usePrototypeData();
+  const { role } = useSession();
   const canHide = /^\/(exams|reports)\/[^/]+/.test(pathname);
   const expanded =
     mode === "expanded" || (mode === "hidden" && drawerOpen);
@@ -66,16 +79,24 @@ export function Sidebar({
      sitting in the worklist, assigned or not. */
   const pendingExams = data.inbox.length;
 
-  const items: SidebarItem[] = navigation.map((item) => ({
-    label: item.name,
-    href: item.href,
-    icon: item.icon,
-    active: pathname === item.href || pathname.startsWith(`${item.href}/`),
-    ...(item.href === "/exam-inbox" && {
-      badge: pendingExams,
-      badgeLabel: "exams awaiting your report",
-    }),
-  }));
+  const items: SidebarItem[] = [
+    ...navigationFor(role).map((module) => ({
+      label: moduleLabel(role, module.id),
+      href: module.href,
+      icon: moduleIcons[module.id],
+      active: pathname === module.href || pathname.startsWith(`${module.href}/`),
+      ...(module.id === "examInbox" && {
+        badge: pendingExams,
+        badgeLabel: "exams awaiting your report",
+      }),
+    })),
+    {
+      label: "Settings",
+      href: "/settings",
+      icon: Settings,
+      active: pathname === "/settings" || pathname.startsWith("/settings/"),
+    },
+  ];
 
   return (
     <AppSidebar
@@ -147,6 +168,7 @@ function SidebarFooter({ expanded }: { expanded: boolean }) {
 
 function UserMenu({ expanded }: { expanded: boolean }) {
   const { theme, toggleTheme } = useTheme();
+  const { role } = useSession();
   const avatar = (
     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-semibold text-accent-foreground">
       {currentUser.initials}
@@ -180,7 +202,7 @@ function UserMenu({ expanded }: { expanded: boolean }) {
                   {currentUser.name}
                 </p>
                 <p className="mt-1 truncate text-xs text-muted-foreground">
-                  {currentUser.role}
+                  {role.name}
                 </p>
               </div>
               <DropdownMenuTrigger asChild>
@@ -200,7 +222,7 @@ function UserMenu({ expanded }: { expanded: boolean }) {
               {currentUser.name}
             </span>
             <span className="mt-0.5 block text-xs font-medium text-muted-foreground">
-              {currentUser.role}
+              {role.name}
             </span>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
