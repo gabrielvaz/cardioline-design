@@ -3,7 +3,7 @@
  *
  * `next/image` applies `basePath` through the image optimizer, but the static
  * export runs with `unoptimized: true` and passes `src` straight to the `<img>`
- * — so on GitHub Pages, where the site lives under `/cardioline-design/`, a
+ * — so on GitHub Pages, where the site lives under a repository subpath, a
  * bare `/brand/...` resolves to the domain root and 404s. Anything referencing
  * `public/` by literal path has to go through here.
  */

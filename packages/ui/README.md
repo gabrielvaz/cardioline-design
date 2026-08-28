@@ -55,4 +55,4 @@ import uiConfig from '@cardioline/ui/tailwind.config';
 
 ## Design System Documentation
 
-→ **[Beat Design System Docs](https://gabrielvaz.github.io/cardioline-design/)** (GitHub Pages)
+→ **[Beat Design System Docs](https://gabrielvaz.github.io/vireo-ark-dolomiti/beat/)** (GitHub Pages)
